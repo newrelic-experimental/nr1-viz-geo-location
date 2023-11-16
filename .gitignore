@@ -1,0 +1,9 @@
+# IDEs
+.DS_Store
+.idea
+
+# OS
+node_modules/
+
+# Build
+dist/

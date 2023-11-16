@@ -1,0 +1,39 @@
+{
+  "schemaType": "VISUALIZATION",
+  "id": "store-map-viz",
+  "displayName": "StoreMapViz",
+  "description": "",
+  "configuration": [
+    {
+      "name": "nrqlQueries",
+      "title": "NRQL Queries",
+      "type": "collection",
+      "items": [
+        {
+          "name": "accountId",
+          "title": "Account ID",
+          "description": "Account ID to be associated with the query",
+          "type": "account-id"
+        },
+        {
+          "name": "query",
+          "title": "Query",
+          "description": "NRQL query for visualization",
+          "type": "nrql"
+        }
+      ]
+    },
+    {
+      "name": "fill",
+      "title": "Fill color",
+      "description": "A fill color to override the default fill color",
+      "type": "string"
+    },
+    {
+      "name": "stroke",
+      "title": "Stroke color",
+      "description": "A stroke color to override the default stroke color",
+      "type": "string"
+    }
+  ]
+}
