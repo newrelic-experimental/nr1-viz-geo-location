@@ -1,8 +1,10 @@
-import React from "react";
+import React, { useState } from "react";
 import { AutoSizer, NrqlQuery, Spinner, LineChart } from "nr1";
 
 import EmptyState from "./components/EmptyState";
 import ErrorState from "./components/ErrorState";
+
+import MapView from "./components/Map";
 
 const App = ({ nrqlQueries, stroke, fill, nerdletState, platformState }) => {
   console.log({ nrqlQueries, stroke, fill, nerdletState, platformState });
@@ -16,6 +18,9 @@ const App = ({ nrqlQueries, stroke, fill, nerdletState, platformState }) => {
   if (!nrqlQueryPropsAvailable) {
     return <EmptyState />;
   }
+
+  // center for the map
+  const [mapCenter, setMapCenter] = useState([51.505, -0.09]);
 
   return (
     <AutoSizer>
@@ -32,7 +37,7 @@ const App = ({ nrqlQueries, stroke, fill, nerdletState, platformState }) => {
           <div
             style={{ fontSize: "2rem", paddingRight: ".25rem", height: "100%" }}
           >
-            <NrqlQuery
+            {/* <NrqlQuery
               query={query}
               accountId={parseInt(nrqlQueries[0].accountId)}
               pollInterval={NrqlQuery.AUTO_POLL_INTERVAL}
@@ -48,7 +53,8 @@ const App = ({ nrqlQueries, stroke, fill, nerdletState, platformState }) => {
 
                 return <LineChart fullWidth fullHeight data={data} />;
               }}
-            </NrqlQuery>
+            </NrqlQuery> */}
+            <MapView mapCenter={mapCenter} setMapCenter={setMapCenter} />
           </div>
         );
       }}

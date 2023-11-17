@@ -1,7 +1,7 @@
 {
   "private": true,
   "name": "store-map",
-  "version": "0.2.4",
+  "version": "0.3.0",
   "scripts": {
     "start": "nr1 nerdpack:serve",
     "test": "exit 0"
@@ -10,9 +10,11 @@
     "uuid": "d97f35b3-8d0a-4b86-98a9-675c8678f7d0"
   },
   "dependencies": {
+    "leaflet": "^1.6.0",
     "prop-types": "15.7.2",
     "react": "17.0.2",
     "react-dom": "17.0.2",
+    "react-leaflet": "^2.7.0",
     "recharts": "^2.9.3"
   },
   "browserslist": [
