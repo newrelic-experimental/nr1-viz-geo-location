@@ -42,24 +42,6 @@ const MapView = () => {
     width: "100%",
   });
 
-  const [locations, setLocations] = useState([]);
-
-  console.log("zoom", zoom);
-  console.log("center", center);
-
-  useEffect(async () => {
-    const accountId = 3495486;
-    const variables = {
-      id: parseInt(accountId),
-    };
-    const response = await NerdGraphQuery.query({
-      query: nerdGraphSalesQuery(),
-      variables,
-    });
-
-    setLocations(response.data.actor.account.sales.results);
-  }, []);
-
   // This effect is used in the config mode of the Viz (before it's added to a dashboard)
   useEffect(() => {
     if (mapRef.current) {
@@ -69,18 +51,12 @@ const MapView = () => {
   }, [zoom, center]);
 
   return (
-    <Map
-      ref={mapRef}
-      center={center}
-      zoom={zoom}
-      style={mapStyle}
-      key={`${zoom}-${center}`}
-    >
+    <Map ref={mapRef} center={center} zoom={zoom} style={mapStyle}>
       <TileLayer
         attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
         url="https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png"
       />
-      <Markers locations={locations} />
+      <Markers />
       <Regions />
     </Map>
   );

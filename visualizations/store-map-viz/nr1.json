@@ -5,17 +5,10 @@
   "description": "",
   "configuration": [
     {
-      "name": "queries",
-      "title": "NRQL Queries",
-      "type": "collection",
-      "items": [
-        {
-          "name": "accountId",
-          "title": "Account ID",
-          "description": "Account ID to be associated with the query",
-          "type": "account-id"
-        }
-      ]
+      "name": "accountId",
+      "title": "Account ID",
+      "description": "Account ID to be associated with the query",
+      "type": "account-id"
     },
     {
       "name": "zoom",

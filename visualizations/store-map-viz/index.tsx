@@ -7,7 +7,6 @@ import { StoreMapProvider } from "./context/StoreMapContext";
 const Hours12 = "43200000";
 
 // props contain properties from config
-// nrqlQueries, fill, stroke
 const StoreMapVizVisualization = (props) => {
   // this is for local testing only
   const [platformState, setPlatformState] = useState({
