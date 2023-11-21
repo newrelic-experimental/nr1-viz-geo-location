@@ -1,4 +1,5 @@
 @import "~leaflet/dist/leaflet.css";
+@import "~react-leaflet-markercluster/dist/styles.min.css";
 
 .EmptyState,
 .ErrorState {
@@ -16,4 +17,12 @@
 
 .ErrorState-headingText {
   color: darkgrey;
+}
+
+.custom-tooltip {
+  background: transparent;
+  border: none;
+  box-shadow: none;
+  color: black;
+  font-weight: bold;
 }

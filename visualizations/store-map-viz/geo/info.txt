@@ -1,0 +1,2 @@
+Get GEO Data (GEOJSON) from here if needed
+https://cartographyvectors.com/geo/united-kingdom

@@ -5,7 +5,7 @@
   "description": "",
   "configuration": [
     {
-      "name": "nrqlQueries",
+      "name": "queries",
       "title": "NRQL Queries",
       "type": "collection",
       "items": [
@@ -14,26 +14,160 @@
           "title": "Account ID",
           "description": "Account ID to be associated with the query",
           "type": "account-id"
-        },
-        {
-          "name": "query",
-          "title": "Query",
-          "description": "NRQL query for visualization",
-          "type": "nrql"
         }
       ]
     },
     {
-      "name": "fill",
-      "title": "Fill color",
-      "description": "A fill color to override the default fill color",
-      "type": "string"
+      "name": "zoom",
+      "title": "Zoom",
+      "description": "Zoom level for the map",
+      "type": "enum",
+      "items": [
+        {
+          "title": "1",
+          "value": "1"
+        },
+        {
+          "title": "2",
+          "value": "2"
+        },
+        {
+          "title": "3",
+          "value": "3"
+        },
+        {
+          "title": "4",
+          "value": "4"
+        },
+        {
+          "title": "5",
+          "value": "5"
+        },
+        {
+          "title": "6",
+          "value": "6"
+        },
+        {
+          "title": "7",
+          "value": "7"
+        },
+        {
+          "title": "8",
+          "value": "8"
+        },
+        {
+          "title": "9",
+          "value": "9"
+        },
+        {
+          "title": "10",
+          "value": "10"
+        },
+        {
+          "title": "11",
+          "value": "11"
+        },
+        {
+          "title": "12",
+          "value": "12"
+        },
+        {
+          "title": "13",
+          "value": "13"
+        },
+        {
+          "title": "14",
+          "value": "14"
+        },
+        {
+          "title": "15",
+          "value": "15"
+        },
+        {
+          "title": "16",
+          "value": "16"
+        },
+        {
+          "title": "17",
+          "value": "17"
+        },
+        {
+          "title": "18",
+          "value": "18"
+        },
+        {
+          "title": "19",
+          "value": "19"
+        },
+        {
+          "title": "20",
+          "value": "20"
+        },
+        {
+          "title": "21",
+          "value": "21"
+        },
+        {
+          "title": "22",
+          "value": "22"
+        },
+        {
+          "title": "23",
+          "value": "23"
+        },
+        {
+          "title": "24",
+          "value": "24"
+        }
+      ]
     },
     {
-      "name": "stroke",
-      "title": "Stroke color",
-      "description": "A stroke color to override the default stroke color",
-      "type": "string"
+      "name": "center",
+      "title": "Center",
+      "description": "Center of the map",
+      "type": "enum",
+      "items": [
+        {
+          "title": "London",
+          "value": "[51.5074, 0.1278]"
+        },
+        {
+          "title": "Manchester",
+          "value": "[53.4808, 2.2426]"
+        },
+        {
+          "title": "Edinburgh",
+          "value": "[55.9533, -3.1883]"
+        },
+        {
+          "title": "Birmingham",
+          "value": "[52.4862, -1.8904]"
+        },
+        {
+          "title": "Glasgow",
+          "value": "[55.8642, -4.2518]"
+        },
+        {
+          "title": "Liverpool",
+          "value": "[53.4084, -2.9916]"
+        },
+        {
+          "title": "Bristol",
+          "value": "[51.4545, -2.5879]"
+        },
+        {
+          "title": "Belfast",
+          "value": "[54.5973, -5.9301]"
+        },
+        {
+          "title": "Cardiff",
+          "value": "[51.4816, -3.1791]"
+        },
+        {
+          "title": "Dublin",
+          "value": "[53.3498, -6.2603]"
+        }
+      ]
     }
   ]
 }

@@ -1,13 +1,13 @@
 {
   "private": true,
   "name": "store-map",
-  "version": "0.3.0",
+  "version": "0.4.9",
   "scripts": {
     "start": "nr1 nerdpack:serve",
     "test": "exit 0"
   },
   "nr1": {
-    "uuid": "d97f35b3-8d0a-4b86-98a9-675c8678f7d0"
+    "uuid": "4db08c61-8aea-46a8-8e36-ff03037dbbcf"
   },
   "dependencies": {
     "leaflet": "^1.6.0",
@@ -15,6 +15,7 @@
     "react": "17.0.2",
     "react-dom": "17.0.2",
     "react-leaflet": "^2.7.0",
+    "react-leaflet-markercluster": "^2.0.0",
     "recharts": "^2.9.3"
   },
   "browserslist": [

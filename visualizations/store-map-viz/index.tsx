@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { PlatformStateContext, NerdletStateContext } from "nr1";
 
 import App from "./App";
+import { StoreMapProvider } from "./context/StoreMapContext";
 
 const Hours12 = "43200000";
 
@@ -26,6 +27,7 @@ const StoreMapVizVisualization = (props) => {
     setSwitchState(!switchState);
   };
 
+  const { zoom, center } = props;
   return (
     <div style={{ height: "100%" }}>
       {/* Uncomment for local testing */}
@@ -34,13 +36,15 @@ const StoreMapVizVisualization = (props) => {
         {(platformContextState) => (
           <NerdletStateContext.Consumer>
             {(nerdletContextState) => (
-              <App
-                platformState={platformContextState}
-                // platformState // Uncomment for local testing
-                nerdletState={nerdletContextState}
-                // props from config
-                {...props}
-              />
+              <StoreMapProvider zoom={zoom} center={center}>
+                <App
+                  platformState={platformContextState}
+                  // platformState // Uncomment for local testing
+                  nerdletState={nerdletContextState}
+                  // props from config
+                  {...props}
+                />
+              </StoreMapProvider>
             )}
           </NerdletStateContext.Consumer>
         )}
