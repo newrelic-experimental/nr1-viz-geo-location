@@ -29,3 +29,10 @@ export const timeRangeToNrql = function (timeRange) {
   // Default case if none of the above conditions are met
   return ""; // "SINCE 30 minutes ago"; could also be returned here
 };
+
+export const formatCurrency = (amount, currency = "GBP", locale = "en-GB") => {
+  return new Intl.NumberFormat(locale, {
+    style: "currency",
+    currency: currency,
+  }).format(amount);
+};

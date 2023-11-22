@@ -5,6 +5,7 @@ import { NerdGraphQuery, PlatformStateContext, NerdletStateContext } from "nr1";
 
 import { nerdGraphSalesQuery } from "../queries";
 import { FETCH_INTERVAL } from "../contstants";
+import LocationPopup from "./LocationPopup";
 
 const Markers = () => {
   // const nerdletState = useContext(NerdletStateContext);
@@ -50,11 +51,7 @@ const Markers = () => {
           key={location.storeNumber}
           position={[location.latitude, location.longitude]}
         >
-          <Popup>
-            <div>StoreNo: {location.storeNumber}</div>
-            <div>Sales: {location.sales}</div>
-            <div>Amount: £{location.amount}</div>
-          </Popup>
+          <LocationPopup location={location} />
         </Marker>
       ))}
     </MarkerClusterGroup>

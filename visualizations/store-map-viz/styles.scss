@@ -26,3 +26,14 @@
   color: black;
   font-weight: bold;
 }
+
+.popup-grid {
+  display: grid;
+  grid-template-columns: auto auto; /* Two columns: one for labels, one for values */
+  column-gap: 10px; /* Space between columns */
+  align-items: center;
+}
+
+.popup-label {
+  font-weight: bold;
+}
