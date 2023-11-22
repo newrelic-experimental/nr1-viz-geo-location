@@ -1,6 +1,7 @@
 @import "~leaflet/dist/leaflet.css";
 @import "~react-leaflet-markercluster/dist/styles.min.css";
 
+// ErrorState.tsx and EmptyState.tsx
 .EmptyState,
 .ErrorState {
   height: 100%;
@@ -19,6 +20,7 @@
   color: darkgrey;
 }
 
+// custom tooltip styles (Region.tsx)
 .custom-tooltip {
   background: transparent;
   border: none;
@@ -27,6 +29,7 @@
   font-weight: bold;
 }
 
+// custom popup styles (LocationPopup.tsx)
 .popup-grid {
   display: grid;
   grid-template-columns: auto auto; /* Two columns: one for labels, one for values */
@@ -36,4 +39,32 @@
 
 .popup-label {
   font-weight: bold;
+}
+
+// custom marker (cluster) styles (Markers.tsx)
+.marker-cluster-custom {
+  background-clip: padding-box;
+  border-radius: 50%; /* Makes it circular */
+}
+
+.marker-cluster-custom div {
+  width: 40px; /* Outer diameter */
+  height: 40px;
+  margin-top: -20px; /* Half of height to center it */
+  margin-left: -20px; /* Half of width to center it */
+
+  text-align: center;
+  border-radius: 50%; /* Makes it circular */
+  line-height: 40px; /* Centers the text vertically */
+  color: white; /* Text color */
+  background-color: rgba(
+    60,
+    179,
+    113,
+    0.8
+  ); /* Slightly darker green with some transparency */
+  box-shadow: 0 0 0 8px rgba(110, 204, 57, 0.3); /* Creates the outer ring */
+  position: absolute;
+  top: 50%;
+  left: 50%;
 }

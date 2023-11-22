@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from "react";
-import { Marker, Popup } from "react-leaflet";
+import { Marker } from "react-leaflet";
 import MarkerClusterGroup from "react-leaflet-markercluster";
 import { NerdGraphQuery, PlatformStateContext, NerdletStateContext } from "nr1";
 
@@ -40,11 +40,21 @@ const Markers = () => {
     return () => clearInterval(intervalId);
   }, [timeRange]);
 
+  // Custom cluster icon function
+  const createClusterCustomIcon = function (cluster) {
+    return L.divIcon({
+      html: `<div><span>${cluster.getChildCount()}</span></div>`,
+      className: "marker-cluster-custom",
+      iconSize: L.point(40, 40, true),
+    });
+  };
+
   return (
     <MarkerClusterGroup
       singleMarkerMode={true}
       spiderfyOnMaxZoom={7}
-      disableClusteringAtZoom={20}
+      disableClusteringAtZoom={10}
+      iconCreateFunction={createClusterCustomIcon}
     >
       {locations.map((location) => (
         <Marker
