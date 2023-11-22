@@ -7,8 +7,7 @@ import { nerdGraphSalesQuery } from "../queries";
 import { FETCH_INTERVAL } from "../contstants";
 
 const Markers = () => {
-  const nerdletState = useContext(NerdletStateContext);
-  console.log("nerdlet state", nerdletState);
+  // const nerdletState = useContext(NerdletStateContext);
   const accountId = 3495486; //nerdletState.visualizationProps.accountId;
 
   // timeRange formatting happens in the query (nerdGraphSalesQuery)
@@ -32,7 +31,7 @@ const Markers = () => {
     };
 
     // Perform the immediate fetch to populate the initial data
-    // fetchData();
+    fetchData();
 
     // Then set an interval to continue fetching
     const intervalId = setInterval(fetchData, FETCH_INTERVAL);
