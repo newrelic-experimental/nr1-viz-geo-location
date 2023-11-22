@@ -1,38 +1,23 @@
 import React, { useState, useEffect, useContext } from "react";
 import { Marker, Popup } from "react-leaflet";
 import MarkerClusterGroup from "react-leaflet-markercluster";
-import { NerdGraphQuery, PlatformStateContext } from "nr1";
+import { NerdGraphQuery, PlatformStateContext, NerdletStateContext } from "nr1";
 
 import { nerdGraphSalesQuery } from "../queries";
 import { FETCH_INTERVAL } from "../contstants";
 
 const Markers = () => {
-  // const nerdletState = useContext(NerdletStateContext);
+  const nerdletState = useContext(NerdletStateContext);
+  console.log("nerdlet state", nerdletState);
   const accountId = 3495486; //nerdletState.visualizationProps.accountId;
 
+  // timeRange formatting happens in the query (nerdGraphSalesQuery)
   const { timeRange } = useContext(PlatformStateContext);
-  // Function to format timeRange
-  const formatTimeRange = (timeRange) => {
-    // Return an object with all nulls if timeRange is not provided
-    // this is when the user is in the config panel
-    if (timeRange === undefined) {
-      return { begin_time: null, duration: null, end_time: null };
-    }
-    // Create a new object with either the provided value or null for each property
-    return {
-      begin_time: timeRange.begin_time || null,
-      duration: timeRange.duration || null,
-      end_time: timeRange.end_time || null,
-    };
-  };
-
-  // Use the function to set the timeRange
-  const time = formatTimeRange(timeRange);
 
   const [locations, setLocations] = useState([]);
   useEffect(() => {
     const fetchData = async () => {
-      const query = nerdGraphSalesQuery(time);
+      const query = nerdGraphSalesQuery(timeRange);
       const variables = { id: parseInt(accountId) };
 
       try {
@@ -53,13 +38,13 @@ const Markers = () => {
     const intervalId = setInterval(fetchData, FETCH_INTERVAL);
 
     return () => clearInterval(intervalId);
-  }, [time]);
+  }, [timeRange]);
 
   return (
     <MarkerClusterGroup
       singleMarkerMode={true}
       spiderfyOnMaxZoom={7}
-      disableClusteringAtZoom={10}
+      disableClusteringAtZoom={20}
     >
       {locations.map((location) => (
         <Marker

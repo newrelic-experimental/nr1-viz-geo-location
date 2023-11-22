@@ -1,8 +1,6 @@
 import React, { useEffect, useState, useRef } from "react";
 import { Map, TileLayer } from "react-leaflet";
-import { NerdGraphQuery } from "nr1";
 
-import { nerdGraphSalesQuery } from "../queries";
 import Markers from "./Markers";
 import Regions from "./Regions";
 import { useStoreMap } from "../context/StoreMapContext";
