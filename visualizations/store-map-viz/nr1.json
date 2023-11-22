@@ -10,6 +10,19 @@
       "description": "Account ID to be associated with the query",
       "type": "account-id"
     },
+
+    {
+      "name": "alert",
+      "title": "Alert",
+      "description": "Alert threshold - below this value the store will be marked as red",
+      "type": "number"
+    },
+    {
+      "name": "warning",
+      "title": "Warning",
+      "description": "Warning threshold - below this value the store will be marked as yellow",
+      "type": "number"
+    },
     {
       "name": "zoom",
       "title": "Zoom",

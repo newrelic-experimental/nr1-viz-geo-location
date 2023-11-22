@@ -3,6 +3,7 @@ import { PlatformStateContext, NerdletStateContext } from "nr1";
 
 import App from "./App";
 import { StoreMapProvider } from "./context/StoreMapContext";
+import { VizPropsProvider } from "./context/VizPropsProvider";
 
 const Hours12 = "43200000";
 
@@ -36,13 +37,15 @@ const StoreMapVizVisualization = (props) => {
           <NerdletStateContext.Consumer>
             {(nerdletContextState) => (
               <StoreMapProvider zoom={zoom} center={center}>
-                <App
-                  platformState={platformContextState}
-                  // platformState // Uncomment for local testing
-                  nerdletState={nerdletContextState}
-                  // props from config
-                  {...props}
-                />
+                <VizPropsProvider {...props}>
+                  <App
+                    platformState={platformContextState}
+                    // platformState // Uncomment for local testing
+                    nerdletState={nerdletContextState}
+                    // props from config
+                    {...props}
+                  />
+                </VizPropsProvider>
               </StoreMapProvider>
             )}
           </NerdletStateContext.Consumer>

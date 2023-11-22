@@ -5,12 +5,13 @@ import { NerdGraphQuery, PlatformStateContext, NerdletStateContext } from "nr1";
 
 import { nerdGraphSalesQuery } from "../queries";
 import { FETCH_INTERVAL } from "../contstants";
+import { createClusterCustomIcon, createCustomIcon } from "../utils/map";
 import LocationPopup from "./LocationPopup";
+import { useProps } from "../context/VizPropsProvider";
 
 const Markers = () => {
   // const nerdletState = useContext(NerdletStateContext);
-  const accountId = 3495486; //nerdletState.visualizationProps.accountId;
-
+  const { accountId } = useProps();
   // timeRange formatting happens in the query (nerdGraphSalesQuery)
   const { timeRange } = useContext(PlatformStateContext);
 
@@ -40,15 +41,6 @@ const Markers = () => {
     return () => clearInterval(intervalId);
   }, [timeRange]);
 
-  // Custom cluster icon function
-  const createClusterCustomIcon = function (cluster) {
-    return L.divIcon({
-      html: `<div><span>${cluster.getChildCount()}</span></div>`,
-      className: "marker-cluster-custom",
-      iconSize: L.point(40, 40, true),
-    });
-  };
-
   return (
     <MarkerClusterGroup
       singleMarkerMode={true}
@@ -60,6 +52,7 @@ const Markers = () => {
         <Marker
           key={location.storeNumber}
           position={[location.latitude, location.longitude]}
+          icon={createCustomIcon(location)}
         >
           <LocationPopup location={location} />
         </Marker>

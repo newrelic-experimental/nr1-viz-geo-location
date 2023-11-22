@@ -41,7 +41,7 @@
   font-weight: bold;
 }
 
-// custom marker (cluster) styles (Markers.tsx)
+// custom marker (cluster) styles (utils/map.tsx)
 .marker-cluster-custom {
   background-clip: padding-box;
   border-radius: 50%; /* Makes it circular */
@@ -67,4 +67,25 @@
   position: absolute;
   top: 50%;
   left: 50%;
+}
+
+// custom marker (single) styles (utils/map.tsx)
+.custom-marker-icon {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  background-clip: padding-box;
+  border-radius: 50%; /* Makes it circular */
+  box-shadow: 0 0 0 8px rgba(0, 0, 0, 0.1); /* Outer ring */
+}
+
+.custom-marker-icon div {
+  width: 40px; /* Outer diameter */
+  height: 40px;
+  line-height: 40px; /* Centers the text vertically */
+  color: white; /* Text color */
+  border-radius: 50%; /* Makes it circular */
+  font-size: 12px; /* Adjust as needed */
+  background-color: inherit; /* Takes color from the inline style */
 }
