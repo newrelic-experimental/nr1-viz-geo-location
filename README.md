@@ -2,6 +2,9 @@
 
 Store Map Visualization is a dynamic web application designed to visually represent sales data on a geographical map. This tool is particularly useful for businesses seeking to monitor sales performance across different store locations. It utilizes New Relic's custom visualization capabilities, alongside React and Leaflet, to provide a user-friendly and interactive map interface.
 
+![Store Map Visualization Overview](./docs/map-overview.jpeg)
+![Store Map Visualization Overview](./docs/map-zoom-in-popup.jpeg)
+
 ## Features
 
 - **Dynamic Sales Data Visualization:** Visualize sales data from different store locations on an interactive map. Each store's performance is represented by customizable markers, with colors indicating different levels of sales performance.
