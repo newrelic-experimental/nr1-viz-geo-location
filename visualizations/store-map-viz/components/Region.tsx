@@ -2,7 +2,7 @@ import React from "react";
 import { GeoJSON, Tooltip } from "react-leaflet";
 
 const Region = ({ region }) => {
-  const style = () => ({ color: "white", fillColor: "green", opacity: 0.5 });
+  const style = () => ({ color: "white", fillColor: "red", opacity: 0.5 });
 
   const percentage = "100";
 

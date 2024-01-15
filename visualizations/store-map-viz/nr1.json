@@ -1,7 +1,7 @@
 {
   "schemaType": "VISUALIZATION",
-  "id": "store-map-viz",
-  "displayName": "StoreMapViz",
+  "id": "location-map-viz",
+  "displayName": "LocationMapViz",
   "description": "",
   "configuration": [
     {
@@ -9,6 +9,12 @@
       "title": "Account ID",
       "description": "Account ID to be associated with the query",
       "type": "account-id"
+    },
+    {
+      "name": "markersQuery",
+      "title": "Markers query",
+      "description": "Query to gather markers",
+      "type": "nrql"
     },
 
     {

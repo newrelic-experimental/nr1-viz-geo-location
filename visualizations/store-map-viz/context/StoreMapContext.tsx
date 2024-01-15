@@ -6,7 +6,7 @@ import React, {
   ReactNode,
 } from "react";
 
-import { DEFAULT_ZOOM, DEFAULT_CENTER } from "../contstants";
+import { DEFAULT_ZOOM, DEFAULT_CENTER } from "../constants";
 
 // Define the shape of your context data
 interface StoreMapContextData {

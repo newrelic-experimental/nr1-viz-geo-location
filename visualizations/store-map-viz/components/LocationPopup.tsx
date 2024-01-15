@@ -1,22 +1,21 @@
 import React from "react";
 import { Popup } from "react-leaflet";
 import { formatCurrency } from "../utils";
+import { MARKER_TOOLTIP } from "../constants";  
 
-const LocationPopup = ({ location }) => {
+const LocationPopup = ({ location, config }) => {
+
+  const items = config.map(item=>{
+      return <>
+        <div className="popup-label">{item.label}:</div>
+        <div>{(typeof item.formatFn) === "function" ? item.formatFn?.(location[item.queryField]): location[item.queryField]}</div>
+      </>
+  })
+
   return (
     <Popup>
       <div className="popup-grid">
-        <div className="popup-label">Name:</div>
-        <div>{location.costCenterName}</div>
-
-        <div className="popup-label">StoreNo:</div>
-        <div>{location.storeNumber}</div>
-
-        <div className="popup-label">Sales:</div>
-        <div>{location.sales}</div>
-
-        <div className="popup-label">Amount:</div>
-        <div>{formatCurrency(location.amount)}</div>
+       {items}
       </div>
     </Popup>
   );

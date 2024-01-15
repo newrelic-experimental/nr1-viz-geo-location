@@ -16,7 +16,8 @@
     "react-dom": "17.0.2",
     "react-leaflet": "^2.7.0",
     "react-leaflet-markercluster": "^2.0.0",
-    "recharts": "^2.9.3"
+    "recharts": "^2.9.3",
+    "text-case": "^1.0.9"
   },
   "browserslist": [
     "last 2 versions",

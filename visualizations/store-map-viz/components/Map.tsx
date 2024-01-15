@@ -7,7 +7,7 @@ import { useStoreMap } from "../context/StoreMapContext";
 
 // there are some issues with the default zoom and center from the context
 // so just in case we'll set them here
-import { DEFAULT_ZOOM, DEFAULT_CENTER } from "../contstants";
+import { DEFAULT_ZOOM, DEFAULT_CENTER } from "../constants";
 
 // fix for broken marker icons
 import icon from "leaflet/dist/images/marker-icon.png";

@@ -56,14 +56,9 @@
   text-align: center;
   border-radius: 50%; /* Makes it circular */
   line-height: 40px; /* Centers the text vertically */
-  color: white; /* Text color */
-  background-color: rgba(
-    60,
-    179,
-    113,
-    0.8
-  ); /* Slightly darker green with some transparency */
-  box-shadow: 0 0 0 8px rgba(110, 204, 57, 0.3); /* Creates the outer ring */
+  color: #ffffff; /* Text color */
+  background-color:inherit; /* Slightly darker green with some transparency */
+  // box-shadow: 0 0 0 8px #cc39c04d; /* Creates the outer ring */
   position: absolute;
   top: 50%;
   left: 50%;

@@ -4,27 +4,27 @@ import MarkerClusterGroup from "react-leaflet-markercluster";
 import { NerdGraphQuery, PlatformStateContext, NerdletStateContext } from "nr1";
 
 import { nerdGraphSalesQuery } from "../queries";
-import { FETCH_INTERVAL } from "../contstants";
-import { createClusterCustomIcon, createCustomIcon } from "../utils/map";
+import { FETCH_INTERVAL } from "../constants";
+import { createClusterCustomIcon, createCustomIcon, generateTooltipConfig } from "../utils/map";
 import LocationPopup from "./LocationPopup";
 import { useProps } from "../context/VizPropsProvider";
 
 const Markers = () => {
   // const nerdletState = useContext(NerdletStateContext);
-  const { accountId } = useProps();
+  const { accountId, markersQuery } = useProps();
+
   // timeRange formatting happens in the query (nerdGraphSalesQuery)
   const { timeRange } = useContext(PlatformStateContext);
 
   const [locations, setLocations] = useState([]);
   useEffect(() => {
     const fetchData = async () => {
-      const query = nerdGraphSalesQuery(timeRange);
+      const query = nerdGraphSalesQuery(markersQuery,timeRange);
       const variables = { id: parseInt(accountId) };
 
       try {
         const response = await NerdGraphQuery.query({ query, variables });
         const locations = response?.data?.actor?.account?.sales?.results;
-
         setLocations(locations);
       } catch (error) {
         console.error("Error fetching data:", error);
@@ -41,6 +41,9 @@ const Markers = () => {
     return () => clearInterval(intervalId);
   }, [timeRange]);
 
+
+  const tooltipConfig=generateTooltipConfig(locations)
+
   return (
     <MarkerClusterGroup
       singleMarkerMode={true}
@@ -54,7 +57,7 @@ const Markers = () => {
           position={[location.latitude, location.longitude]}
           icon={createCustomIcon(location)}
         >
-          <LocationPopup location={location} />
+          <LocationPopup location={location} config={tooltipConfig} />
         </Marker>
       ))}
     </MarkerClusterGroup>
