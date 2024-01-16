@@ -1,8 +1,8 @@
 {
   "schemaType": "VISUALIZATION",
-  "id": "location-map-viz",
-  "displayName": "LocationMapViz",
-  "description": "",
+  "id": "location-geomap-viz",
+  "displayName": "Location Geo Map",
+  "description": "Plot data on a world map",
   "configuration": [
     {
       "name": "accountId",
@@ -16,22 +16,9 @@
       "description": "Query to gather markers",
       "type": "nrql"
     },
-
-    {
-      "name": "alert",
-      "title": "Alert",
-      "description": "Alert threshold - below this value the store will be marked as red",
-      "type": "number"
-    },
-    {
-      "name": "warning",
-      "title": "Warning",
-      "description": "Warning threshold - below this value the store will be marked as yellow",
-      "type": "number"
-    },
     {
       "name": "zoom",
-      "title": "Zoom",
+      "title": "Default Zoom",
       "description": "Zoom level for the map",
       "type": "enum",
       "items": [
@@ -134,52 +121,124 @@
       ]
     },
     {
-      "name": "center",
-      "title": "Center",
-      "description": "Center of the map",
+      "name": "disableClusterZoom",
+      "title": "Disable cluster at zoom ",
+      "description": "Zoom level at which to disable clustering",
       "type": "enum",
       "items": [
         {
-          "title": "London",
-          "value": "[51.5074, 0.1278]"
+          "title": "Default (7)",
+          "value": "default"
         },
         {
-          "title": "Manchester",
-          "value": "[53.4808, 2.2426]"
+          "title": "1",
+          "value": "1"
         },
         {
-          "title": "Edinburgh",
-          "value": "[55.9533, -3.1883]"
+          "title": "2",
+          "value": "2"
         },
         {
-          "title": "Birmingham",
-          "value": "[52.4862, -1.8904]"
+          "title": "3",
+          "value": "3"
         },
         {
-          "title": "Glasgow",
-          "value": "[55.8642, -4.2518]"
+          "title": "4",
+          "value": "4"
         },
         {
-          "title": "Liverpool",
-          "value": "[53.4084, -2.9916]"
+          "title": "5",
+          "value": "5"
         },
         {
-          "title": "Bristol",
-          "value": "[51.4545, -2.5879]"
+          "title": "6",
+          "value": "6"
         },
         {
-          "title": "Belfast",
-          "value": "[54.5973, -5.9301]"
+          "title": "7",
+          "value": "7"
         },
         {
-          "title": "Cardiff",
-          "value": "[51.4816, -3.1791]"
+          "title": "8",
+          "value": "8"
         },
         {
-          "title": "Dublin",
-          "value": "[53.3498, -6.2603]"
+          "title": "9",
+          "value": "9"
+        },
+        {
+          "title": "10",
+          "value": "10"
+        },
+        {
+          "title": "11",
+          "value": "11"
+        },
+        {
+          "title": "12",
+          "value": "12"
+        },
+        {
+          "title": "13",
+          "value": "13"
+        },
+        {
+          "title": "14",
+          "value": "14"
+        },
+        {
+          "title": "15",
+          "value": "15"
+        },
+        {
+          "title": "16",
+          "value": "16"
+        },
+        {
+          "title": "17",
+          "value": "17"
+        },
+        {
+          "title": "18",
+          "value": "18"
+        },
+        {
+          "title": "19",
+          "value": "19"
+        },
+        {
+          "title": "20",
+          "value": "20"
+        },
+        {
+          "title": "21",
+          "value": "21"
+        },
+        {
+          "title": "22",
+          "value": "22"
+        },
+        {
+          "title": "23",
+          "value": "23"
+        },
+        {
+          "title": "24",
+          "value": "24"
         }
       ]
+    },
+    {
+      "name": "center",
+      "title": "Center lat,lng",
+      "description": "Center of the map. Privide as lat,lng value",
+      "type": "string"
+    },
+    {
+      "name": "fetchInterval",
+      "title": "Fetch interval (s)",
+      "description": "Zero for no refresh",
+      "type": "number"
     }
   ]
 }

@@ -1,7 +1,5 @@
 import React from "react";
-import { Popup } from "react-leaflet";
-import { formatCurrency } from "../utils";
-import { MARKER_TOOLTIP } from "../constants";  
+import { Tooltip } from "react-leaflet";
 
 const LocationPopup = ({ location, config }) => {
 
@@ -13,11 +11,11 @@ const LocationPopup = ({ location, config }) => {
   })
 
   return (
-    <Popup>
+    <Tooltip>
       <div className="popup-grid">
        {items}
       </div>
-    </Popup>
+    </Tooltip>
   );
 };
 

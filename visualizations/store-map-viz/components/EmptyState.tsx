@@ -4,19 +4,36 @@ import { Card, CardBody, HeadingText } from "nr1";
 const EmptyState: React.FC = () => (
   <Card className="EmptyState">
     <CardBody className="EmptyState-cardBody">
+   
       <HeadingText
         spacingType={[HeadingText.SPACING_TYPE.LARGE]}
         type={HeadingText.TYPE.HEADING_3}
       >
-        Please provide at least one NRQL query & account ID pair
+        Please provide NRQL query that returns geo data in the correct format.
       </HeadingText>
-      <HeadingText
-        spacingType={[HeadingText.SPACING_TYPE.MEDIUM]}
-        type={HeadingText.TYPE.HEADING_4}
-      >
-        An example NRQL query you can try is:
-      </HeadingText>
-      <code>FROM NrUsage SELECT sum(usage) FACET metric SINCE 1 week ago</code>
+      <div className="queryHelpText">
+      The query should include the columns (as required):<br /><br />
+        <ul>
+          <li>latitude - the latitude of the marker</li>
+          <li>longitude - the longitude of the marker</li>
+          <li>icon_label - the value to show on the marker</li>
+          <li>value - the value to evaluate against thresholds</li>
+          <li>threshold_warning - the threshold to cause warning colour</li>
+          <li>threshold_critical - the threshold to cause critical colour</li>
+          <li>tooltip_any_field_name - A value to appear in the tool tip, inlcude as many as you like.</li>
+          <li>link - URL to link to on click.</li>
+        </ul>
+        <br /><br />Example:<br/>
+        <code>FROM myGeoEvents SELECT count(*) AS 'icon_label',
+latest(latitude) AS 'latitude',
+latest(longitude) AS 'longitude',          
+count(*) AS 'value',
+50 as 'threshold_warning', 
+70 as 'threshold_critical',
+average(sales) AS 'tooltip_sales' 
+FACET location AS 'name' </code>
+      </div>
+      
     </CardBody>
   </Card>
 );

@@ -20,6 +20,12 @@
   color: darkgrey;
 }
 
+.queryHelpText {
+  text-align: left;
+  margin-left: 10%;
+  margin-right: 10%;
+}
+
 // custom tooltip styles (Region.tsx)
 .custom-tooltip {
   background: transparent;
@@ -27,6 +33,10 @@
   box-shadow: none;
   color: black;
   font-weight: bold;
+}
+
+.queryHelpText li {
+  margin-left: 1em;
 }
 
 // custom popup styles (LocationPopup.tsx)
