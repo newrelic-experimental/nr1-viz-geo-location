@@ -229,7 +229,7 @@
       ]
     },
     {
-      "name": "center",
+      "name": "centerLatLng",
       "title": "Center lat,lng",
       "description": "Center of the map. Privide as lat,lng value",
       "type": "string"

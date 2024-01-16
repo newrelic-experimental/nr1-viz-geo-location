@@ -29,7 +29,7 @@ const StoreMapVizVisualization = (props) => {
 
   const { zoom, centerLatLng } = props;
   const latLngString = (centerLatLng === null || centerLatLng === undefined || centerLatLng == "") ? null : `[${centerLatLng}]`;
-  const theCenter = latLngString === null ? null : `[${latLngString}]`;
+  const theCenter = latLngString === null ? null : latLngString;
 
   return (
     <div style={{ height: "100%" }}>
