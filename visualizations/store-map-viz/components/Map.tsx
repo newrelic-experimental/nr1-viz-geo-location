@@ -29,7 +29,7 @@ const MapView = () => {
   // Handle null values explicitly
   const zoom = storeMap.zoom !== null ? storeMap.zoom : DEFAULT_ZOOM;
   const center =
-    storeMap.center !== null ? storeMap.center : JSON.parse(DEFAULT_CENTER);
+    storeMap.center !== null ? storeMap.center : DEFAULT_CENTER;
 
   // use ref for the map to refresh it in Viz's config mode
   const mapRef = useRef(null);
@@ -55,7 +55,7 @@ const MapView = () => {
         url="https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png"
       />
       <Markers />
-      <Regions />
+      {/* <Regions /> */}
     </Map>
   );
 };

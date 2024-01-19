@@ -10,6 +10,38 @@ import LocationPopup from "./LocationPopup";
 import { useProps } from "../context/VizPropsProvider";
 import { DEFAULT_DISABLE_CLUSTER_ZOOM } from "../constants";  
 
+const deriveStatus = (location) => {
+  let status = "OK";
+  const critical = location.threshold_critical === undefined ? null : location.threshold_critical;
+  const warning = location.threshold_warning === undefined ? null : location.threshold_warning;
+
+  const thresholdDirection:string = (critical !== null && warning !== null && critical < warning) ? "LESS" : "MORE"; 
+
+  // Determine the color based on the sales property of the location
+  if(thresholdDirection === "LESS") { //less than
+    if (critical !== null && location.value < critical) {
+      status = "CRITICAL"; 
+    } else if (
+      warning !== null &&
+      location.value >= critical &&
+      location.value <= warning
+    ) {
+      status = "WARNING";
+    }
+  } else { //more than
+    if (critical !== null && location.value >= critical) {
+      status = "CRITICAL"; // Red
+    } else if (
+      warning !== null &&
+      location.value < critical &&
+      location.value >= warning
+    ) {
+      status = "WARNING"; // Amber
+    }
+  }
+  location.status = status;
+}
+
 const Markers = () => {
   // const nerdletState = useContext(NerdletStateContext);
   const { accountId, markersQuery, disableClusterZoom, fetchInterval } = useProps();
@@ -25,6 +57,11 @@ const Markers = () => {
 
       try {
         const response = await NerdGraphQuery.query({ query, variables });
+        const results=response?.data?.actor?.account?.sales?.results;
+        if(results && Array.isArray(results)) {
+          results.forEach(location=>deriveStatus(location))
+        }
+        console.log("results",results);
         setLocations(response?.data?.actor?.account?.sales?.results);
       } catch (error) {
         console.error("Error fetching data:", error);

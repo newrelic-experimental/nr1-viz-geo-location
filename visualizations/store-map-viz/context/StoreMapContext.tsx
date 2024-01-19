@@ -33,13 +33,15 @@ export const StoreMapProvider: React.FC<StoreMapProviderProps> = ({
   center
 }) => {
 
-  let centerPoints=DEFAULT_CENTER;
+  let centerPoints;
   try {
     let centerParsed=JSON.parse(center);
     if( Array.isArray(centerParsed) && centerParsed.length==2 ) {
       centerPoints=centerParsed;
     }
-  } catch (error) {}
+  } catch (error) {
+    centerPoints=DEFAULT_CENTER;
+  }
 
 
   // Initialize state with default or provided values
