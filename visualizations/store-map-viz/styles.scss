@@ -79,6 +79,10 @@
   height: 30px;
 }
 
+.marker-cluster-custom span {
+  font-size: 0.8em; 
+}
+
 .marker-cluster-custom div.outerPie {
   width: 48px;
   height: 48px;
@@ -96,11 +100,15 @@
 }
 
 .custom-marker-icon div {
-  width: 40px; /* Outer diameter */
-  height: 40px;
-  line-height: 40px; /* Centers the text vertically */
+  width: 34px; /* Outer diameter */
+  height: 34px;
+  line-height: 34px; /* Centers the text vertically */
   color: white; /* Text color */
   border-radius: 50%; /* Makes it circular */
   font-size: 12px; /* Adjust as needed */
   background-color: inherit; /* Takes color from the inline style */
+}
+
+.custom-marker-icon div span {
+  font-size: 0.8em; 
 }

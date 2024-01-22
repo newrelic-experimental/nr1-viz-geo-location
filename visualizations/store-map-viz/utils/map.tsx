@@ -31,10 +31,17 @@ export const createCustomIcon = (location) => {
   const colour = (location.status==="CRITICAL") ? MARKER_COLOURS.criticalColour : (location.status==="WARNING") ? MARKER_COLOURS.warningColour : MARKER_COLOURS.safeColour; // Default to safe colour
   const borderColour = (location.status==="CRITICAL") ? MARKER_COLOURS.criticalColourBorder : (location.status==="WARNING") ? MARKER_COLOURS.warningColourBorder : MARKER_COLOURS.safeColourBorder; // Default to safe colour
   const textColour = (location.status==="CRITICAL") ? MARKER_COLOURS.criticalColourText : (location.status==="WARNING") ? MARKER_COLOURS.warningColourText : MARKER_COLOURS.safeColourText; // Default to safe colour
+
+  let markerLabel = " " 
+  if(location.icon_label!==undefined) {
+    markerLabel=location.icon_label;
+  } else if(location.value !==undefined ) {
+    markerLabel=location.value;
+  }
   return L.divIcon({
-    html: `<div style="color: ${textColour}; background-color: ${colour}; box-shadow:0 0 0 8px ${borderColour};"><span>${location.icon_label===undefined? " " : location.icon_label}</span></div>`,
+    html: `<div style="color: ${textColour}; background-color: ${colour}; box-shadow:0 0 0 6px ${borderColour};"><span>${markerLabel}</span></div>`,
     className: "custom-marker-icon",
-    iconSize: [40, 40],
+    iconSize: [34,34],
   });
 };
 

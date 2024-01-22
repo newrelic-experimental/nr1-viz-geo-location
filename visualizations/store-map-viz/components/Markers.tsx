@@ -3,7 +3,7 @@ import { Marker } from "react-leaflet";
 import MarkerClusterGroup from "react-leaflet-markercluster";
 import { NerdGraphQuery, PlatformStateContext, NerdletStateContext } from "nr1";
 
-import { nerdGraphSalesQuery } from "../queries";
+import { nerdGraphMarkerQuery } from "../queries";
 import { FETCH_INTERVAL_DEFAULT } from "../constants";
 import { createClusterCustomIcon, createCustomIcon, generateTooltipConfig } from "../utils/map";
 import LocationPopup from "./LocationPopup";
@@ -42,26 +42,55 @@ const deriveStatus = (location) => {
   location.status = status;
 }
 
+const formatValues = (location) =>{
+  Object.keys(location).forEach((key)=>{
+    if(key.includes("tooltip_") || key=="icon_label" && !key.includes("_precision")) {
+
+      if(location[key+'_precision'] !== undefined) {
+        try {
+          location[key]=location[key].toFixed(parseInt(location[key+'_precision']));
+          delete location[key+'_precision'];
+        } catch (error) {
+          console.warn(`Value for ${key} does not appear to be numeric, cant change precision`);
+        }
+      }
+
+      if(location[key+'_prefix'] !== undefined) {
+        location[key]=""+location[key+'_prefix']+location[key]
+        delete location[key+'_prefix'];
+      }
+
+      if(location[key+'_suffix'] !== undefined) {
+        location[key]=""+location[key]+location[key+'_suffix']
+        delete location[key+'_suffix'];
+      }
+
+    }
+  })
+}
+
 const Markers = () => {
   // const nerdletState = useContext(NerdletStateContext);
   const { accountId, markersQuery, disableClusterZoom, fetchInterval } = useProps();
 
-  // timeRange formatting happens in the query (nerdGraphSalesQuery)
+  // timeRange formatting happens in the query (nerdGraphMarkerQuery)
   const { timeRange } = useContext(PlatformStateContext);
 
   const [locations, setLocations] = useState([]);
   useEffect(() => {
     const fetchData = async () => {
-      const query = nerdGraphSalesQuery(markersQuery,timeRange);
+      const query = nerdGraphMarkerQuery(markersQuery,timeRange);
       const variables = { id: parseInt(accountId) };
 
       try {
         const response = await NerdGraphQuery.query({ query, variables });
         const results=response?.data?.actor?.account?.sales?.results;
         if(results && Array.isArray(results)) {
-          results.forEach(location=>deriveStatus(location))
+          results.forEach(location=>{
+            deriveStatus(location);
+            formatValues(location);
+          })
         }
-        console.log("results",results);
         setLocations(response?.data?.actor?.account?.sales?.results);
       } catch (error) {
         console.error("Error fetching data:", error);

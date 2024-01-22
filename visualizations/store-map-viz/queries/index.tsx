@@ -1,26 +1,32 @@
 import { timeRangeToNrql } from "../utils";
-import { useProps } from "../context/VizPropsProvider";
 
-const salesQuery = (markersQuery,timeRange) => {
-  // Generate the time range part of the NRQL query
-  const timeRangePart = timeRangeToNrql(timeRange);
+const markerNRQL = (markersQuery,timeRange) => {
 
-  // Construct the full NRQL query, remove line breaks
-  let query = `${markersQuery.replace(/(\r\n|\n|\r)/gm," ")} ${timeRangePart}`;
-  return query;
+  if(markersQuery.match(/since|until/gi)) {
+    return markersQuery.replace(/(\r\n|\n|\r)/gm," ");
+  } else {
+    // Generate the time range part of the NRQL query
+    const timeRangePart = timeRangeToNrql(timeRange);
+
+    // Construct the full NRQL query, remove line breaks
+    let query = `${markersQuery.replace(/(\r\n|\n|\r)/gm," ")} ${timeRangePart}`;
+    console.log("OVERFETCH!",Date.now(), query); //TODO: Mat to look at overfetch on window resize
+    return query;
+  }
+
 };
 
-export const salesNrql = (timeRange) => {
-  return `nrql( query: "${salesQuery(timeRange)}" ) { results }`;
+export const markerGQL = (markersQuery,timeRange) => {
+  return `nrql( query: "${markerNRQL(markersQuery, timeRange)}" ) { results }`;
 };
 
-export const nerdGraphSalesQuery = (markersQuery,timeRange) => {
+export const nerdGraphMarkerQuery = (markersQuery,timeRange) => {
 
   return `
   query($id: Int!) {
     actor {
       account(id: $id) {
-        sales: ${salesNrql(markersQuery,timeRange)}
+        sales: ${markerGQL(markersQuery,timeRange)}
       }
     }
   }
