@@ -68,11 +68,22 @@
   line-height: 40px; /* Centers the text vertically */
   color: #ffffff; /* Text color */
   background-color:inherit; /* Slightly darker green with some transparency */
-  // box-shadow: 0 0 0 8px #cc39c04d; /* Creates the outer ring */
   position: absolute;
   top: 50%;
   left: 50%;
+
 }
+
+.marker-cluster-custom div.innerPie {
+  width: 30px;
+  height: 30px;
+}
+
+.marker-cluster-custom div.outerPie {
+  width: 48px;
+  height: 48px;
+}
+
 
 // custom marker (single) styles (utils/map.tsx)
 .custom-marker-icon {
@@ -82,7 +93,6 @@
   text-align: center;
   background-clip: padding-box;
   border-radius: 50%; /* Makes it circular */
-  box-shadow: 0 0 0 8px rgba(0, 0, 0, 0.1); /* Outer ring */
 }
 
 .custom-marker-icon div {

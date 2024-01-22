@@ -8,7 +8,7 @@ import { FETCH_INTERVAL_DEFAULT } from "../constants";
 import { createClusterCustomIcon, createCustomIcon, generateTooltipConfig } from "../utils/map";
 import LocationPopup from "./LocationPopup";
 import { useProps } from "../context/VizPropsProvider";
-import { DEFAULT_DISABLE_CLUSTER_ZOOM } from "../constants";  
+import { DEFAULT_DISABLE_CLUSTER_ZOOM, MARKER_COLOURS } from "../constants";  
 
 const deriveStatus = (location) => {
   let status = "OK";
@@ -93,6 +93,13 @@ const Markers = () => {
       spiderfyOnMaxZoom={7}
       disableClusteringAtZoom={disableClusterZoom === "default" ? DEFAULT_DISABLE_CLUSTER_ZOOM : disableClusterZoom }
       iconCreateFunction={createClusterCustomIcon}
+      polygonOptions = {{
+        fillColor: MARKER_COLOURS.groupBorder,
+        color: MARKER_COLOURS.groupBorder,
+        weight: 3,
+        opacity: 0.9,
+        fillOpacity: 0.4
+        }}
     >
       {locations.map((location) => (
         <Marker

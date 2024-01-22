@@ -48,12 +48,17 @@ const MapView = () => {
     }
   }, [zoom, center]);
 
+  //map ratser tiles: https://wiki.openstreetmap.org/wiki/Raster_tile_providers
   return (
     <Map ref={mapRef} center={center} zoom={zoom} style={mapStyle}>
       <TileLayer
-        attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+        attribution='&copy; <a href="http://osm.org/copyright">Map tiles by Carto, under CC BY 3.0. Data by OpenStreetMap, under ODbL.'
         url="https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png"
       />
+      {/* <TileLayer
+        attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+        url="https://tile.openstreetmap.org/{z}/{x}/{y}.png"
+      /> */}
       <Markers />
       {/* <Regions /> */}
     </Map>
