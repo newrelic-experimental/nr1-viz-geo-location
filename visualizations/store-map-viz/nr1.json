@@ -17,6 +17,19 @@
       "type": "nrql"
     },
     {
+      "name": "defaultSince",
+      "title": "Default since/until clause",
+      "description": "The since/until to use if no time picker value is chosen",
+      "type": "string"
+    }
+    ,
+    {
+      "name": "ignorePicker",
+      "title": "Ignore time picker",
+      "description": "Dont adjust the query based on selected time picker",
+      "type": "boolean"
+    },
+    {
       "name": "zoom",
       "title": "Default Zoom",
       "description": "Zoom level for the map",

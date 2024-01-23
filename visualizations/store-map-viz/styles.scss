@@ -58,14 +58,14 @@
 }
 
 .marker-cluster-custom div {
-  width: 40px; /* Outer diameter */
-  height: 40px;
+  // width: 40px; /* Outer diameter */
+  // height: 40px;
   margin-top: -20px; /* Half of height to center it */
   margin-left: -20px; /* Half of width to center it */
 
   text-align: center;
   border-radius: 50%; /* Makes it circular */
-  line-height: 40px; /* Centers the text vertically */
+  line-height: 42px; /* Centers the text vertically */
   color: #ffffff; /* Text color */
   background-color:inherit; /* Slightly darker green with some transparency */
   position: absolute;
@@ -74,18 +74,21 @@
 
 }
 
-.marker-cluster-custom div.innerPie {
-  width: 30px;
-  height: 30px;
+div.innerPie {
+  width: 42px;
+  height: 42px;
+  line-height:42px;
+  top: 26px; 
+  left: 26px; 
 }
 
 .marker-cluster-custom span {
-  font-size: 0.8em; 
+  font-size: 1em; 
 }
 
 .marker-cluster-custom div.outerPie {
-  width: 48px;
-  height: 48px;
+  width: 54px;
+  height: 54px;
 }
 
 
@@ -100,9 +103,9 @@
 }
 
 .custom-marker-icon div {
-  width: 34px; /* Outer diameter */
-  height: 34px;
-  line-height: 34px; /* Centers the text vertically */
+  width: 42px; /* Outer diameter */
+  height: 42px;
+  line-height: 42px; /* Centers the text vertically */
   color: white; /* Text color */
   border-radius: 50%; /* Makes it circular */
   font-size: 12px; /* Adjust as needed */
@@ -110,5 +113,5 @@
 }
 
 .custom-marker-icon div span {
-  font-size: 0.8em; 
+  font-size: 1em; 
 }

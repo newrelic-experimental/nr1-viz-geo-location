@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useContext } from "react";
 import { Marker } from "react-leaflet";
 import MarkerClusterGroup from "react-leaflet-markercluster";
-import { NerdGraphQuery, PlatformStateContext, NerdletStateContext } from "nr1";
+import { NerdGraphQuery, PlatformStateContext } from "nr1";
 
 import { nerdGraphMarkerQuery } from "../queries";
 import { FETCH_INTERVAL_DEFAULT } from "../constants";
@@ -11,35 +11,40 @@ import { useProps } from "../context/VizPropsProvider";
 import { DEFAULT_DISABLE_CLUSTER_ZOOM, MARKER_COLOURS } from "../constants";  
 
 const deriveStatus = (location) => {
-  let status = "OK";
-  const critical = location.threshold_critical === undefined ? null : location.threshold_critical;
-  const warning = location.threshold_warning === undefined ? null : location.threshold_warning;
-
-  const thresholdDirection:string = (critical !== null && warning !== null && critical < warning) ? "LESS" : "MORE"; 
-
-  // Determine the color based on the sales property of the location
-  if(thresholdDirection === "LESS") { //less than
-    if (critical !== null && location.value < critical) {
-      status = "CRITICAL"; 
-    } else if (
-      warning !== null &&
-      location.value >= critical &&
-      location.value <= warning
-    ) {
-      status = "WARNING";
+  if(location.threshold_critical === undefined && location.threshold_warning == undefined) {
+    location.status="NONE";
+  } else {
+    let status = "OK";
+    const critical = location.threshold_critical === undefined ? null : location.threshold_critical;
+    const warning = location.threshold_warning === undefined ? null : location.threshold_warning;
+  
+    const thresholdDirection:string = (critical !== null && warning !== null && critical < warning) ? "LESS" : "MORE"; 
+  
+    // Determine the color based on the sales property of the location
+    if(thresholdDirection === "LESS") { //less than
+      if (critical !== null && location.value <= critical) {
+        status = "CRITICAL"; 
+      } else if (
+        warning !== null &&
+        location.value >= critical &&
+        location.value <= warning
+      ) {
+        status = "WARNING";
+      }
+    } else { //more than
+      if (critical !== null && location.value >= critical) {
+        status = "CRITICAL"; // Red
+      } else if (
+        warning !== null &&
+        location.value < critical &&
+        location.value >= warning
+      ) {
+        status = "WARNING"; // Amber
+      }
     }
-  } else { //more than
-    if (critical !== null && location.value >= critical) {
-      status = "CRITICAL"; // Red
-    } else if (
-      warning !== null &&
-      location.value < critical &&
-      location.value >= warning
-    ) {
-      status = "WARNING"; // Amber
-    }
+    location.status = status;
   }
-  location.status = status;
+
 }
 
 const formatValues = (location) =>{
@@ -71,7 +76,8 @@ const formatValues = (location) =>{
 
 const Markers = () => {
   // const nerdletState = useContext(NerdletStateContext);
-  const { accountId, markersQuery, disableClusterZoom, fetchInterval } = useProps();
+  const { accountId, markersQuery, disableClusterZoom, fetchInterval, ignorePicker, defaultSince } = useProps();
+  const defSinceString = (defaultSince === undefined || defaultSince === null) ? "" : " "+defaultSince;
 
   // timeRange formatting happens in the query (nerdGraphMarkerQuery)
   const { timeRange } = useContext(PlatformStateContext);
@@ -79,7 +85,7 @@ const Markers = () => {
   const [locations, setLocations] = useState([]);
   useEffect(() => {
     const fetchData = async () => {
-      const query = nerdGraphMarkerQuery(markersQuery,timeRange);
+      const query = nerdGraphMarkerQuery(markersQuery,timeRange,defSinceString,ignorePicker);
       const variables = { id: parseInt(accountId) };
 
       try {

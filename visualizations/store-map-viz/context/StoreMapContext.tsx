@@ -9,7 +9,7 @@ import React, {
 import { DEFAULT_ZOOM, DEFAULT_CENTER } from "../constants";
 
 
-let centerPoints;
+let centerPoints=[];
 
 // Define the shape of your context data
 interface StoreMapContextData {
