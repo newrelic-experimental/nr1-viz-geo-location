@@ -9,7 +9,7 @@ import React, {
 import { DEFAULT_ZOOM, DEFAULT_CENTER } from "../constants";
 
 
-let centerPoints=[];
+let centerPoints=DEFAULT_CENTER;
 
 // Define the shape of your context data
 interface StoreMapContextData {
@@ -33,7 +33,7 @@ const StoreMapContext = createContext<StoreMapContextData | undefined>(
 export const StoreMapProvider: React.FC<StoreMapProviderProps> = ({
   children,
   zoom = DEFAULT_ZOOM,
-  center
+  center 
 }) => {
 
   try {

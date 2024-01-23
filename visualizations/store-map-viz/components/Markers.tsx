@@ -79,6 +79,10 @@ const Markers = () => {
   const { accountId, markersQuery, disableClusterZoom, fetchInterval, ignorePicker, defaultSince } = useProps();
   const defSinceString = (defaultSince === undefined || defaultSince === null) ? "" : " "+defaultSince;
 
+  if(markersQuery=== null || markersQuery === undefined) {
+    return null;
+  }
+  
   // timeRange formatting happens in the query (nerdGraphMarkerQuery)
   const { timeRange } = useContext(PlatformStateContext);
 
