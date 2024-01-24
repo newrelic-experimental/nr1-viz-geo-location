@@ -28,8 +28,7 @@ const MapView = () => {
   const storeMap = useStoreMap();
   // Handle null values explicitly
   const zoom = storeMap.zoom !== null ? storeMap.zoom : DEFAULT_ZOOM;
-  const center =
-    storeMap.center !== null ? storeMap.center : DEFAULT_CENTER;
+  const center = storeMap.center !== null ? storeMap.center : DEFAULT_CENTER;
 
   // use ref for the map to refresh it in Viz's config mode
   const mapRef = useRef(null);
@@ -55,11 +54,8 @@ const MapView = () => {
         attribution='&copy; <a href="http://osm.org/copyright">Map tiles by Carto, under CC BY 3.0. Data by OpenStreetMap, under ODbL.'
         url="https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png"
       />
-      {/* <TileLayer
-        attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
-        url="https://tile.openstreetmap.org/{z}/{x}/{y}.png"
-      /> */}
       <Markers />
+      {/* uncomment to turn on Map GeoJson features */}
       {/* <Regions /> */}
     </Map>
   );
