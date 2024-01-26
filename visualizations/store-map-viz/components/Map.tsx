@@ -7,7 +7,7 @@ import { useStoreMap } from "../context/StoreMapContext";
 
 // there are some issues with the default zoom and center from the context
 // so just in case we'll set them here
-import { DEFAULT_ZOOM, DEFAULT_CENTER } from "../contstants";
+import { DEFAULT_ZOOM, DEFAULT_CENTER } from "../constants";
 
 // fix for broken marker icons
 import icon from "leaflet/dist/images/marker-icon.png";
@@ -28,8 +28,7 @@ const MapView = () => {
   const storeMap = useStoreMap();
   // Handle null values explicitly
   const zoom = storeMap.zoom !== null ? storeMap.zoom : DEFAULT_ZOOM;
-  const center =
-    storeMap.center !== null ? storeMap.center : JSON.parse(DEFAULT_CENTER);
+  const center = storeMap.center !== null ? storeMap.center : DEFAULT_CENTER;
 
   // use ref for the map to refresh it in Viz's config mode
   const mapRef = useRef(null);
@@ -48,14 +47,16 @@ const MapView = () => {
     }
   }, [zoom, center]);
 
+  //map ratser tiles: https://wiki.openstreetmap.org/wiki/Raster_tile_providers
   return (
     <Map ref={mapRef} center={center} zoom={zoom} style={mapStyle}>
       <TileLayer
-        attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+        attribution='&copy; <a href="http://osm.org/copyright">Map tiles by Carto, under CC BY 3.0. Data by OpenStreetMap, under ODbL.'
         url="https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png"
       />
       <Markers />
-      <Regions />
+      {/* uncomment to turn on Map GeoJson features */}
+      {/* <Regions /> */}
     </Map>
   );
 };

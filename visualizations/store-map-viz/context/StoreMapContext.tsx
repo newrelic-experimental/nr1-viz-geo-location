@@ -6,7 +6,9 @@ import React, {
   ReactNode,
 } from "react";
 
-import { DEFAULT_ZOOM, DEFAULT_CENTER } from "../contstants";
+import { DEFAULT_ZOOM, DEFAULT_CENTER } from "../constants";
+
+let centerPoints = DEFAULT_CENTER;
 
 // Define the shape of your context data
 interface StoreMapContextData {
@@ -30,12 +32,21 @@ const StoreMapContext = createContext<StoreMapContextData | undefined>(
 export const StoreMapProvider: React.FC<StoreMapProviderProps> = ({
   children,
   zoom = DEFAULT_ZOOM,
-  center = DEFAULT_CENTER,
+  center,
 }) => {
+  try {
+    let centerParsed = JSON.parse(center);
+    if (Array.isArray(centerParsed) && centerParsed.length == 2) {
+      centerPoints = centerParsed;
+    }
+  } catch (error) {
+    centerPoints = DEFAULT_CENTER;
+  }
+
   // Initialize state with default or provided values
   const [currentZoom, setZoom] = useState<number>(zoom);
   // Parse the string value of center into an array of two numbers
-  const [currentCenter, setCenter] = useState<number[]>(JSON.parse(center));
+  const [currentCenter, setCenter] = useState<number[]>(centerPoints); ///do a split instead?
 
   // Update state when props change
   useEffect(() => {
@@ -43,8 +54,8 @@ export const StoreMapProvider: React.FC<StoreMapProviderProps> = ({
   }, [zoom]);
 
   useEffect(() => {
-    setCenter(JSON.parse(center));
-  }, [center]);
+    setCenter(centerPoints);
+  }, [centerPoints.toString()]);
 
   return (
     <StoreMapContext.Provider

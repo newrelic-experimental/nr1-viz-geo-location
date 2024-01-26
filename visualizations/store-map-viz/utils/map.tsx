@@ -1,42 +1,119 @@
-import { useProps } from "../context/VizPropsProvider";
+import { MARKER_COLOURS } from "../constants";
+import { sentenceCase } from "text-case";
+
+// Utility function to get color attributes based on location status
+const getColorAttributes = (status) => {
+  const colors = {
+    CRITICAL: {
+      color: MARKER_COLOURS.criticalColour,
+      borderColor: MARKER_COLOURS.criticalColourBorder,
+      textColor: MARKER_COLOURS.criticalColourText,
+    },
+    WARNING: {
+      color: MARKER_COLOURS.warningColour,
+      borderColor: MARKER_COLOURS.warningColourBorder,
+      textColor: MARKER_COLOURS.warningColourText,
+    },
+    OK: {
+      color: MARKER_COLOURS.safeColour,
+      borderColor: MARKER_COLOURS.safeColourBorder,
+      textColor: MARKER_COLOURS.safeColourText,
+    },
+    NONE: {
+      color: MARKER_COLOURS.noneColour,
+      borderColor: MARKER_COLOURS.noneBorder,
+      textColor: MARKER_COLOURS.noneText,
+    },
+  };
+
+  return colors[status] || colors.NONE;
+};
 
 // Custom cluster icon function
-export const createClusterCustomIcon = function (cluster) {
+export const createClusterCustomIcon = (cluster) => {
+  const locations = cluster.getAllChildMarkers();
+  const clusterStatusBreakdown = { NONE: 0, OK: 0, WARNING: 0, CRITICAL: 0 };
+
+  locations.forEach((location) => {
+    const status = location?.options?.children?.props?.location?.status;
+    if (status in clusterStatusBreakdown) {
+      clusterStatusBreakdown[status]++;
+    }
+  });
+
+  let pie = `background: ${MARKER_COLOURS.groupBorder};`;
+  const totalStatus =
+    clusterStatusBreakdown.OK +
+    clusterStatusBreakdown.WARNING +
+    clusterStatusBreakdown.CRITICAL;
+
+  if (totalStatus !== 0) {
+    let critical = Math.floor(
+      (clusterStatusBreakdown.CRITICAL / locations.length) * 360
+    );
+    let warning = Math.floor(
+      (clusterStatusBreakdown.WARNING / locations.length) * 360
+    );
+    pie = `background: conic-gradient(${
+      MARKER_COLOURS.criticalColourBorder
+    } 0deg ${critical}deg, ${
+      MARKER_COLOURS.warningColourBorder
+    } ${critical}deg ${warning + critical}deg, ${
+      MARKER_COLOURS.safeColourBorder
+    } ${warning + critical}deg 360deg);`;
+  }
+
   return L.divIcon({
-    html: `<div><span>${cluster.getChildCount()}</span></div>`,
+    html: `<div class="outerPie" style="${pie};"><div class="innerPie" style="color: ${
+      MARKER_COLOURS.groupText
+    }; background-color: ${
+      MARKER_COLOURS.groupColour
+    };"><span>${cluster.getChildCount()}</span></div></div>`,
     className: "marker-cluster-custom",
-    iconSize: L.point(40, 40, true),
+    iconSize: L.point(54, 54, true),
   });
 };
 
 // Function to generate a custom icon based on the location property
 export const createCustomIcon = (location) => {
-  // get the alert and warning values from the viz's context (configuration options)
-  const { alert, warning } = useProps();
+  const status = location.status || "NONE";
+  const { color, borderColor, textColor } = getColorAttributes(status);
 
-  const alertColour = "rgba(255, 80, 71, 0.7)"; // Red color for alert
-  const warningColour = "rgba(255, 150, 0, 0.7)"; // Amber color for warning
-  const safeColour = "rgba(60, 179, 113, 0.7)"; // Green color for safe
-
-  let colour = safeColour; // Default to safe colour
-
-  // Determine the color based on the sales property of the location
-  if (alert !== null && location.amount < alert) {
-    colour = alertColour; // Red
-  } else if (
-    warning !== null &&
-    location.amount >= alert &&
-    location.amount <= warning
-  ) {
-    colour = warningColour; // Amber
+  let markerLabel = " ";
+  if (location.icon_label !== undefined) {
+    markerLabel = location.icon_label;
+  } else if (location.value !== undefined) {
+    markerLabel = location.value;
   }
 
-  // If both alert and warning are null, always use safeColour
-  // If one of them is null, the logic above handles the color assignment
-
   return L.divIcon({
-    html: `<div style="background-color: ${colour};"><span>${location.storeNumber}</span></div>`,
+    html: `<div style="color: ${textColor}; background-color: ${color}; box-shadow:0 0 0 6px ${borderColor};"><span>${markerLabel}</span></div>`,
     className: "custom-marker-icon",
-    iconSize: [40, 40],
+    iconSize: [42, 42],
   });
+};
+
+// Tool tip config generator
+export const generateTooltipConfig = (locations) => {
+  const defaultConfig = [
+    { label: "Name", queryField: "name" },
+    { label: "Value", queryField: "value" },
+  ];
+
+  if (!locations || locations.length === 0) {
+    return defaultConfig;
+  }
+
+  const config = Object.keys(locations[0])
+    .filter((key) => key.includes("tooltip_"))
+    .map((key) => ({
+      label: sentenceCase(key.replace(/.*tooltip_/gm, "").replace(/_/gm, " ")),
+      queryField: key,
+    }));
+
+  if (locations[0].name) {
+    config.unshift({ label: "Name", queryField: "name" });
+  }
+
+  return config.length > 0 ? config : defaultConfig;
 };

@@ -27,7 +27,9 @@ const StoreMapVizVisualization = (props) => {
     setSwitchState(!switchState);
   };
 
-  const { zoom, center } = props;
+  const { zoom, centerLatLng } = props;
+  const theCenter = centerLatLng ? `[${centerLatLng}]` : null;
+
   return (
     <div style={{ height: "100%" }}>
       {/* Uncomment for local testing */}
@@ -36,7 +38,7 @@ const StoreMapVizVisualization = (props) => {
         {(platformContextState) => (
           <NerdletStateContext.Consumer>
             {(nerdletContextState) => (
-              <StoreMapProvider zoom={zoom} center={center}>
+              <StoreMapProvider zoom={zoom} center={theCenter}>
                 <VizPropsProvider {...props}>
                   <App
                     platformState={platformContextState}

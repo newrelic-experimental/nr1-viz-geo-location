@@ -1,25 +1,19 @@
 <a href="https://opensource.newrelic.com/oss-category/#new-relic-experimental"><picture><source media="(prefers-color-scheme: dark)" srcset="https://github.com/newrelic/opensource-website/raw/main/src/images/categories/dark/Experimental.png"><source media="(prefers-color-scheme: light)" srcset="https://github.com/newrelic/opensource-website/raw/main/src/images/categories/Experimental.png"><img alt="New Relic Open Source experimental project banner." src="https://github.com/newrelic/opensource-website/raw/main/src/images/categories/Experimental.png"></picture></a>
 
-# Store Map Visualization
+# Geo Location Map Visualization
 
-Store Map Visualization is a dynamic web application designed to visually represent sales data on a geographical map. This tool is particularly useful for businesses seeking to monitor sales performance across different store locations. It utilizes New Relic's custom visualization capabilities, alongside React and Leaflet, to provide a user-friendly and interactive map interface.
+Geo Location Map Visualization is a dynamic web application designed to visually represent business or telemetry data on a geographical map. This tool is particularly useful for businesses seeking to data across different physical locations. It utilizes New Relic's custom visualization capabilities, alongside React and Leaflet, to provide a user-friendly and interactive map interface.
 
-![Store Map Visualization Overview](./docs/map-overview.jpeg)
-![Store Map Visualization Overview](./docs/map-zoom-in-popup.jpeg)
+![Visualization Overview](./docs/basic-screenshot.jpg)
+![Visualization Overview with status](./docs/status-screenshot.jpg)
 
 ## Features
 
-- **Dynamic Sales Data Visualization:** Visualize sales data from different store locations on an interactive map. Each store's performance is represented by customizable markers, with colors indicating different levels of sales performance.
-- **Customizable Thresholds:** Set custom thresholds for sales performance indicators. Markers change color based on predefined sales ranges, providing an intuitive visual representation of each store's performance.
-- **Interactive Map Clusters:** Store locations are clustered on the map for a cleaner visual representation. Clicking on a cluster zooms into that area, revealing individual store markers.
-- **Real-time Data Updates:** The application periodically fetches and updates sales data, ensuring the information displayed is current and accurate.
-- **Flexible Configuration:** Easily configure map zoom levels, center points, and other display options through a JSON configuration file.
-
-## Architecture
-
-The following diagram illustrates the architecture of the Store Map Visualization:
-
-![Architecture Diagram](./docs/store-map-architecture.png)
+- **Dynamic Data Visualization:** Visualize data from different locations on an interactive map. Display key metric and and hover to reveal more.
+- **Customizable Thresholds:** Set custom thresholds for key indicator. Markers change color based on thresholds providing and intuitive visual representation of each locations status.
+- **Interactive Map Clusters:** Locations are clustered on the map for a cleaner visual representation. Clicking on a cluster zooms into that area, revealing individual markers. Clusters also provide a summary representation of the underlying marker status.
+- **Real-time Data Updates:** The application periodically fetches and updates data, ensuring the information displayed is current and accurate.
+- **Flexible Configuration:** Easily configure via configuraiton options and query values.
 
 ## Prerequisites
 
@@ -32,100 +26,119 @@ Also, make sure you are logged in to your New Relic account. (alternatively chec
 
 ## Installation
 
-Explain how to install the application, including any prerequisites or dependencies.
+Clone the repository and run `npm install` to install dependencies.
 
-```bash
-# clone this repository
-git clone https://github.com/newrelic-experimental/store-map
-# cd into the repository
-cd store-map
-# install dependencies
-npm install
-```
+You will need a development profile, you can read more about how to set up on the New Relic [developer site](https://developer.newrelic.com/)
 
-From here you can open your IDE and adjust configuration files as needed.
+To summarise the steps required:
+
+- Navigate to the "Build your own Nerdpack" tile under `+Add data > Apps and visualizations`
+- Follow steps one to three to download and install the NR1 CLI, generate API key and add the key to your profile (`nr1 profiles:add --name {account-slug} --api-key {api-key} --region {us|eu} `)
+- Ensure the correct profile is selected: `nr1 profiles:default`
+- Generate a new UUID for your app deployment: `nr1 nerdpack:uuid -gf`
+
+
+## Testing
+
+You can test locally by running `nr1 nerdpack:serve`
+
+## Deploy to account
+To use the custom visualisation you must deploy it to your account following these steps:
+
+- Ensure the correct profile is selected: `nr1 profiles:default`
+- Publish the assets: `nr1 nerdpack:publish`
+- Deploy to production: `nr1 nerdpack:deploy`
+- Subscribe your account: `nr1 subscription:set`
+
+The custom visualization should now appear as an option in the Custom Visualizations app  (in the Apps > Custom Visualizations). Select the custom visualization, configure it and save to a dashboard. 
+
+Pro tip: Once a custom visualization is on a dashboard, you can click the ellipses to duplicate it.
+
+
 
 ## Configuration
-The Store Map Visualization is highly configurable, allowing users to tailor its behavior and appearance to their specific needs. Configuration is managed through two primary files: 
-- `constants.ts` 
-- `nr1.json`
+The visualization is highly configurable, allowing users to tailor its behavior and appearance to their specific needs. Configuration is managed primarily managed through config options and by providing data in an NRQL query. 
 
-### constants.ts
-This file defines several key constants that control the default behavior of the map visualization:
+You may also change color schemes etc by editing the values in the `constants.ts` file, this will affect all instances of the visualization.
+ 
+### Configuration Options
+The following options can be configured using the visualization configuration panel:
 
-`DEFAULT_ZOOM`: Sets the default zoom level of the map. Currently set to 1.
-`DEFAULT_CENTER`: Specifies the default center point of the map. It is currently set to London's coordinates (`[51.5074, 0.1278]`).
-`FETCH_INTERVAL`: Determines the interval in milliseconds at which the application fetches new data. It is set to 300,000 milliseconds (or 5 minutes), ensuring regular updates to the sales data visualized on the map.
+- **Account ID:** Choose the account you wish the query to work against. (The custom visualization needs to be deplopyed to all accounts that you require data from.)
+- **Markers query:** This is an NRQL query that returns the markers to render on the map. You must supply a longitude and latitude value for each location, along with the data to render. See below for more details on the query structure.
+- **Default Since/Until:** The since.until clause to use when no picker value (i.e. default) is selected.
+- **Ignore time picker:** If checked changes to the time picker will not be applied to the maerk query.
+- **Default zoom:** This allows you to select how zoomed in the map is when it first loads.
+- **Disable cluster at zoom:** You can choose at what zoom level the clustering is disabled and all markers shown. This deafults to level 7.
+- **Center lat,lng:** Specify the center of the map as two lat/lng coordinates. e.g. "51.5,0.1"
+- **Fetch interval:** The number of seconds between refresh. Default is 5 minutes if empty. Specify 0 to disable auto refresh.
 
-### nr1.json
-The `nr1.json` file is used for additional configuration, particularly for properties that can be adjusted within the New Relic visualization interface:
+### Markers Query 
+For the most flexibility, you can provide a number of configuration and data values via the NRQL query as named fields. If supplied, the fields perform the following actions:
 
-`accountId`: Allows the user to associate a specific account ID with the query, linking the map with relevant data sources.
-`alert` and `warning`: These are threshold settings for sales data. 
-- The alert threshold indicates a critical sales level, below which store markers will be colored red. 
-- The warning threshold sets a cautionary level, below which store markers will be colored amber. If sales are above the warning level, markers will be colored green.
+- **`SINCE` / `UNTIL`:** If your query includes a since or until clause then the time picker will be ignored. 
+- **`latitude` & `longitude`:** These values are required, and indicate the location on the map.
+- **`value`:** This field should contain the key value you want to display, it is the value that the thresholds to indicate status are compared with. Note: If you are selecting a value that is affected by changes to the time window (such as a `count()`) you may consider wrapping in a `rate()` function so that the thresholds specificed continue to work over different time ranges. e.g. `...rate(count(*), 1 minute) as 'value'`
+- **`threshold_critical` & `threshold_warning`:** Specify one or both of these values to determine the marker status color. As with standard billboard widgets, if the critical threshold is larger than warning threshold then the status will be determined by the `>=` operator. Conversely if the warning threshold is larger than the critical then the status is determined by the `<=` operator (comparisons are made against the `value` field).
+- **`icon_label`:** If this field is provided then it will be used to display on the marker. This is useful for displaying a different value than that which you are setting the status colour from.
+- **`link`:** A URL. If present then clicking on a marker will take the user to the URL provided. You can use this to link to other New Relic pages or your own systems.
+- **`tooltip_label_of_your_choice`:** The tooltip that appears when you hover over a marker can display as many values as you require. Simply provide as many 'tooltip_' fields as you require. The label will be automatically created from the text after the "tooltip_" string. Pro tip: Prefix your tooltip label to affect sorting. e.g. "atooltip_zoo_name" will appear above "ztooltip_aardvark" in the tool tip.
 
-`zoom`: Offers a range of zoom levels (1 to 24) for the map, allowing users to control how closely they view the map data.
-`center`: Determines the central point of the map. This is a dropdown menu in the UI, with each item representing a different city. 
-- Adding more items to this property in the `nr1.json` file will provide additional options for centering the map. Currently, it includes major cities like London, Manchester, Edinburgh, and others.
+#### Precision, prefix and suffix
+Its possible to specify the precision of numbers and add prefix/suffix to values. These adjustments can be made to the `icon_label`` and `tooltip_xxx`` fields by providing extra fields:
+- **`_precision`:** Sets the number of decimal places to display. e.g. `select ... 2 as 'icon_label_precision'...`
+- **`_prefix`:** Adds a prefix to the value. e.g. `select ... '$' as 'tooltip_sales_prefix' ...`
+- **`_suffix`:** Adds a suffix to the value. e.g. `select ... 'rpm' as 'tooltip_thoughput_suffix' ...`
 
-By adjusting these configuration files, users can customize the Store Map Visualization to fit their unique data visualization needs. For instance, changing the `DEFAULT_CENTER` in `constants.ts` will alter the initial focus of the map, while adding more `center` options (items) in `nr1.json` expands the choices available for centering the map in the UI.
+#### Example Query
 
-## Getting started 
-
-### Local Development
-
-Create a unique UUID for your visualization:
-```
-nr1 create --type uuid
-```
-
-Make any changes you need to the code.
-
-Serve your app locally:
-```
-nr1 nerdpack:serve
-```
-
-And navigate to https://one.newrelic.com/?nerdpacks=local to see your changes.
-
-For more detailed instructions on developing and serving locally, visit the [Serve your Nerdpack](https://developer.newrelic.com/build-apps/publish-deploy/serve) documentation page.
-
-### Publishing your changes to New Relic One
-
-Navigate to the project root directory and deploy your visualization:
+Here is a basic example query, that utilises a lookup table (containing storeID/lat/lng/city) to supply the latitude, longitude to the data:
 
 ```
-nr1 nerdpack:publish
+FROM Transaction left join (from lookup(geoCities) select storeId, city as city, lat, lng limit max) on storeId
+select rate(count(*), 1 hour) as value,
+latest(lat) as latitude,
+latest(lng) as longitude
+facet city as name limit max
 ```
 
-If everything is_successful, you'll see a message indicating that your visualization has been published.
+Here is a more complex query that demonstrates additional features as described above:
 
-For more detailed instructions on publishing your visualization, visit the [Publish your Nerdpack](https://developer.newrelic.com/build-apps/publish-deploy/publish) documentation page.
-
-### Validate Deployment
-To ensure that your visualization has been published successfully, use the following command:
-
-```bash
-nr1 nerdpack:list
 ```
-You should see your visualization listed along with its UUID and version number.
+FROM Transaction left join (from lookup(geoCities) 
+select storeId,city as city,lat,lng limit max) on storeId  
+select 
 
-### Subscribe Visualization to your Account
-To make the visualization available for your account, use the following command:
+rate(count(*), 1 hour) as value,  
+10000 as threshold_critical, 
+5000 as threshold_warning,  
 
-```bash
-nr1 nerdpack:subscribe
+latest(lat) as latitude,  
+latest(lng) as longitude,  
+
+rate(count(*)/1000,1 hour) as icon_label,  
+1 as 'icon_label_precision',   
+'£' as icon_label_prefix,   
+'m' as icon_label_suffix, 
+
+'https://www.newrelic.com' as link,  
+
+count(*) as 'tooltip_count', 
+
+latest(city) as 'tooltip_city', 
+
+average(duration) as 'tooltip_avg_duration', 
+2 as 'tooltip_avg_duration_precision'  
+
+facet city as 'name' limit max
 ```
 
-For more detailed instructions on subscribing your visualization, visit the [Subscribe to a Nerdpack](https://developer.newrelic.com/build-apps/publish-deploy/subscribe) documentation page.
+## Architecture
 
-#### To unsubscribe and unpublish your visualization
+The following diagram illustrates the architecture of the visualization:
 
-```bash
-nr1 nerdpack:unsubscribe
-nr1 nerdpack:undeploy
-```
+![Architecture Diagram](./docs/store-map-architecture.png)
+
 
 ## Support
 
