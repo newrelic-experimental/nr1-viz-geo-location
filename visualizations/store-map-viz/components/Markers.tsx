@@ -145,6 +145,16 @@ const Markers = () => {
     return () => clearInterval(intervalId);
   }, [timeRange, fetchInterval]);
 
+  // This is a hack to force a re-render when markers show up for the first time.
+  // Without this, the createCustomIcon icon (/utils/map.tsx) does not render as expected.
+  const [renderKey, setRenderKey] = useState(Math.random());
+  useEffect(() => {
+    if (locations) {
+      // Force a re-render by changing a state variable
+      setRenderKey(Math.random());
+    }
+  }, [locations]);
+
   const tooltipConfig = generateTooltipConfig(locations);
   if (locations === undefined) {
     console.log("No locations in NRQL results to plot. Check the query.");
