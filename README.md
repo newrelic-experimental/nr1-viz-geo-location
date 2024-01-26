@@ -15,12 +15,6 @@ Geo Location Map Visualization is a dynamic web application designed to visually
 - **Real-time Data Updates:** The application periodically fetches and updates data, ensuring the information displayed is current and accurate.
 - **Flexible Configuration:** Easily configure via configuraiton options and query values.
 
-## Architecture
-
-The following diagram illustrates the architecture of the Store Map Visualization:
-
-![Architecture Diagram](./docs/store-map-architecture.png)
-
 ## Prerequisites
 
 Before we start, make sure you have the following installed:
@@ -138,6 +132,12 @@ average(duration) as 'tooltip_avg_duration',
 
 facet city as 'name' limit max
 ```
+
+## Architecture
+
+The following diagram illustrates the architecture of the visualization:
+
+![Architecture Diagram](./docs/store-map-architecture.png)
 
 
 ## Support
