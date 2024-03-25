@@ -14,77 +14,7 @@ import LocationPopup from "./LocationPopup";
 import { useProps } from "../context/VizPropsProvider";
 import { DEFAULT_DISABLE_CLUSTER_ZOOM, MARKER_COLOURS } from "../constants";
 
-const deriveStatus = (location) => {
-  const {
-    threshold_critical: critical,
-    threshold_warning: warning,
-    value,
-  } = location;
-
-  if (critical === undefined && warning === undefined) {
-    location.status = "NONE";
-    return;
-  }
-
-  const thresholdDirection =
-    critical !== undefined && warning !== undefined && critical < warning
-      ? "LESS"
-      : "MORE";
-
-  let status = "OK";
-
-  if (thresholdDirection === "LESS") {
-    if (critical !== undefined && value <= critical) {
-      status = "CRITICAL";
-    } else if (warning !== undefined && value >= critical && value <= warning) {
-      status = "WARNING";
-    }
-  } else {
-    if (critical !== undefined && value >= critical) {
-      status = "CRITICAL";
-    } else if (warning !== undefined && value < critical && value >= warning) {
-      status = "WARNING";
-    }
-  }
-
-  location.status = status;
-};
-
-const formatValues = (location) => {
-  Object.keys(location).forEach((key) => {
-    const isTooltip = key.includes("tooltip_");
-    const isIconLabel = key === "icon_label" && !key.includes("_precision");
-
-    if (isTooltip || isIconLabel) {
-      const precisionKey = `${key}_precision`;
-      const prefixKey = `${key}_prefix`;
-      const suffixKey = `${key}_suffix`;
-
-      if (location[precisionKey] !== undefined) {
-        try {
-          location[key] = location[key].toFixed(
-            parseInt(location[precisionKey])
-          );
-          delete location[precisionKey];
-        } catch (error) {
-          console.warn(
-            `Value for ${key} does not appear to be numeric, can't change precision`
-          );
-        }
-      }
-
-      if (location[prefixKey] !== undefined) {
-        location[key] = `${location[prefixKey]}${location[key]}`;
-        delete location[prefixKey];
-      }
-
-      if (location[suffixKey] !== undefined) {
-        location[key] = `${location[key]}${location[suffixKey]}`;
-        delete location[suffixKey];
-      }
-    }
-  });
-};
+import {deriveStatus, formatValues} from "../utils/dataFormatting";
 
 const Markers = () => {
   // const nerdletState = useContext(NerdletStateContext);
@@ -121,14 +51,14 @@ const Markers = () => {
 
       try {
         const response = await NerdGraphQuery.query({ query, variables });
-        const results = response?.data?.actor?.account?.sales?.results;
+        const results = response?.data?.actor?.account?.markers?.results;
         if (results && Array.isArray(results)) {
           results.forEach((location) => {
             deriveStatus(location);
             formatValues(location);
           });
         }
-        setLocations(response?.data?.actor?.account?.sales?.results);
+        setLocations(response?.data?.actor?.account?.markers?.results);
       } catch (error) {
         console.error("Error fetching data:", error);
         // Handle error appropriately
@@ -157,7 +87,6 @@ const Markers = () => {
 
   const tooltipConfig = generateTooltipConfig(locations);
   if (locations === undefined) {
-    console.log("No locations in NRQL results to plot. Check the query.");
     return null;
   }
   return (

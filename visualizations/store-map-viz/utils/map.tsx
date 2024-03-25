@@ -29,6 +29,29 @@ const getColorAttributes = (status) => {
   return colors[status] || colors.NONE;
 };
 
+export const regionStatusColor = (status) => {
+  const colors = {
+    CRITICAL: {
+      color: MARKER_COLOURS.criticalRegionColour,
+      borderColor: MARKER_COLOURS.criticalRegionColourBorder
+    },
+    WARNING: {
+      color: MARKER_COLOURS.warningRegionColour,
+      borderColor: MARKER_COLOURS.warningRegionColourBorder
+    },
+    OK: {
+      color: MARKER_COLOURS.safeRegionColour,
+      borderColor: MARKER_COLOURS.safeRegionColourBorder
+    },
+    NONE: {
+      color: MARKER_COLOURS.noneRegionColour,
+      borderColor: MARKER_COLOURS.noneRegionColourBorder
+    },
+  };
+
+  return colors[status] || colors.NONE;
+}
+
 // Custom cluster icon function
 export const createClusterCustomIcon = (cluster) => {
   const locations = cluster.getAllChildMarkers();
@@ -106,6 +129,7 @@ export const generateTooltipConfig = (locations) => {
 
   const config = Object.keys(locations[0])
     .filter((key) => key.includes("tooltip_"))
+    .filter((key) => key!="tooltip_header")
     .map((key) => ({
       label: sentenceCase(key.replace(/.*tooltip_/gm, "").replace(/_/gm, " ")),
       queryField: key,

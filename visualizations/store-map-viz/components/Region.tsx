@@ -1,22 +1,26 @@
 import React from "react";
-import { GeoJSON, Tooltip } from "react-leaflet";
+import { GeoJSON, } from "react-leaflet";
+import {regionStatusColor } from "../utils/map";
+import LocationPopup from "./LocationPopup";
 
-const Region = ({ region }) => {
-  const style = () => ({ color: "white", fillColor: "blue", opacity: 0.5 });
-
-  const percentage = "100";
-
+const Region = ({ region, location, tooltipConfig }) => {
+  const style = () => ({ color: regionStatusColor(location.status).borderColor, fillColor: regionStatusColor(location.status).color, opacity: 0.5 });
+  let tooltipTitle=region.properties.ADMIN;
+  if(location.tooltip_header || location?.tooltip_header=="") {
+    if(location.tooltip_header == "NONE" || location.tooltip_header=="") {
+      tooltipTitle=null;
+    } else {
+      tooltipTitle=location.tooltip_header;
+    }
+  }
   return (
-    <GeoJSON data={region} style={style}>
-      {/* <Tooltip
-        direction="center"
-        offset={[0, 0]}
-        opacity={0.8}
-        permanent
-        className="custom-tooltip"
-      >
-        {`${percentage}%`}
-      </Tooltip> */}
+    <GeoJSON data={region} style={style}  
+    onClick={() => {
+      if (location.link) {
+        window.open(location.link, "_blank");
+      }
+    }}>
+      <LocationPopup location={location} config={tooltipConfig} sticky={true} title={tooltipTitle}/>
     </GeoJSON>
   );
 };

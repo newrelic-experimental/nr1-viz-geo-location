@@ -5,15 +5,29 @@ export const MARKER_COLOURS = {
   noneColour: "#0c74df", //grey for group
   noneBorder: "#0c74df70",
   noneText: "#FFF",
+  noneRegionColour: "#0c74df",
+  noneRegionColourBorder: "#0c74df70",
+
   criticalColour: "#DF2E23", // Red color for alert
   criticalColourBorder: "#DF2E2370",
   criticalColourText: "#fff",
+  criticalRegionColour: "#DF2E23", 
+  criticalRegionColourBorder: "#DF2E2370",
+
+
   warningColour: "#FFD23D", // Amber color for warning
   warningColourBorder: "#FFD23D70",
   warningColourText: "#293238",
+  warningRegionColour: "#FFD23D", 
+  warningRegionColourBorder: "#FFD23D70",
+
+
   safeColour: "#05865B", // Green color for safe
   safeColourBorder: "#05865B70",
   safeColourText: "#FFF",
+  safeRegionColour: "#05865B",
+  safeRegionColourBorder: "#05865B70",
+
   groupColour: "#757575", //grey for group
   groupBorder: "#75757570", //border, including transparency
   groupText: "#fff",

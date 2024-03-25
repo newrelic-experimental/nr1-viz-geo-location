@@ -38,7 +38,7 @@ export const nerdGraphMarkerQuery = (
   query($id: Int!) {
     actor {
       account(id: $id) {
-        sales: ${markerGQL(markersQuery, timeRange, defaultSince, ignorePicker)}
+        markers: ${markerGQL(markersQuery, timeRange, defaultSince, ignorePicker)}
       }
     }
   }

@@ -47,6 +47,7 @@ const MapView = () => {
     }
   }, [zoom, center]);
 
+ 
   //map ratser tiles: https://wiki.openstreetmap.org/wiki/Raster_tile_providers
   return (
     <Map ref={mapRef} center={center} zoom={zoom} style={mapStyle}>
@@ -56,7 +57,7 @@ const MapView = () => {
       />
       <Markers />
       {/* uncomment to turn on Map GeoJson features */}
-      {/* <Regions /> */}
+      <Regions />
     </Map>
   );
 };

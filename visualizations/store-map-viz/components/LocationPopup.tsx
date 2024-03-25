@@ -1,7 +1,7 @@
 import React from "react";
 import { Tooltip } from "react-leaflet";
 
-const LocationPopup = ({ location, config }) => {
+const LocationPopup = ({ location, config, title, sticky }) => {
   const items = config.map((item) => {
     return (
       <>
@@ -15,8 +15,14 @@ const LocationPopup = ({ location, config }) => {
     );
   });
 
+  let titleHeader;
+  if(title && title!="") {
+    titleHeader=<h4>{title}</h4>
+  }
+
   return (
-    <Tooltip>
+    <Tooltip sticky={sticky}>
+      {titleHeader}
       <div className="popup-grid">{items}</div>
     </Tooltip>
   );

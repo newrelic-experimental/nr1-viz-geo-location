@@ -17,6 +17,12 @@
       "type": "nrql"
     },
     {
+      "name": "regionsQuery",
+      "title": "Region query",
+      "description": "Query to gather reqgions",
+      "type": "nrql"
+    },
+    {
       "name": "defaultSince",
       "title": "Default since/until clause",
       "description": "The since/until to use if no time picker value is chosen",

@@ -84,6 +84,13 @@ For the most flexibility, you can provide a number of configuration and data val
 - **`link`:** A URL. If present then clicking on a marker will take the user to the URL provided. You can use this to link to other New Relic pages or your own systems.
 - **`tooltip_label_of_your_choice`:** The tooltip that appears when you hover over a marker can display as many values as you require. Simply provide as many 'tooltip_' fields as you require. The label will be automatically created from the text after the "tooltip_" string. Pro tip: Prefix your tooltip label to affect sorting. e.g. "atooltip_zoo_name" will appear above "ztooltip_aardvark" in the tool tip.
 
+### Regions Query 
+Regions can be rendered as an alternative or in additon to markers. Use the same configuration opttions as above with following changes:
+
+- **`iso_a3` or `iso_a2`:** The ISO A3 or ISO A2  country code (e.g. "GBR" or "GB") (Replaces latitide/longitude)
+- **`tooltip_header`**: By default the country name is displayed as tool tip header. You can override by supplying a value here. Specify empty string or NONE to remove the header entirely. 
+
+
 #### Precision, prefix and suffix
 Its possible to specify the precision of numbers and add prefix/suffix to values. These adjustments can be made to the `icon_label`` and `tooltip_xxx`` fields by providing extra fields:
 - **`_precision`:** Sets the number of decimal places to display. e.g. `select ... 2 as 'icon_label_precision'...`
