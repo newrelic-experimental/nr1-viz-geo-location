@@ -143,6 +143,9 @@ average(duration) as 'tooltip_avg_duration',
 facet city as 'name' limit max
 ```
 
+## Geo Regions
+The Geo regions are defined in [countries.geojson.json](./visualizations/store-map-viz/geo/countries.geojson.json). This is a GEOJSON file contiaing the country region polygons. You may want to edit these to suit your needs.
+
 ## Architecture
 
 The following diagram illustrates the architecture of the visualization:
