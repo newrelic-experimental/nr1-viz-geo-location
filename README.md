@@ -6,6 +6,8 @@ Geo Location Map Visualization is a dynamic web application designed to visually
 
 ![Visualization Overview](./docs/basic-screenshot.jpg)
 ![Visualization Overview with status](./docs/status-screenshot.jpg)
+![Visualisation showing Regions only](./docs/screenshot_regions.jpg)
+![Visualisation showing regions and markers together](./docs/screenshot_regionsandmarkers.jpg)
 
 ## Features
 
@@ -13,7 +15,8 @@ Geo Location Map Visualization is a dynamic web application designed to visually
 - **Customizable Thresholds:** Set custom thresholds for key indicator. Markers change color based on thresholds providing and intuitive visual representation of each locations status.
 - **Interactive Map Clusters:** Locations are clustered on the map for a cleaner visual representation. Clicking on a cluster zooms into that area, revealing individual markers. Clusters also provide a summary representation of the underlying marker status.
 - **Real-time Data Updates:** The application periodically fetches and updates data, ensuring the information displayed is current and accurate.
-- **Flexible Configuration:** Easily configure via configuraiton options and query values.
+- **Flexible Configuration:** Easily configure via configuration options and query values.
+- **Country regions:** Display whole countries with threshold colourings.
 
 ## Prerequisites
 

@@ -1,13 +1,10 @@
 {
   "private": true,
   "name": "location-geo-map",
-  "version": "2.1.1",
+  "version": "2.2.0",
   "scripts": {
     "start": "nr1 nerdpack:serve",
     "test": "exit 0"
-  },
-  "nr1": {
-    "uuid": "4db08c61-8aea-46a8-8e36-ff03037dbbcf"
   },
   "dependencies": {
     "leaflet": "^1.6.0",
