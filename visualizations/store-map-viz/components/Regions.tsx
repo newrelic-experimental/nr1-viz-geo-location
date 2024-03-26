@@ -80,40 +80,57 @@ const Regions = () => {
   }, [timeRange, fetchInterval]);
 
 
-if (!regions || regions.length === 0) {
-    return null; // No regions to display
-  }
+  if(!regions || regions.length == 0) {
+    return null; //no regions to display
+  } else {
+    const tooltipConfig=generateTooltipConfig(regions)
 
-const generateGeoFeatureLocations = (regions, tooltipConfig) => {
-  return regions.flatMap((location, index) => {
-    let feature;
+    let geoFeatureLocations=[];
 
-    if (location.geoISOCountry) {
-      feature = countries.features.find(f => f.properties.ISO_A3 === location.geoISOCountry || f.properties.ISO_A2 === location.geoISOCountry);
-    } else if (location.geoUSState) {
-      feature = geoUSStates.features.find(f => f.properties.STATECODE === location.geoUSState || f.properties.STATE === location.geoUSState || f.properties.NAME === location.geoUSState);
-    } else if (location.geoUKRegion) {
-      const region = allUKRegions.find(f => f.name === location.geoUKRegion);
-      if (region) {
-        return region.features.map((f, featureIndex) => <Region key={`${index}-${featureIndex}`} region={f} location={location} tooltipConfig={tooltipConfig} defaultHeader={region.name} />);
+    regions.forEach((location,index)=>{
+      
+      // World Countries
+      if(location.geoISOCountry && location.geoISOCountry!="") {
+        let feature=countries.features.find((f)=>{ 
+          return f.properties.ISO_A3 == location.geoISOCountry || f.properties.ISO_A2 == location.geoISOCountry;
+        });
+        if(feature) {
+          geoFeatureLocations.push(<Region key={index} region={feature} location={location} tooltipConfig={tooltipConfig} defaultHeader={feature.properties.ADMIN}/>);
+        } else {
+          console.log("Country not found for data, will not render", location);
+        }
       }
-    }
+      
+      // US States (example)
+      else if (location.geoUSState && location.geoUSState!="") {
+          let feature=geoUSStates.features.find((f)=>{
+            return  f.properties.STATECODE == location.geoUSState || f.properties.STATE == location.geoUSState || f.properties.NAME == location.geoUSState;
+          });
+          if(feature){
+            geoFeatureLocations.push(<Region key={index} region={feature} location={location} tooltipConfig={tooltipConfig} defaultHeader={feature.properties.NAME}/>);
+          } else {
+            console.log("US State not found for data, will not render", location);
+          }
+      }
+      
+      // UK Regions (example)
+      else if (location.geoUKRegion && location.geoUKRegion!="") {
+        let region = allUKRegions.find((f)=>{
+          return  f.name == location.geoUKRegion 
+        });
+        if(region) {
+          region.features.forEach((f)=>{
+            geoFeatureLocations.push(<Region key={index} region={f} location={location} tooltipConfig={tooltipConfig} defaultHeader={region.name}/>);
+          })
+        } else {
+          console.log("UK Region not found for data, will not render", location)
+        }
+        
+     }
+    })
 
-    if (!feature) {
-      console.log("Feature not found for data, will not render", location);
-      return [];
-    }
-
-    return <Region key={index} region={feature} location={location} tooltipConfig={tooltipConfig} defaultHeader={feature.properties.ADMIN || feature.properties.NAME} />;
-  });
-  
-  const tooltipConfig = generateTooltipConfig(regions);
-  const geoFeatureLocations = generateGeoFeatureLocations(regions, tooltipConfig);
-
-  return <>{geoFeatureLocations}</>;
-};
-
-
+    return geoFeatureLocations;
+  }
 
 
 
