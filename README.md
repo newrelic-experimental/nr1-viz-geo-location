@@ -90,7 +90,9 @@ For the most flexibility, you can provide a number of configuration and data val
 ### Regions Query 
 Regions can be rendered as an alternative or in additon to markers. Use the same configuration opttions as above with following changes:
 
-- **`iso_a3` or `iso_a2`:** The ISO A3 or ISO A2  country code (e.g. "GBR" or "GB") (Replaces latitide/longitude)
+- **`geoISOCountry`:** The ISO A3 or ISO A2 country code (e.g. "GBR" or "GB") (Replaces latitide/longitude)
+- **`geoUSState`:** A US state 2 letter code, number or name
+- **`geoUKRegion`:** A Uk Region name 
 - **`tooltip_header`**: By default the country name is displayed as tool tip header. You can override by supplying a value here. Specify empty string or NONE to remove the header entirely. 
 
 

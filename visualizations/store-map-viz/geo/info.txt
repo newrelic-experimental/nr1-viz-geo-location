@@ -1,4 +1,0 @@
-Get GEO Data (GEOJSON) from here if needed
-UK: https://cartographyvectors.com/geo/united-kingdom
-World country: https://github.com/datasets/geo-countries
-US States: https://eric.clst.org/tech/usgeojson/
