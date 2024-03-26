@@ -95,6 +95,7 @@ Regions can be rendered as an alternative or in additon to markers. Use the same
 - **`geoUKRegion`:** A Uk Region name 
 - **`tooltip_header`**: By default the country name is displayed as tool tip header. You can override by supplying a value here. Specify empty string or NONE to remove the header entirely. 
 
+More details regarding region setup can be found [here](./visualizations/store-map-viz/geo/readme.md).
 
 #### Precision, prefix and suffix
 Its possible to specify the precision of numbers and add prefix/suffix to values. These adjustments can be made to the `icon_label`` and `tooltip_xxx`` fields by providing extra fields:
