@@ -1,13 +1,17 @@
 import React, {useEffect, useContext, useState} from "react";
 import Region from "./Region";
-// import allUKRegions from "../geo/uk-regions/all-uk-regions";
 import countries from "../geo/countries.geojson.json"
+import geoUSStates from "../geo/us-states/us-states"
 import {PlatformStateContext, NerdGraphQuery} from "nr1";
 import { nerdGraphMarkerQuery } from "../queries";
 import { FETCH_INTERVAL_DEFAULT } from "../constants";
 import {deriveStatus, formatValues} from "../utils/dataFormatting";
 import { useProps } from "../context/VizPropsProvider";
 import { generateTooltipConfig} from "../utils/map";
+import allUKRegions from "../geo/uk-regions/all-uk-regions";
+
+
+
 
 
 const Regions = () => {
@@ -64,32 +68,65 @@ const Regions = () => {
 
     // Then set an interval to continue fetching
     const fetchIntervalms = (fetchInterval || FETCH_INTERVAL_DEFAULT) * 1000;
+
+    if(fetchIntervalms >=1000) {
     const intervalId = setInterval(fetchData, fetchIntervalms);
-    // Clear the interval when the component unmounts
-    return () => clearInterval(intervalId);
+      // Clear the interval when the component unmounts
+      return () => clearInterval(intervalId);
+    } else {
+      return null
+    }
+
   }, [timeRange, fetchInterval]);
+
 
   if(!regions || regions.length == 0) {
     return null; //no regions to display
   } else {
     const tooltipConfig=generateTooltipConfig(regions)
 
-    let geoFeatureLocations = regions.map((location,index)=>{
+    let geoFeatureLocations=[];
+
+    regions.forEach((location,index)=>{
       
-      let feature;
-      if(location.iso_a3 && location.isa_a3!="") {
-        feature=countries.features.find((f)=>{ return f.properties.ISO_A3 == location.iso_a3;});
-      } else {
-        if(location.iso_a2 && location.isa_a2!="") {
-          feature=countries.features.find((f)=>{return f.properties.ISO_A2 == location.iso_a2;})
+      // World Countries
+      if(location.geoISOCountry && location.geoISOCountry!="") {
+        let feature=countries.features.find((f)=>{ 
+          return f.properties.ISO_A3 == location.geoISOCountry || f.properties.ISO_A2 == location.geoISOCountry;
+        });
+        if(feature) {
+          geoFeatureLocations.push(<Region key={index} region={feature} location={location} tooltipConfig={tooltipConfig} defaultHeader={feature.properties.ADMIN}/>);
+        } else {
+          console.log("Country not found for data, will not render", location);
         }
       }
-      if(feature) {
-        return  <Region key={index} region={feature} location={location} tooltipConfig={tooltipConfig}/>;
-      } else {
-        console.log("Region could not be found in geo region map",location)
-        return null;
+      
+      // US States (example)
+      else if (location.geoUSState && location.geoUSState!="") {
+          let feature=geoUSStates.features.find((f)=>{
+            return  f.properties.STATECODE == location.geoUSState || f.properties.STATE == location.geoUSState || f.properties.NAME == location.geoUSState;
+          });
+          if(feature){
+            geoFeatureLocations.push(<Region key={index} region={feature} location={location} tooltipConfig={tooltipConfig} defaultHeader={feature.properties.NAME}/>);
+          } else {
+            console.log("US State not found for data, will not render", location);
+          }
       }
+      
+      // UK Regions (example)
+      else if (location.geoUKRegion && location.geoUKRegion!="") {
+        let region = allUKRegions.find((f)=>{
+          return  f.name == location.geoUKRegion 
+        });
+        if(region) {
+          region.features.forEach((f)=>{
+            geoFeatureLocations.push(<Region key={index} region={f} location={location} tooltipConfig={tooltipConfig} defaultHeader={region.name}/>);
+          })
+        } else {
+          console.log("UK Region not found for data, will not render", location)
+        }
+        
+     }
     })
 
     return geoFeatureLocations;

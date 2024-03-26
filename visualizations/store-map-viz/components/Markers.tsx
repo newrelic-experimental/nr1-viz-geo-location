@@ -70,9 +70,14 @@ const Markers = () => {
 
     // Then set an interval to continue fetching
     const fetchIntervalms = (fetchInterval || FETCH_INTERVAL_DEFAULT) * 1000;
-    const intervalId = setInterval(fetchData, fetchIntervalms);
-    // Clear the interval when the component unmounts
-    return () => clearInterval(intervalId);
+
+    if(fetchIntervalms >=1000) {
+      const intervalId = setInterval(fetchData, fetchIntervalms);
+        // Clear the interval when the component unmounts
+        return () => clearInterval(intervalId);
+      } else {
+        return null
+      }
   }, [timeRange, fetchInterval]);
 
   // This is a hack to force a re-render when markers show up for the first time.
