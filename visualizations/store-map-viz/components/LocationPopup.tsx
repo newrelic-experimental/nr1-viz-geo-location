@@ -15,14 +15,9 @@ const LocationPopup = ({ location, config, title, sticky }) => {
     );
   });
 
-  let titleHeader;
-  if(title && title!="") {
-    titleHeader=<h4>{title}</h4>
-  }
-
   return (
     <Tooltip sticky={sticky}>
-      {titleHeader}
+      {title && title !== "" && <h4>{title}</h4>}
       <div className="popup-grid">{items}</div>
     </Tooltip>
   );
