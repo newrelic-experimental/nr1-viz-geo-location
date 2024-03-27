@@ -56,7 +56,7 @@ const MapView = () => {
       />
       <Markers />
       {/* uncomment to turn on Map GeoJson features */}
-      {/* <Regions /> */}
+      <Regions />
     </Map>
   );
 };
