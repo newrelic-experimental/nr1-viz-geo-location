@@ -34,7 +34,7 @@ const Region = ({ region, location, tooltipConfig, defaultHeader }) => {
   };
 
   return (
-    <GeoJSON data={region} style={style} onClick={handleRegionClick}>
+    <GeoJSON key={location.status} data={region} style={style} onClick={handleRegionClick}>
       <LocationPopup
         location={location}
         config={tooltipConfig}
