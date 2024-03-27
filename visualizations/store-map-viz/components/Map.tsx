@@ -47,7 +47,6 @@ const MapView = () => {
     }
   }, [zoom, center]);
 
- 
   //map ratser tiles: https://wiki.openstreetmap.org/wiki/Raster_tile_providers
   return (
     <Map ref={mapRef} center={center} zoom={zoom} style={mapStyle}>

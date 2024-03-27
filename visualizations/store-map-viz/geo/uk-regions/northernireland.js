@@ -6,7 +6,7 @@ export const northernIreland = {
     {
       type: "Feature",
       properties: {
-        Name: "Northern Ireland"
+        Name: "Northern Ireland",
       },
       geometry: {
         type: "Polygon",

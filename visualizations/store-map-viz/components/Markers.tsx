@@ -14,7 +14,7 @@ import LocationPopup from "./LocationPopup";
 import { useProps } from "../context/VizPropsProvider";
 import { DEFAULT_DISABLE_CLUSTER_ZOOM, MARKER_COLOURS } from "../constants";
 
-import {deriveStatus, formatValues} from "../utils/dataFormatting";
+import { deriveStatus, formatValues } from "../utils/dataFormatting";
 
 const Markers = () => {
   // const nerdletState = useContext(NerdletStateContext);
@@ -71,13 +71,13 @@ const Markers = () => {
     // Then set an interval to continue fetching
     const fetchIntervalms = (fetchInterval || FETCH_INTERVAL_DEFAULT) * 1000;
 
-    if(fetchIntervalms >=1000) {
+    if (fetchIntervalms >= 1000) {
       const intervalId = setInterval(fetchData, fetchIntervalms);
-        // Clear the interval when the component unmounts
-        return () => clearInterval(intervalId);
-      } else {
-        return null
-      }
+      // Clear the interval when the component unmounts
+      return () => clearInterval(intervalId);
+    } else {
+      return null;
+    }
   }, [timeRange, fetchInterval]);
 
   // This is a hack to force a re-render when markers show up for the first time.

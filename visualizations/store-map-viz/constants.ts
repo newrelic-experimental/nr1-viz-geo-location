@@ -11,16 +11,14 @@ export const MARKER_COLOURS = {
   criticalColour: "#DF2E23", // Red color for alert
   criticalColourBorder: "#DF2E2370",
   criticalColourText: "#fff",
-  criticalRegionColour: "#DF2E23", 
+  criticalRegionColour: "#DF2E23",
   criticalRegionColourBorder: "#DF2E2370",
-
 
   warningColour: "#FFD23D", // Amber color for warning
   warningColourBorder: "#FFD23D70",
   warningColourText: "#293238",
-  warningRegionColour: "#FFD23D", 
+  warningRegionColour: "#FFD23D",
   warningRegionColourBorder: "#FFD23D70",
-
 
   safeColour: "#05865B", // Green color for safe
   safeColourBorder: "#05865B70",

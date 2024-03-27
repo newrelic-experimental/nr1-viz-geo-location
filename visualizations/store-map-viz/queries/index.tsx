@@ -18,13 +18,13 @@ export const markerGQL = (
   markersQuery,
   timeRange,
   defaultSince,
-  ignorePicker
+  ignorePicker,
 ) => {
   return `nrql( query: "${markerNRQL(
     markersQuery,
     timeRange,
     defaultSince,
-    ignorePicker
+    ignorePicker,
   )}" ) { results }`;
 };
 
@@ -32,13 +32,18 @@ export const nerdGraphMarkerQuery = (
   markersQuery,
   timeRange,
   defaultSince,
-  ignorePicker
+  ignorePicker,
 ) => {
   return `
   query($id: Int!) {
     actor {
       account(id: $id) {
-        markers: ${markerGQL(markersQuery, timeRange, defaultSince, ignorePicker)}
+        markers: ${markerGQL(
+          markersQuery,
+          timeRange,
+          defaultSince,
+          ignorePicker,
+        )}
       }
     }
   }

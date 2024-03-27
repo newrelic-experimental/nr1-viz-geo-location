@@ -27,8 +27,7 @@
       "title": "Default since/until clause",
       "description": "The since/until to use if no time picker value is chosen",
       "type": "string"
-    }
-    ,
+    },
     {
       "name": "ignorePicker",
       "title": "Ignore time picker",
