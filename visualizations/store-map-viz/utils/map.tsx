@@ -29,23 +29,25 @@ const getColorAttributes = (status) => {
   return colors[status] || colors.NONE;
 };
 
-export const regionStatusColor = (status) => {
+export const regionStatusColor = (status,customColors) => {
+
+  const overrideColors = (customColors ? customColors : []);
   const colors = {
     CRITICAL: {
-      color: MARKER_COLOURS.criticalRegionColour,
-      borderColor: MARKER_COLOURS.criticalRegionColourBorder,
+      color: overrideColors[3] ? overrideColors[3] : MARKER_COLOURS.criticalRegionColour,
+      borderColor: overrideColors[3] ? overrideColors[3] : MARKER_COLOURS.criticalRegionColourBorder,
     },
     WARNING: {
-      color: MARKER_COLOURS.warningRegionColour,
-      borderColor: MARKER_COLOURS.warningRegionColourBorder,
+      color: overrideColors[2] ? overrideColors[2] : MARKER_COLOURS.warningRegionColour,
+      borderColor: overrideColors[2] ? overrideColors[2] : MARKER_COLOURS.warningRegionColourBorder,
     },
     OK: {
-      color: MARKER_COLOURS.safeRegionColour,
-      borderColor: MARKER_COLOURS.safeRegionColourBorder,
+      color: overrideColors[1] ? overrideColors[1] :  MARKER_COLOURS.safeRegionColour,
+      borderColor: overrideColors[1] ? overrideColors[1] : MARKER_COLOURS.safeRegionColourBorder,
     },
     NONE: {
-      color: MARKER_COLOURS.noneRegionColour,
-      borderColor: MARKER_COLOURS.noneRegionColourBorder,
+      color: overrideColors[0] ? overrideColors[0] : MARKER_COLOURS.noneRegionColour,
+      borderColor: overrideColors[0] ? overrideColors[0] :  MARKER_COLOURS.noneRegionColourBorder,
     },
   };
 

@@ -2,7 +2,7 @@ import React, { useEffect, useContext, useState } from "react";
 import { PlatformStateContext, NerdGraphQuery } from "nr1";
 
 import { nerdGraphMarkerQuery } from "../queries";
-import { FETCH_INTERVAL_DEFAULT } from "../constants";
+import { FETCH_INTERVAL_DEFAULT, MARKER_COLOURS } from "../constants";
 
 import { generateTooltipConfig } from "../utils/map";
 import { deriveStatus, formatValues } from "../utils/dataFormatting";
@@ -13,23 +13,33 @@ import countries from "../geo/countries.geojson.json";
 import geoUSStates from "../geo/us-states/us-states";
 import allUKRegions from "../geo/uk-regions/all-uk-regions";
 
+import  Gradient  from "javascript-color-gradient";
+
 const Regions = () => {
-  const { accountId, regionsQuery, fetchInterval, ignorePicker, defaultSince } =
-    useProps();
+  const { accountId, regionsQuery, fetchInterval, ignorePicker, defaultSince, heatMapSteps, regionColors } = useProps();
 
   const [regions, setRegions] = useState([]);
+  const [HMSteps, setHMSteps] = useState(0);
+  const [HMColors,setHMColors] = useState([]);
+  const [customColors,setCustomColors] = useState(null);
 
-  const defSinceString =
-    defaultSince === undefined || defaultSince === null
-      ? ""
-      : " " + defaultSince;
-  if (regionsQuery === null || regionsQuery === undefined) {
-    return null;
-  }
+
 
   const { timeRange } = useContext(PlatformStateContext);
 
   useEffect(() => {
+
+    const defSinceString =
+    defaultSince === undefined || defaultSince === null
+      ? ""
+      : " " + defaultSince;
+    if (regionsQuery === null || regionsQuery === undefined) {
+      return null;
+    }
+
+    setHMSteps(heatMapSteps && heatMapSteps!="" ? parseInt(heatMapSteps) : 0);
+    setHMColors(regionColors && regionColors!="" ? regionColors.split(",") : MARKER_COLOURS.heatMapDefault);
+    setCustomColors(regionColors && regionColors!="" ? regionColors.split(",") : null);
     const fetchData = async () => {
       const query = nerdGraphMarkerQuery(
         regionsQuery,
@@ -68,7 +78,7 @@ const Regions = () => {
     } else {
       return null;
     }
-  }, [timeRange, fetchInterval]);
+  }, [timeRange, fetchInterval, heatMapSteps,regionColors,regionsQuery]);
 
   if (!regions || regions.length == 0) {
     return null; //no regions to display
@@ -76,6 +86,34 @@ const Regions = () => {
     const tooltipConfig = generateTooltipConfig(regions);
 
     let geoFeatureLocations = [];
+
+    // ---- heat map configuration  -------
+
+    const gradientSteps=HMSteps;
+    let getGradientColor=null;
+
+    if(gradientSteps > 0) {
+      let maxValue=-Infinity, minValue=Infinity;
+      regions.forEach(location=>{
+        maxValue = location.value > maxValue ? location.value : maxValue;
+        minValue = location.value < minValue ? location.value : minValue;
+      })
+
+      if(HMColors.length > 1) {
+
+        const gradientArray = new Gradient()
+        .setColorGradient(...HMColors)
+        .setMidpoint(gradientSteps)
+        .getColors();
+
+        getGradientColor = (value) => {
+          let ratio = (value - minValue) / (maxValue-minValue);
+          let element = Math.floor((gradientSteps-1)*ratio);
+          return gradientArray[element];
+        }
+    }
+    }
+
 
     regions.forEach((location, index) => {
       // World Countries
@@ -94,6 +132,10 @@ const Regions = () => {
               location={location}
               tooltipConfig={tooltipConfig}
               defaultHeader={feature.properties.ADMIN}
+              heatMap={getGradientColor}
+              heatMapSteps={gradientSteps}
+              heatMapColors={HMColors}
+              customColors={customColors}
             />,
           );
         } else {
@@ -118,6 +160,10 @@ const Regions = () => {
               location={location}
               tooltipConfig={tooltipConfig}
               defaultHeader={feature.properties.NAME}
+              heatMap={getGradientColor}
+              heatMapSteps={gradientSteps}
+              heatMapColors={HMColors}
+              customColors={customColors}
             />,
           );
         } else {
@@ -139,6 +185,10 @@ const Regions = () => {
                 location={location}
                 tooltipConfig={tooltipConfig}
                 defaultHeader={region.name}
+                heatMap={getGradientColor}
+                heatMapSteps={gradientSteps}
+                heatMapColors={HMColors}
+                customColors={customColors}
               />,
             );
           });

@@ -7,6 +7,7 @@
     "test": "exit 0"
   },
   "dependencies": {
+    "javascript-color-gradient": "^2.4.4",
     "leaflet": "^1.6.0",
     "prop-types": "15.7.2",
     "react": "17.0.2",

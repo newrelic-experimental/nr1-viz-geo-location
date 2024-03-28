@@ -3,16 +3,29 @@ import { GeoJSON } from "react-leaflet";
 import { regionStatusColor } from "../utils/map";
 import LocationPopup from "./LocationPopup";
 
-const Region = ({ region, location, tooltipConfig, defaultHeader }) => {
-  // memoize to avoid unnecessary recalculations
+const Region = ({ key, region, location, tooltipConfig, defaultHeader, heatMap, heatMapSteps, customColors }) => {
+
   const style = useMemo(
-    () => ({
-      color: regionStatusColor(location.status).borderColor,
-      fillColor: regionStatusColor(location.status).color,
-      opacity: 0.5,
-    }),
-    [location.status],
+    () => {
+      if(heatMap != null) {
+        return ({
+        color: heatMap(location.value),
+        fillColor: heatMap(location.value),
+        opacity: 0.5,
+        fillOpacity: 0.7
+      })
+    } else {
+      return ({
+        color: regionStatusColor(location.status,customColors).borderColor,
+        fillColor: regionStatusColor(location.status,customColors).color,
+        opacity: 0.7,
+      })
+    }
+  
+  },
+    [location.value,heatMapSteps,customColors],
   );
+
 
   // determine the tooltip title, memoized to avoid unnecessary recalculations
   const getTooltipTitle = () => {
@@ -34,7 +47,7 @@ const Region = ({ region, location, tooltipConfig, defaultHeader }) => {
   };
 
   return (
-    <GeoJSON key={location.status} data={region} style={style} onClick={handleRegionClick}>
+    <GeoJSON key={key+"-"+location.value+"-"+style.fillColor} data={region} style={style} onClick={handleRegionClick}>
       <LocationPopup
         location={location}
         config={tooltipConfig}

@@ -40,6 +40,7 @@ const Markers = () => {
 
   const [locations, setLocations] = useState([]);
   useEffect(() => {
+    setLocations([]);
     const fetchData = async () => {
       const query = nerdGraphMarkerQuery(
         markersQuery,
@@ -78,7 +79,7 @@ const Markers = () => {
     } else {
       return null;
     }
-  }, [timeRange, fetchInterval]);
+  }, [timeRange, fetchInterval, markersQuery]);
 
   // This is a hack to force a re-render when markers show up for the first time.
   // Without this, the createCustomIcon icon (/utils/map.tsx) does not render as expected.

@@ -23,6 +23,18 @@
       "type": "nrql"
     },
     {
+      "name": "heatMapSteps",
+      "title": "Heat map steps",
+      "description": "The nnumber of steps in the heat map gradient. Empty or 0 disables heat map.",
+      "type": "string"
+    } , 
+    {
+      "name": "regionColors",
+      "title": "Region colors",
+      "description": "A comma seperated list of hex colours. Used to create heatmap or control thresholds. For critical/warning states provide none,ok,warning,critical ",
+      "type": "string"
+    } , 
+    {
       "name": "defaultSince",
       "title": "Default since/until clause",
       "description": "The since/until to use if no time picker value is chosen",
