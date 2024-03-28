@@ -29,5 +29,8 @@ export const MARKER_COLOURS = {
   groupColour: "#757575", //grey for group
   groupBorder: "#75757570", //border, including transparency
   groupText: "#fff",
+
+  heatMapDefault: [ "#420052","#6C0485","#8F18AC","#FFBE35","#FFA022"],
+  heatMapStepsDefault: 50
 };
 export const DEFAULT_DISABLE_CLUSTER_ZOOM = "7"; // default disbale cluserting level

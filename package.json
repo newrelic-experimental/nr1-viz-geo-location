@@ -1,12 +1,13 @@
 {
   "private": true,
   "name": "location-geo-map",
-  "version": "2.2.5",
+  "version": "2.2.10",
   "scripts": {
     "start": "nr1 nerdpack:serve",
     "test": "exit 0"
   },
   "dependencies": {
+    "javascript-color-gradient": "^2.4.4",
     "leaflet": "^1.6.0",
     "prop-types": "15.7.2",
     "react": "17.0.2",

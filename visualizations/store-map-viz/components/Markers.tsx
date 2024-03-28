@@ -25,6 +25,8 @@ const Markers = () => {
     fetchInterval,
     ignorePicker,
     defaultSince,
+    markerColors,
+    markerAggregation
   } = useProps();
   const defSinceString =
     defaultSince === undefined || defaultSince === null
@@ -35,11 +37,14 @@ const Markers = () => {
     return null;
   }
 
+  const customColors = markerColors && markerColors!="" ? markerColors.split(",") : [];
   // timeRange formatting happens in the query (nerdGraphMarkerQuery)
   const { timeRange } = useContext(PlatformStateContext);
 
   const [locations, setLocations] = useState([]);
+
   useEffect(() => {
+    setLocations([]);
     const fetchData = async () => {
       const query = nerdGraphMarkerQuery(
         markersQuery,
@@ -78,7 +83,7 @@ const Markers = () => {
     } else {
       return null;
     }
-  }, [timeRange, fetchInterval]);
+  }, [timeRange, fetchInterval, markersQuery]);
 
   // This is a hack to force a re-render when markers show up for the first time.
   // Without this, the createCustomIcon icon (/utils/map.tsx) does not render as expected.
@@ -94,8 +99,9 @@ const Markers = () => {
   if (locations === undefined) {
     return null;
   }
+
   return (
-    <MarkerClusterGroup
+    <MarkerClusterGroup key={markerAggregation}
       singleMarkerMode={true}
       spiderfyOnMaxZoom={7}
       disableClusteringAtZoom={
@@ -103,10 +109,10 @@ const Markers = () => {
           ? DEFAULT_DISABLE_CLUSTER_ZOOM
           : disableClusterZoom
       }
-      iconCreateFunction={createClusterCustomIcon}
+      iconCreateFunction={(c)=>{ return createClusterCustomIcon(c,customColors,markerAggregation);}}
       polygonOptions={{
-        fillColor: MARKER_COLOURS.groupBorder,
-        color: MARKER_COLOURS.groupBorder,
+        fillColor: customColors[0] ? customColors[0]+"70" : MARKER_COLOURS.groupBorder,
+        color: customColors[0] ? customColors[0]+"70" : MARKER_COLOURS.groupBorder,
         weight: 3,
         opacity: 0.9,
         fillOpacity: 0.4,
@@ -116,7 +122,7 @@ const Markers = () => {
         <Marker
           key={location.storeNumber}
           position={[location.latitude, location.longitude]}
-          icon={createCustomIcon(location)}
+          icon={createCustomIcon(location,customColors)}
           onClick={() => {
             if (location.link) {
               window.open(location.link, "_blank");

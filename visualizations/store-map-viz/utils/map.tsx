@@ -2,50 +2,58 @@ import { MARKER_COLOURS } from "../constants";
 import { sentenceCase } from "text-case";
 
 // Utility function to get color attributes based on location status
-const getColorAttributes = (status) => {
+export const getColorAttributes = (status,customColors) => {
+  const overrideColors = customColors ? customColors : [];
   const colors = {
     CRITICAL: {
-      color: MARKER_COLOURS.criticalColour,
-      borderColor: MARKER_COLOURS.criticalColourBorder,
+      color: overrideColors[4] ? overrideColors[4] : MARKER_COLOURS.criticalColour,
+      borderColor: overrideColors[4] ? overrideColors[4]+"99" : MARKER_COLOURS.criticalColourBorder,
       textColor: MARKER_COLOURS.criticalColourText,
     },
     WARNING: {
-      color: MARKER_COLOURS.warningColour,
-      borderColor: MARKER_COLOURS.warningColourBorder,
+      color: overrideColors[3] ? overrideColors[3] : MARKER_COLOURS.warningColour,
+      borderColor: overrideColors[3] ? overrideColors[3]+"99" : MARKER_COLOURS.warningColourBorder,
       textColor: MARKER_COLOURS.warningColourText,
     },
     OK: {
-      color: MARKER_COLOURS.safeColour,
-      borderColor: MARKER_COLOURS.safeColourBorder,
+      color:overrideColors[2] ? overrideColors[2] :  MARKER_COLOURS.safeColour,
+      borderColor: overrideColors[2] ? overrideColors[2]+"99" : MARKER_COLOURS.safeColourBorder,
       textColor: MARKER_COLOURS.safeColourText,
     },
     NONE: {
-      color: MARKER_COLOURS.noneColour,
-      borderColor: MARKER_COLOURS.noneBorder,
+      color: overrideColors[1] ? overrideColors[1] : MARKER_COLOURS.noneColour,
+      borderColor: overrideColors[1] ? overrideColors[1]+"99" : MARKER_COLOURS.noneBorder,
       textColor: MARKER_COLOURS.noneText,
+    },
+    CLUSTER: {
+      color: overrideColors[0] ? overrideColors[0] : MARKER_COLOURS.groupColour,
+      borderColor: overrideColors[0] ? overrideColors[0]+"99" : MARKER_COLOURS.groupBorder,
+      textColor: MARKER_COLOURS.groupText,
     },
   };
 
   return colors[status] || colors.NONE;
 };
 
-export const regionStatusColor = (status) => {
+export const regionStatusColor = (status,customColors) => {
+
+  const overrideColors = (customColors ? customColors : []);
   const colors = {
     CRITICAL: {
-      color: MARKER_COLOURS.criticalRegionColour,
-      borderColor: MARKER_COLOURS.criticalRegionColourBorder,
+      color: overrideColors[3] ? overrideColors[3] : MARKER_COLOURS.criticalRegionColour,
+      borderColor: overrideColors[3] ? overrideColors[3] : MARKER_COLOURS.criticalRegionColourBorder,
     },
     WARNING: {
-      color: MARKER_COLOURS.warningRegionColour,
-      borderColor: MARKER_COLOURS.warningRegionColourBorder,
+      color: overrideColors[2] ? overrideColors[2] : MARKER_COLOURS.warningRegionColour,
+      borderColor: overrideColors[2] ? overrideColors[2] : MARKER_COLOURS.warningRegionColourBorder,
     },
     OK: {
-      color: MARKER_COLOURS.safeRegionColour,
-      borderColor: MARKER_COLOURS.safeRegionColourBorder,
+      color: overrideColors[1] ? overrideColors[1] :  MARKER_COLOURS.safeRegionColour,
+      borderColor: overrideColors[1] ? overrideColors[1] : MARKER_COLOURS.safeRegionColourBorder,
     },
     NONE: {
-      color: MARKER_COLOURS.noneRegionColour,
-      borderColor: MARKER_COLOURS.noneRegionColourBorder,
+      color: overrideColors[0] ? overrideColors[0] : MARKER_COLOURS.noneRegionColour,
+      borderColor: overrideColors[0] ? overrideColors[0] :  MARKER_COLOURS.noneRegionColourBorder,
     },
   };
 
@@ -53,7 +61,7 @@ export const regionStatusColor = (status) => {
 };
 
 // Custom cluster icon function
-export const createClusterCustomIcon = (cluster) => {
+export const createClusterCustomIcon = (cluster,customColors,aggregationMode) => {
   const locations = cluster.getAllChildMarkers();
   const clusterStatusBreakdown = { NONE: 0, OK: 0, WARNING: 0, CRITICAL: 0 };
 
@@ -64,7 +72,7 @@ export const createClusterCustomIcon = (cluster) => {
     }
   });
 
-  let pie = `background: ${MARKER_COLOURS.groupBorder};`;
+  let pie = `background: ${getColorAttributes("CLUSTER",customColors).borderColor};`;
   const totalStatus =
     clusterStatusBreakdown.OK +
     clusterStatusBreakdown.WARNING +
@@ -78,29 +86,74 @@ export const createClusterCustomIcon = (cluster) => {
       (clusterStatusBreakdown.WARNING / locations.length) * 360,
     );
     pie = `background: conic-gradient(${
-      MARKER_COLOURS.criticalColourBorder
+      getColorAttributes("CRITICAL",customColors).borderColor
     } 0deg ${critical}deg, ${
-      MARKER_COLOURS.warningColourBorder
+      getColorAttributes("WARNING",customColors).borderColor
     } ${critical}deg ${warning + critical}deg, ${
-      MARKER_COLOURS.safeColourBorder
+      getColorAttributes("OK",customColors).borderColor
     } ${warning + critical}deg 360deg);`;
   }
 
+  const childCount = cluster.getChildCount();
+  let clusterLabel=childCount;
+
+  //special aggregation mode?
+  if(aggregationMode!=undefined && aggregationMode!="" && aggregationMode!="count" ) {
+    let total=0;
+    if(childCount > 0 ) {
+      let minValue=Infinity, maxValue=-Infinity;
+      let children = cluster.getAllChildMarkers();
+      let suffix="";
+      let prefix="";
+      let precision=0;
+      children.forEach((child)=>{
+        let loc=child.options.children.props.location;
+        total=total+loc.value;
+        minValue = loc.value < minValue ? loc.value : minValue;
+        maxValue = loc.value > maxValue ? loc.value : maxValue;
+  
+        //We assume all the markers are suffix and prefixed the same
+        if(loc.cluster_label_precision!=undefined) {
+          precision = loc.cluster_label_precision;
+        }
+        if(loc.cluster_label_prefix!=undefined) {
+          prefix = loc.cluster_label_prefix;
+        }
+        if(loc.cluster_label_suffix!=undefined) {
+          suffix = loc.cluster_label_suffix;
+        }
+      });
+      let mean = total / childCount;
+      switch (aggregationMode) {
+        case "average":
+          clusterLabel=prefix+mean.toFixed(precision)+suffix;
+          break;
+        case "min":
+          clusterLabel=prefix+minValue.toFixed(precision)+suffix;
+          break;
+        case "max":
+          clusterLabel=prefix+maxValue.toFixed(precision)+suffix;
+          break;
+        default: //sum
+          clusterLabel=prefix+total.toFixed(precision)+suffix;
+          break;
+      }
+    }
+  }
+
   return L.divIcon({
-    html: `<div class="outerPie" style="${pie};"><div class="innerPie" style="color: ${
-      MARKER_COLOURS.groupText
-    }; background-color: ${
-      MARKER_COLOURS.groupColour
-    };"><span>${cluster.getChildCount()}</span></div></div>`,
+    html: `<div class="outerPie" style="${pie};"><div class="innerPie" style="color: ${MARKER_COLOURS.groupText} ; background-color: ${getColorAttributes("CLUSTER",customColors).color };"><span>
+    ${clusterLabel}
+    </span></div></div>`,
     className: "marker-cluster-custom",
     iconSize: L.point(54, 54, true),
   });
 };
 
 // Function to generate a custom icon based on the location property
-export const createCustomIcon = (location) => {
+export const createCustomIcon = (location,customColors) => {
   const status = location.status || "NONE";
-  const { color, borderColor, textColor } = getColorAttributes(status);
+  const { color, borderColor, textColor } = getColorAttributes(status,customColors);
 
   let markerLabel = " ";
   if (location.icon_label !== undefined) {
