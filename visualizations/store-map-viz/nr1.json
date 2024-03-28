@@ -17,6 +17,34 @@
       "type": "nrql"
     },
     {
+      "name": "markerAggregation",
+      "title": "Marker aggregation",
+      "description": "How should clustered markers be treated",
+      "type": "enum",
+      "items": [
+        {
+          "title": "Show count of markers",
+          "value": "count"
+        },
+        {
+          "title": "Show sum of markers",
+          "value": "sum"
+        },
+        {
+          "title": "Show mean average of markers",
+          "value": "average"
+        },
+        {
+          "title": "Show max of markers",
+          "value": "max"
+        },
+        {
+          "title": "Show min of markers",
+          "value": "min"
+        }
+      ]
+    },
+    {
       "name": "markerColors",
       "title": "Marker colors",
       "description": "A comma seperated list of hex colours in the order: cluster,no-status,ok,warning,critical",

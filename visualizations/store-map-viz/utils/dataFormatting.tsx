@@ -35,11 +35,17 @@ export const deriveStatus = (location) => {
 };
 
 export const formatValues = (location) => {
+  
+  const label_prefix=location.icon_label_prefix;
+  const label_suffix=location.icon_label_suffix;
+  const label_precision=location.icon_label_precision;
+
   Object.keys(location).forEach((key) => {
+    const isClusterData = key.includes("cluster_");
     const isTooltip = key.includes("tooltip_");
     const isIconLabel = key === "icon_label" && !key.includes("_precision");
 
-    if (isTooltip || isIconLabel) {
+    if (!isClusterData && (isTooltip || isIconLabel)) {
       const precisionKey = `${key}_precision`;
       const prefixKey = `${key}_prefix`;
       const suffixKey = `${key}_suffix`;
@@ -68,4 +74,10 @@ export const formatValues = (location) => {
       }
     }
   });
+
+  location.cluster_label_prefix=location.cluster_label_prefix ? location.cluster_label_prefix : label_prefix;
+  location.cluster_label_suffix=location.cluster_label_suffix ? location.cluster_label_suffix : label_suffix;
+  location.cluster_label_precision=location.cluster_label_precision ? location.cluster_label_precision : label_precision;
+
+
 };

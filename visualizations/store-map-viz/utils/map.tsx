@@ -61,7 +61,7 @@ export const regionStatusColor = (status,customColors) => {
 };
 
 // Custom cluster icon function
-export const createClusterCustomIcon = (cluster,customColors) => {
+export const createClusterCustomIcon = (cluster,customColors,aggregationMode) => {
   const locations = cluster.getAllChildMarkers();
   const clusterStatusBreakdown = { NONE: 0, OK: 0, WARNING: 0, CRITICAL: 0 };
 
@@ -94,12 +94,57 @@ export const createClusterCustomIcon = (cluster,customColors) => {
     } ${warning + critical}deg 360deg);`;
   }
 
+  const childCount = cluster.getChildCount();
+  let clusterLabel=childCount;
+
+  //special aggregation mode?
+  if(aggregationMode!=undefined && aggregationMode!="" && aggregationMode!="count" ) {
+    let total=0;
+    if(childCount > 0 ) {
+      let minValue=Infinity, maxValue=-Infinity;
+      let children = cluster.getAllChildMarkers();
+      let suffix="";
+      let prefix="";
+      let precision=0;
+      children.forEach((child)=>{
+        let loc=child.options.children.props.location;
+        total=total+loc.value;
+        minValue = loc.value < minValue ? loc.value : minValue;
+        maxValue = loc.value > maxValue ? loc.value : maxValue;
+  
+        //We assume all the markers are suffix and prefixed the same
+        if(loc.cluster_label_precision!=undefined) {
+          precision = loc.cluster_label_precision;
+        }
+        if(loc.cluster_label_prefix!=undefined) {
+          prefix = loc.cluster_label_prefix;
+        }
+        if(loc.cluster_label_suffix!=undefined) {
+          suffix = loc.cluster_label_suffix;
+        }
+      });
+      let mean = total / childCount;
+      switch (aggregationMode) {
+        case "average":
+          clusterLabel=prefix+mean.toFixed(precision)+suffix;
+          break;
+        case "min":
+          clusterLabel=prefix+minValue.toFixed(precision)+suffix;
+          break;
+        case "max":
+          clusterLabel=prefix+maxValue.toFixed(precision)+suffix;
+          break;
+        default: //sum
+          clusterLabel=prefix+total.toFixed(precision)+suffix;
+          break;
+      }
+    }
+  }
+
   return L.divIcon({
-    html: `<div class="outerPie" style="${pie};"><div class="innerPie" style="color: ${
-      MARKER_COLOURS.groupText
-    }; background-color: ${
-      getColorAttributes("CLUSTER",customColors).color
-    };"><span>${cluster.getChildCount()}</span></div></div>`,
+    html: `<div class="outerPie" style="${pie};"><div class="innerPie" style="color: ${MARKER_COLOURS.groupText} ; background-color: ${getColorAttributes("CLUSTER",customColors).color };"><span>
+    ${clusterLabel}
+    </span></div></div>`,
     className: "marker-cluster-custom",
     iconSize: L.point(54, 54, true),
   });

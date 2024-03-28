@@ -25,7 +25,8 @@ const Markers = () => {
     fetchInterval,
     ignorePicker,
     defaultSince,
-    markerColors
+    markerColors,
+    markerAggregation
   } = useProps();
   const defSinceString =
     defaultSince === undefined || defaultSince === null
@@ -37,11 +38,11 @@ const Markers = () => {
   }
 
   const customColors = markerColors && markerColors!="" ? markerColors.split(",") : [];
-
   // timeRange formatting happens in the query (nerdGraphMarkerQuery)
   const { timeRange } = useContext(PlatformStateContext);
 
   const [locations, setLocations] = useState([]);
+
   useEffect(() => {
     setLocations([]);
     const fetchData = async () => {
@@ -98,8 +99,9 @@ const Markers = () => {
   if (locations === undefined) {
     return null;
   }
+
   return (
-    <MarkerClusterGroup
+    <MarkerClusterGroup key={markerAggregation}
       singleMarkerMode={true}
       spiderfyOnMaxZoom={7}
       disableClusteringAtZoom={
@@ -107,7 +109,7 @@ const Markers = () => {
           ? DEFAULT_DISABLE_CLUSTER_ZOOM
           : disableClusterZoom
       }
-      iconCreateFunction={(c)=>{return createClusterCustomIcon(c,customColors);}}
+      iconCreateFunction={(c)=>{ return createClusterCustomIcon(c,customColors,markerAggregation);}}
       polygonOptions={{
         fillColor: customColors[0] ? customColors[0]+"70" : MARKER_COLOURS.groupBorder,
         color: customColors[0] ? customColors[0]+"70" : MARKER_COLOURS.groupBorder,
