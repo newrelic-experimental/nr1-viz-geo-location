@@ -7,27 +7,27 @@ export const getColorAttributes = (status,customColors) => {
   const colors = {
     CRITICAL: {
       color: overrideColors[4] ? overrideColors[4] : MARKER_COLOURS.criticalColour,
-      borderColor: overrideColors[4] ? overrideColors[4]+"70" : MARKER_COLOURS.criticalColourBorder,
+      borderColor: overrideColors[4] ? overrideColors[4]+"99" : MARKER_COLOURS.criticalColourBorder,
       textColor: MARKER_COLOURS.criticalColourText,
     },
     WARNING: {
       color: overrideColors[3] ? overrideColors[3] : MARKER_COLOURS.warningColour,
-      borderColor: overrideColors[3] ? overrideColors[3]+"70" : MARKER_COLOURS.warningColourBorder,
+      borderColor: overrideColors[3] ? overrideColors[3]+"99" : MARKER_COLOURS.warningColourBorder,
       textColor: MARKER_COLOURS.warningColourText,
     },
     OK: {
       color:overrideColors[2] ? overrideColors[2] :  MARKER_COLOURS.safeColour,
-      borderColor: overrideColors[2] ? overrideColors[2]+"70" : MARKER_COLOURS.safeColourBorder,
+      borderColor: overrideColors[2] ? overrideColors[2]+"99" : MARKER_COLOURS.safeColourBorder,
       textColor: MARKER_COLOURS.safeColourText,
     },
     NONE: {
       color: overrideColors[1] ? overrideColors[1] : MARKER_COLOURS.noneColour,
-      borderColor: overrideColors[1] ? overrideColors[1]+"70" : MARKER_COLOURS.noneBorder,
+      borderColor: overrideColors[1] ? overrideColors[1]+"99" : MARKER_COLOURS.noneBorder,
       textColor: MARKER_COLOURS.noneText,
     },
     CLUSTER: {
       color: overrideColors[0] ? overrideColors[0] : MARKER_COLOURS.groupColour,
-      borderColor: overrideColors[0] ? overrideColors[0]+"70" : MARKER_COLOURS.groupBorder,
+      borderColor: overrideColors[0] ? overrideColors[0]+"99" : MARKER_COLOURS.groupBorder,
       textColor: MARKER_COLOURS.groupText,
     },
   };
