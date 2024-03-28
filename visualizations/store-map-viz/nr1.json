@@ -17,6 +17,12 @@
       "type": "nrql"
     },
     {
+      "name": "markerColors",
+      "title": "Marker colors",
+      "description": "A comma seperated list of hex colours in the order: cluster,no-status,ok,warning,critical",
+      "type": "string"
+    } , 
+    {
       "name": "regionsQuery",
       "title": "Regions query",
       "description": "Query to gather reqgions",
@@ -31,7 +37,7 @@
     {
       "name": "regionColors",
       "title": "Region colors",
-      "description": "A comma seperated list of hex colours. Used to create heatmap or control thresholds. For critical/warning states provide none,ok,warning,critical ",
+      "description": "A comma seperated list of hex colours. Used to create heatmap or control threshold coloring. For critical/warning states provide no-status,ok,warning,critical ",
       "type": "string"
     } , 
     {

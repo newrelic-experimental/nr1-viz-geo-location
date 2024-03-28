@@ -2,27 +2,33 @@ import { MARKER_COLOURS } from "../constants";
 import { sentenceCase } from "text-case";
 
 // Utility function to get color attributes based on location status
-const getColorAttributes = (status) => {
+export const getColorAttributes = (status,customColors) => {
+  const overrideColors = customColors ? customColors : [];
   const colors = {
     CRITICAL: {
-      color: MARKER_COLOURS.criticalColour,
-      borderColor: MARKER_COLOURS.criticalColourBorder,
+      color: overrideColors[4] ? overrideColors[4] : MARKER_COLOURS.criticalColour,
+      borderColor: overrideColors[4] ? overrideColors[4]+"70" : MARKER_COLOURS.criticalColourBorder,
       textColor: MARKER_COLOURS.criticalColourText,
     },
     WARNING: {
-      color: MARKER_COLOURS.warningColour,
-      borderColor: MARKER_COLOURS.warningColourBorder,
+      color: overrideColors[3] ? overrideColors[3] : MARKER_COLOURS.warningColour,
+      borderColor: overrideColors[3] ? overrideColors[3]+"70" : MARKER_COLOURS.warningColourBorder,
       textColor: MARKER_COLOURS.warningColourText,
     },
     OK: {
-      color: MARKER_COLOURS.safeColour,
-      borderColor: MARKER_COLOURS.safeColourBorder,
+      color:overrideColors[2] ? overrideColors[2] :  MARKER_COLOURS.safeColour,
+      borderColor: overrideColors[2] ? overrideColors[2]+"70" : MARKER_COLOURS.safeColourBorder,
       textColor: MARKER_COLOURS.safeColourText,
     },
     NONE: {
-      color: MARKER_COLOURS.noneColour,
-      borderColor: MARKER_COLOURS.noneBorder,
+      color: overrideColors[1] ? overrideColors[1] : MARKER_COLOURS.noneColour,
+      borderColor: overrideColors[1] ? overrideColors[1]+"70" : MARKER_COLOURS.noneBorder,
       textColor: MARKER_COLOURS.noneText,
+    },
+    CLUSTER: {
+      color: overrideColors[0] ? overrideColors[0] : MARKER_COLOURS.groupColour,
+      borderColor: overrideColors[0] ? overrideColors[0]+"70" : MARKER_COLOURS.groupBorder,
+      textColor: MARKER_COLOURS.groupText,
     },
   };
 
@@ -55,7 +61,7 @@ export const regionStatusColor = (status,customColors) => {
 };
 
 // Custom cluster icon function
-export const createClusterCustomIcon = (cluster) => {
+export const createClusterCustomIcon = (cluster,customColors) => {
   const locations = cluster.getAllChildMarkers();
   const clusterStatusBreakdown = { NONE: 0, OK: 0, WARNING: 0, CRITICAL: 0 };
 
@@ -66,7 +72,7 @@ export const createClusterCustomIcon = (cluster) => {
     }
   });
 
-  let pie = `background: ${MARKER_COLOURS.groupBorder};`;
+  let pie = `background: ${getColorAttributes("CLUSTER",customColors).borderColor};`;
   const totalStatus =
     clusterStatusBreakdown.OK +
     clusterStatusBreakdown.WARNING +
@@ -80,11 +86,11 @@ export const createClusterCustomIcon = (cluster) => {
       (clusterStatusBreakdown.WARNING / locations.length) * 360,
     );
     pie = `background: conic-gradient(${
-      MARKER_COLOURS.criticalColourBorder
+      getColorAttributes("CRITICAL",customColors).borderColor
     } 0deg ${critical}deg, ${
-      MARKER_COLOURS.warningColourBorder
+      getColorAttributes("WARNING",customColors).borderColor
     } ${critical}deg ${warning + critical}deg, ${
-      MARKER_COLOURS.safeColourBorder
+      getColorAttributes("OK",customColors).borderColor
     } ${warning + critical}deg 360deg);`;
   }
 
@@ -92,7 +98,7 @@ export const createClusterCustomIcon = (cluster) => {
     html: `<div class="outerPie" style="${pie};"><div class="innerPie" style="color: ${
       MARKER_COLOURS.groupText
     }; background-color: ${
-      MARKER_COLOURS.groupColour
+      getColorAttributes("CLUSTER",customColors).color
     };"><span>${cluster.getChildCount()}</span></div></div>`,
     className: "marker-cluster-custom",
     iconSize: L.point(54, 54, true),
@@ -100,9 +106,9 @@ export const createClusterCustomIcon = (cluster) => {
 };
 
 // Function to generate a custom icon based on the location property
-export const createCustomIcon = (location) => {
+export const createCustomIcon = (location,customColors) => {
   const status = location.status || "NONE";
-  const { color, borderColor, textColor } = getColorAttributes(status);
+  const { color, borderColor, textColor } = getColorAttributes(status,customColors);
 
   let markerLabel = " ";
   if (location.icon_label !== undefined) {

@@ -25,6 +25,7 @@ const Markers = () => {
     fetchInterval,
     ignorePicker,
     defaultSince,
+    markerColors
   } = useProps();
   const defSinceString =
     defaultSince === undefined || defaultSince === null
@@ -34,6 +35,8 @@ const Markers = () => {
   if (markersQuery === null || markersQuery === undefined) {
     return null;
   }
+
+  const customColors = markerColors && markerColors!="" ? markerColors.split(",") : [];
 
   // timeRange formatting happens in the query (nerdGraphMarkerQuery)
   const { timeRange } = useContext(PlatformStateContext);
@@ -104,10 +107,10 @@ const Markers = () => {
           ? DEFAULT_DISABLE_CLUSTER_ZOOM
           : disableClusterZoom
       }
-      iconCreateFunction={createClusterCustomIcon}
+      iconCreateFunction={(c)=>{return createClusterCustomIcon(c,customColors);}}
       polygonOptions={{
-        fillColor: MARKER_COLOURS.groupBorder,
-        color: MARKER_COLOURS.groupBorder,
+        fillColor: customColors[0] ? customColors[0]+"70" : MARKER_COLOURS.groupBorder,
+        color: customColors[0] ? customColors[0]+"70" : MARKER_COLOURS.groupBorder,
         weight: 3,
         opacity: 0.9,
         fillOpacity: 0.4,
@@ -117,7 +120,7 @@ const Markers = () => {
         <Marker
           key={location.storeNumber}
           position={[location.latitude, location.longitude]}
-          icon={createCustomIcon(location)}
+          icon={createCustomIcon(location,customColors)}
           onClick={() => {
             if (location.link) {
               window.open(location.link, "_blank");
