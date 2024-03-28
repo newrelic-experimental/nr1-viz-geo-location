@@ -7,19 +7,28 @@ const Region = ({ key, region, location, tooltipConfig, defaultHeader, heatMap, 
 
   const style = useMemo(
     () => {
-      if(heatMap != null) {
+
+      if(location.custom_color) {
+        return ({
+          color: location.custom_color,
+          fillColor: location.custom_color,
+          opacity: 0.5,
+          fillOpacity: 0.7
+        });
+      } 
+      else if(heatMap != null) {
         return ({
         color: heatMap(location.value),
         fillColor: heatMap(location.value),
         opacity: 0.5,
         fillOpacity: 0.7
-      })
+      });
     } else {
       return ({
         color: regionStatusColor(location.status,customColors).borderColor,
         fillColor: regionStatusColor(location.status,customColors).color,
         opacity: 0.7,
-      })
+      });
     }
   
   },

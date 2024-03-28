@@ -58,7 +58,7 @@
     },
     {
       "name": "heatMapSteps",
-      "title": "Heat map steps",
+      "title": "Heatmap steps",
       "description": "The nnumber of steps in the heat map gradient. Empty or 0 disables heat map.",
       "type": "string"
     } , 
