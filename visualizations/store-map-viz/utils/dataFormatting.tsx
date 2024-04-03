@@ -35,10 +35,9 @@ export const deriveStatus = (location) => {
 };
 
 export const formatValues = (location) => {
-  
-  const label_prefix=location.icon_label_prefix;
-  const label_suffix=location.icon_label_suffix;
-  const label_precision=location.icon_label_precision;
+  const label_prefix = location.icon_label_prefix;
+  const label_suffix = location.icon_label_suffix;
+  const label_precision = location.icon_label_precision;
 
   Object.keys(location).forEach((key) => {
     const isClusterData = key.includes("cluster_");
@@ -75,9 +74,13 @@ export const formatValues = (location) => {
     }
   });
 
-  location.cluster_label_prefix=location.cluster_label_prefix ? location.cluster_label_prefix : label_prefix;
-  location.cluster_label_suffix=location.cluster_label_suffix ? location.cluster_label_suffix : label_suffix;
-  location.cluster_label_precision=location.cluster_label_precision ? location.cluster_label_precision : label_precision;
-
-
+  location.cluster_label_prefix = location.cluster_label_prefix
+    ? location.cluster_label_prefix
+    : label_prefix;
+  location.cluster_label_suffix = location.cluster_label_suffix
+    ? location.cluster_label_suffix
+    : label_suffix;
+  location.cluster_label_precision = location.cluster_label_precision
+    ? location.cluster_label_precision
+    : label_precision;
 };

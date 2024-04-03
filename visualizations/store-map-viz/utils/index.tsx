@@ -36,3 +36,6 @@ export const formatCurrency = (amount, currency = "GBP", locale = "en-GB") => {
     currency: currency,
   }).format(amount);
 };
+
+export { createCustomIcon, createClusterCustomIcon } from "./customIcons";
+export { generateTooltipConfig, regionStatusColor } from "./map";

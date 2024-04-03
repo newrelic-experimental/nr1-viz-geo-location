@@ -98,7 +98,7 @@ Regions can be rendered as an alternative or in additon to markers. Use the same
 - **`geoUSState`:** A US state 2 letter code, number or name
 - **`geoUKRegion`:** A Uk Region name
 - **`tooltip_header`**: By default the country name is displayed as tool tip header. You can override by supplying a value here. Specify empty string or NONE to remove the header entirely.
-- **`custom_color`:** Provide a hex color code for this region (overrides all other colors) 
+- **`custom_color`:** Provide a hex color code for this region (overrides all other colors)
 
 More details regarding region setup can be found [here](./visualizations/store-map-viz/geo/readme.md).
 

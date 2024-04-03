@@ -4,7 +4,7 @@
   "version": "2.2.10",
   "scripts": {
     "start": "nr1 nerdpack:serve",
-    "test": "exit 0"
+    "prettier": "prettier --write ."
   },
   "dependencies": {
     "javascript-color-gradient": "^2.4.4",
@@ -21,5 +21,8 @@
     "last 2 versions",
     "not ie < 11",
     "not dead"
-  ]
+  ],
+  "devDependencies": {
+    "prettier": "3.2.5"
+  }
 }

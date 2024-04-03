@@ -49,7 +49,7 @@
       "title": "Marker colors",
       "description": "A comma seperated list of hex colours in the order: cluster,no-status,ok,warning,critical",
       "type": "string"
-    } , 
+    },
     {
       "name": "regionsQuery",
       "title": "Regions query",
@@ -61,18 +61,19 @@
       "title": "Heatmap steps",
       "description": "The nnumber of steps in the heat map gradient. Empty or 0 disables heat map.",
       "type": "string"
-    } , 
+    },
     {
       "name": "regionColors",
       "title": "Region colors",
       "description": "A comma seperated list of hex colours. Used to create heatmap or control threshold coloring. For critical/warning states provide no-status,ok,warning,critical ",
       "type": "string"
-    } , 
+    },
     {
       "name": "defaultSince",
       "title": "Default since/until clause",
       "description": "The since/until to use if no time picker value is chosen",
-      "type": "string"
+      "type": "string",
+      "default": ""
     },
     {
       "name": "ignorePicker",

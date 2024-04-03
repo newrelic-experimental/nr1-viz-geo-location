@@ -25,7 +25,7 @@ interface StoreMapProviderProps {
 
 // Create the context
 const StoreMapContext = createContext<StoreMapContextData | undefined>(
-  undefined
+  undefined,
 );
 
 // Modify the provider component to accept zoom and center as props
