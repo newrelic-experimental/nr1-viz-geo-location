@@ -2,18 +2,23 @@ import React, { useMemo } from "react";
 import { GeoJSON } from "react-leaflet";
 import LocationPopup from "./LocationPopup";
 import { COLORS } from "../constants";
-import { useHeatmap } from "../hooks/useHeatmap";
+import { useRegionFeature } from "../hooks/useRegionFeature";
 
 const Region = ({
   key,
-  region,
   location,
   tooltipConfig,
-  defaultHeader,
   customColors,
   heatMapSteps,
   getGradientColor,
 }: any) => {
+  const regionFeature = useRegionFeature(location);
+
+  if (!regionFeature) {
+    console.log("Region not found for data, will not render", location);
+    return null;
+  }
+
   const gradientColor = getGradientColor(location.value);
 
   const style = useMemo(() => {
@@ -45,11 +50,13 @@ const Region = ({
     if (location.tooltip_header === "NONE" || location.tooltip_header === "") {
       return null;
     }
-    return location.tooltip_header ? location.tooltip_header : defaultHeader;
+    return location.tooltip_header
+      ? location.tooltip_header
+      : regionFeature.name;
   };
   const tooltipTitle = useMemo(getTooltipTitle, [
     location.tooltip_header,
-    defaultHeader,
+    regionFeature.name,
   ]);
 
   // extracted onClick handler
@@ -62,7 +69,7 @@ const Region = ({
   return (
     <GeoJSON
       key={key + "-" + location.value + "-" + style.fillColor}
-      data={region}
+      data={regionFeature}
       style={style}
       onClick={handleRegionClick}
     >

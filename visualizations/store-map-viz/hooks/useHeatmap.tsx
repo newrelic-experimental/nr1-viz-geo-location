@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback, useLayoutEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import Gradient from "javascript-color-gradient";
 import { COLORS } from "../constants";
 import { useProps } from "../context/VizPropsProvider";
