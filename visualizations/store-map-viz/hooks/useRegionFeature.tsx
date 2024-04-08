@@ -11,8 +11,8 @@ const useRegionFeature = (location) => {
     if (location.geoISOCountry) {
       feature = countries.features.find((f) =>
         [f.properties.ISO_A3, f.properties.ISO_A2].includes(
-          location.geoISOCountry
-        )
+          location.geoISOCountry,
+        ),
       );
       if (feature) {
         feature.name = feature.properties.NAME;
@@ -23,7 +23,7 @@ const useRegionFeature = (location) => {
           f.properties.STATECODE,
           f.properties.STATE,
           f.properties.NAME,
-        ].includes(location.geoUSState)
+        ].includes(location.geoUSState),
       );
       if (feature) {
         feature.name = feature.properties.NAME;

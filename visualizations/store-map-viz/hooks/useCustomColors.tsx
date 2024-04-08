@@ -29,7 +29,7 @@ type ColorsInput = {
 
 const useCustomColors = (
   markerColors: string,
-  defaultColors: ColorsInput = COLORS
+  defaultColors: ColorsInput = COLORS,
 ): { customColors: ColorsInput } => {
   const [customColors, setCustomColors] = useState<ColorsInput>(defaultColors);
 

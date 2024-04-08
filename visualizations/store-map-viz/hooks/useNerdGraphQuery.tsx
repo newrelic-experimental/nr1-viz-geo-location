@@ -29,7 +29,7 @@ export const useNerdGraphQuery = (query: string) => {
 
       try {
         const response = await NerdGraphQuery.query({ query: nrql, variables });
-        const results = response?.data?.actor?.account?.markers?.results;
+        const results = response?.data?.actor?.account?.result?.results;
         if (results && Array.isArray(results)) {
           results.forEach((location) => {
             deriveStatus(location);
