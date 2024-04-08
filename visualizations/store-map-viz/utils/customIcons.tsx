@@ -1,5 +1,4 @@
-import { MARKER_COLOURS } from "../constants";
-import { Status, getColorAttributes } from "./map";
+import { Status } from "../hooks/useCustomColors";
 
 interface ClusterStatusCounts {
   NONE: number;
@@ -29,9 +28,9 @@ function aggregateStatusCounts(locations: any[]): ClusterStatusCounts {
 function generatePieStyle(
   clusterStatusBreakdown: ClusterStatusCounts,
   totalLocations: number,
-  customColors: any,
+  customColors: any
 ): string {
-  let pieStyle = `background: ${getColorAttributes(Status.CLUSTER, customColors).borderColor};`;
+  let pieStyle = `background: ${customColors[Status.CLUSTER].borderColor};`;
   const totalStatus =
     clusterStatusBreakdown.OK +
     clusterStatusBreakdown.WARNING +
@@ -39,18 +38,18 @@ function generatePieStyle(
 
   if (totalStatus > 0) {
     const criticalDegree = Math.floor(
-      (clusterStatusBreakdown.CRITICAL / totalLocations) * 360,
+      (clusterStatusBreakdown.CRITICAL / totalLocations) * 360
     );
     const warningDegree = Math.floor(
-      (clusterStatusBreakdown.WARNING / totalLocations) * 360,
+      (clusterStatusBreakdown.WARNING / totalLocations) * 360
     );
 
     pieStyle = `background: conic-gradient(${
-      getColorAttributes(Status.CRITICAL, customColors).borderColor
+      customColors[Status.CRITICAL].borderColor
     } 0deg ${criticalDegree}deg, ${
-      getColorAttributes(Status.WARNING, customColors).borderColor
+      customColors[Status.WARNING].borderColor
     } ${criticalDegree}deg ${warningDegree + criticalDegree}deg, ${
-      getColorAttributes(Status.OK, customColors).borderColor
+      customColors[Status.OK].borderColor
     } ${warningDegree + criticalDegree}deg 360deg);`;
   }
 
@@ -117,7 +116,7 @@ function calculateAggregatedLabel(cluster, aggregationMode) {
 export const createClusterCustomIcon = (
   cluster,
   customColors,
-  aggregationMode,
+  aggregationMode
 ) => {
   const locations = cluster.getAllChildMarkers();
   const clusterStatusBreakdown = aggregateStatusCounts(locations);
@@ -125,14 +124,14 @@ export const createClusterCustomIcon = (
   let pieStyle = generatePieStyle(
     clusterStatusBreakdown,
     locations.length,
-    customColors,
+    customColors
   );
 
   let clusterLabel = calculateAggregatedLabel(cluster, aggregationMode);
 
   return L.divIcon({
     html: `<div class="outerPie" style="${pieStyle};">
-      <div class="innerPie" style="color: ${MARKER_COLOURS.groupText} ; background-color: ${getColorAttributes(Status.CLUSTER, customColors).color};">
+      <div class="innerPie" style="color: ${customColors[Status.CLUSTER].groupText} ; background-color: ${customColors[Status.CLUSTER].color};">
         <span>
           ${clusterLabel}
         </span>
@@ -146,10 +145,7 @@ export const createClusterCustomIcon = (
 // Function to generate a custom icon based on the location property
 export const createCustomIcon = (location, customColors) => {
   const status = location.status || "NONE";
-  const { color, borderColor, textColor } = getColorAttributes(
-    status,
-    customColors,
-  );
+  const { color, borderColor, textColor } = customColors[status];
 
   let markerLabel = " ";
   if (location.icon_label !== undefined) {

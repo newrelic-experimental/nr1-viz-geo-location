@@ -1,7 +1,8 @@
 import React, { useMemo } from "react";
 import { GeoJSON } from "react-leaflet";
-import { regionStatusColor } from "../utils";
 import LocationPopup from "./LocationPopup";
+import { COLORS } from "../constants";
+import { useHeatmap } from "../hooks/useHeatmap";
 
 const Region = ({
   key,
@@ -9,10 +10,12 @@ const Region = ({
   location,
   tooltipConfig,
   defaultHeader,
-  heatMap,
-  heatMapSteps,
   customColors,
-}) => {
+  heatMapSteps,
+  getGradientColor,
+}: any) => {
+  const gradientColor = getGradientColor(location.value);
+
   const style = useMemo(() => {
     if (location.custom_color) {
       return {
@@ -21,21 +24,21 @@ const Region = ({
         opacity: 0.5,
         fillOpacity: 0.7,
       };
-    } else if (heatMap != null) {
+    } else if (heatMapSteps !== 0) {
       return {
-        color: heatMap(location.value),
-        fillColor: heatMap(location.value),
+        color: gradientColor,
+        fillColor: gradientColor,
         opacity: 0.5,
         fillOpacity: 0.7,
       };
     } else {
       return {
-        color: regionStatusColor(location.status, customColors).borderColor,
-        fillColor: regionStatusColor(location.status, customColors).color,
+        color: COLORS[location.status].borderColor,
+        fillColor: COLORS[location.status].color,
         opacity: 0.7,
       };
     }
-  }, [location.value, heatMapSteps, customColors]);
+  }, [location.value, heatMapSteps, customColors, gradientColor]);
 
   // determine the tooltip title, memoized to avoid unnecessary recalculations
   const getTooltipTitle = () => {

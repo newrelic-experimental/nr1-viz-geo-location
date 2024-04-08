@@ -1,10 +1,9 @@
-import React, { useEffect, useState } from "react";
-import Gradient from "javascript-color-gradient";
+import React, { useEffect } from "react";
 
-import { MARKER_COLOURS } from "../constants";
 import { generateTooltipConfig } from "../utils";
 import { useProps } from "../context/VizPropsProvider";
 import { useNerdGraphQuery } from "../hooks/useNerdGraphQuery";
+import { useHeatmap } from "../hooks/useHeatmap";
 
 import Region from "./Region";
 import countries from "../geo/countries.geojson.json";
@@ -12,30 +11,17 @@ import geoUSStates from "../geo/us-states/us-states";
 import allUKRegions from "../geo/uk-regions/all-uk-regions";
 
 const Regions = () => {
-  const [HMSteps, setHMSteps] = useState(0);
-  const [HMColors, setHMColors] = useState([]);
-  const [customColors, setCustomColors] = useState(null);
-
-  const { regionsQuery, heatMapSteps, regionColors } = useProps();
+  const { regionsQuery, customColors } = useProps();
   if (regionsQuery === null || regionsQuery === undefined) {
     return null;
   }
 
   const { data: regions } = useNerdGraphQuery(regionsQuery);
 
+  const { setRange, heatMapSteps, getGradientColor } = useHeatmap();
   useEffect(() => {
-    setHMSteps(
-      heatMapSteps && heatMapSteps !== "" ? parseInt(heatMapSteps) : 0,
-    );
-    setHMColors(
-      regionColors && regionColors !== ""
-        ? regionColors.split(",")
-        : MARKER_COLOURS.heatMapDefault,
-    );
-    setCustomColors(
-      regionColors && regionColors !== "" ? regionColors.split(",") : null,
-    );
-  }, [heatMapSteps, regionColors]);
+    setRange(regions);
+  }, [regions]);
 
   if (!regions || regions.length == 0) {
     return null; //no regions to display
@@ -43,33 +29,6 @@ const Regions = () => {
     const tooltipConfig = generateTooltipConfig(regions);
 
     let geoFeatureLocations = [];
-
-    // ---- heat map configuration  -------
-
-    const gradientSteps = HMSteps;
-    let getGradientColor = null;
-
-    if (gradientSteps > 0) {
-      let maxValue = -Infinity,
-        minValue = Infinity;
-      regions.forEach((location) => {
-        maxValue = location.value > maxValue ? location.value : maxValue;
-        minValue = location.value < minValue ? location.value : minValue;
-      });
-
-      if (HMColors.length > 1) {
-        const gradientArray = new Gradient()
-          .setColorGradient(...HMColors)
-          .setMidpoint(gradientSteps)
-          .getColors();
-
-        getGradientColor = (value) => {
-          let ratio = (value - minValue) / (maxValue - minValue);
-          let element = Math.floor((gradientSteps - 1) * ratio);
-          return gradientArray[element];
-        };
-      }
-    }
 
     regions.forEach((location, index) => {
       // World Countries
@@ -88,11 +47,10 @@ const Regions = () => {
               location={location}
               tooltipConfig={tooltipConfig}
               defaultHeader={feature.properties.ADMIN}
-              heatMap={getGradientColor}
-              heatMapSteps={gradientSteps}
-              heatMapColors={HMColors}
               customColors={customColors}
-            />,
+              heatMapSteps={heatMapSteps}
+              getGradientColor={getGradientColor}
+            />
           );
         } else {
           console.log("Country not found for data, will not render", location);
@@ -116,11 +74,10 @@ const Regions = () => {
               location={location}
               tooltipConfig={tooltipConfig}
               defaultHeader={feature.properties.NAME}
-              heatMap={getGradientColor}
-              heatMapSteps={gradientSteps}
-              heatMapColors={HMColors}
               customColors={customColors}
-            />,
+              heatMapSteps={heatMapSteps}
+              getGradientColor={getGradientColor}
+            />
           );
         } else {
           console.log("US State not found for data, will not render", location);
@@ -141,17 +98,16 @@ const Regions = () => {
                 location={location}
                 tooltipConfig={tooltipConfig}
                 defaultHeader={region.name}
-                heatMap={getGradientColor}
-                heatMapSteps={gradientSteps}
-                heatMapColors={HMColors}
                 customColors={customColors}
-              />,
+                heatMapSteps={heatMapSteps}
+                getGradientColor={getGradientColor}
+              />
             );
           });
         } else {
           console.log(
             "UK Region not found for data, will not render",
-            location,
+            location
           );
         }
       }
