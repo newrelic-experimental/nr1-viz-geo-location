@@ -294,6 +294,12 @@
       ]
     },
     {
+      "name": "noWrap",
+      "title": "Toggle map tile repetition",
+      "description": "Enable to prevent map tiles from repeating horizontally when panning, creating a bounded map experience.",
+      "type": "boolean"
+    },
+    {
       "name": "centerLatLng",
       "title": "Center lat,lng",
       "description": "Center of the map. Privide as lat,lng value",

@@ -11,28 +11,28 @@ import { DEFAULT_ZOOM, DEFAULT_CENTER } from "../constants";
 let centerPoints = DEFAULT_CENTER;
 
 // Define the shape of your context data
-interface StoreMapContextData {
+interface MapContextData {
   zoom: number;
   center: number[]; // Center is an array of two numbers (latitude and longitude)
 }
 
 // Extending the provider's props to include zoom and center
-interface StoreMapProviderProps {
+interface MapProviderProps {
   children: ReactNode;
   zoom?: number; // Zoom is optional
   center?: string; // Center is a string
+  noWrap?: boolean;
 }
 
 // Create the context
-const StoreMapContext = createContext<StoreMapContextData | undefined>(
-  undefined,
-);
+const MapContext = createContext<MapContextData | undefined>(undefined);
 
 // Modify the provider component to accept zoom and center as props
-export const StoreMapProvider: React.FC<StoreMapProviderProps> = ({
+export const MapProvider: React.FC<MapProviderProps> = ({
   children,
   zoom = DEFAULT_ZOOM,
   center,
+  noWrap = false,
 }) => {
   try {
     let centerParsed = JSON.parse(center);
@@ -58,21 +58,21 @@ export const StoreMapProvider: React.FC<StoreMapProviderProps> = ({
   }, [centerPoints.toString()]);
 
   return (
-    <StoreMapContext.Provider
-      value={{ zoom: currentZoom, center: currentCenter }}
+    <MapContext.Provider
+      value={{ zoom: currentZoom, center: currentCenter, noWrap }}
     >
       {children}
-    </StoreMapContext.Provider>
+    </MapContext.Provider>
   );
 };
 
 // Custom hook to use the context
-export const useStoreMap = () => {
-  const context = useContext(StoreMapContext);
+export const useMap = () => {
+  const context = useContext(MapContext);
   if (!context) {
     throw new Error("useStoreMap must be used within a StoreMapProvider");
   }
   return context;
 };
 
-export default StoreMapContext;
+export default MapContext;
