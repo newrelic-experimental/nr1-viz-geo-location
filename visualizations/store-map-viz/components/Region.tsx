@@ -1,18 +1,20 @@
 import React, { useMemo } from "react";
 import { GeoJSON } from "react-leaflet";
 import LocationPopup from "./LocationPopup";
-import { COLORS } from "../constants";
 import { useRegionFeature } from "../hooks/useRegionFeature";
+import { useProps } from "../context/VizPropsProvider";
+import { useCustomColors } from "../hooks/useCustomColors";
 
 const Region = ({
   key,
   location,
   tooltipConfig,
-  customColors,
   heatMapSteps,
   getGradientColor,
 }: any) => {
   const regionFeature = useRegionFeature(location);
+  const { regionColors } = useProps();
+  const { customColors } = useCustomColors(regionColors, false);
 
   if (!regionFeature) {
     console.log("Region not found for data, will not render", location);
@@ -29,7 +31,7 @@ const Region = ({
         opacity: 0.5,
         fillOpacity: 0.7,
       };
-    } else if (heatMapSteps !== 0) {
+    } else if (heatMapSteps && heatMapSteps !== 0) {
       return {
         color: gradientColor,
         fillColor: gradientColor,
@@ -38,12 +40,18 @@ const Region = ({
       };
     } else {
       return {
-        color: COLORS[location.status].borderColor,
-        fillColor: COLORS[location.status].color,
+        color: customColors[location.status].borderColor,
+        fillColor: customColors[location.status].color,
         opacity: 0.7,
       };
     }
-  }, [location.value, heatMapSteps, customColors, gradientColor]);
+  }, [
+    location.value,
+    heatMapSteps,
+    customColors,
+    gradientColor,
+    location.status,
+  ]);
 
   // determine the tooltip title, memoized to avoid unnecessary recalculations
   const getTooltipTitle = () => {

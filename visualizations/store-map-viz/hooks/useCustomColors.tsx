@@ -29,7 +29,8 @@ type ColorsInput = {
 
 const useCustomColors = (
   markerColors: string,
-  defaultColors: ColorsInput = COLORS,
+  hasCluster: boolean = true,
+  defaultColors: ColorsInput = COLORS
 ): { customColors: ColorsInput } => {
   const [customColors, setCustomColors] = useState<ColorsInput>(defaultColors);
 
@@ -40,13 +41,15 @@ const useCustomColors = (
     }
     const colorsArray = markerColors.split(",");
 
-    const keys: Status[] = [
-      Status.CLUSTER,
-      Status.NONE,
-      Status.OK,
-      Status.WARNING,
-      Status.CRITICAL,
-    ];
+    const keys: Status[] = hasCluster
+      ? [
+          Status.CLUSTER,
+          Status.NONE,
+          Status.OK,
+          Status.WARNING,
+          Status.CRITICAL,
+        ]
+      : [Status.NONE, Status.OK, Status.WARNING, Status.CRITICAL];
 
     let colorsObject: ColorsInput = { ...defaultColors };
 

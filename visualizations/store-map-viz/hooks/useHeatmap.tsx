@@ -50,10 +50,10 @@ const useHeatmap = (): HeatmapHook => {
   );
 
   useEffect(() => {
-    const steps =
-      heatMapSteps && heatMapSteps !== ""
-        ? parseInt(heatMapSteps, 10)
-        : COLORS.HEATMAP.default.length;
+    let steps =
+      heatMapSteps && heatMapSteps !== "" ? parseInt(heatMapSteps, 10) : 0;
+    steps = isNaN(steps) ? 0 : steps;
+
     const colors =
       regionColors && regionColors.split(",").length > 1
         ? regionColors.split(",")

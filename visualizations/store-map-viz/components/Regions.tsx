@@ -8,7 +8,7 @@ import { useHeatmap } from "../hooks/useHeatmap";
 import Region from "./Region";
 
 const Regions = () => {
-  const { regionsQuery, customColors } = useProps();
+  const { regionsQuery } = useProps();
   if (regionsQuery === null || regionsQuery === undefined) {
     return null;
   }
@@ -30,7 +30,6 @@ const Regions = () => {
         key={index}
         location={location}
         tooltipConfig={tooltipConfig}
-        customColors={customColors}
         heatMapSteps={heatMapSteps}
         getGradientColor={getGradientColor}
       />

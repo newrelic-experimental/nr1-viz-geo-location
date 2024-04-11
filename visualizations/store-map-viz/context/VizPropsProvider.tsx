@@ -1,5 +1,5 @@
 // PropsProvider.js
-import React, { createContext, useContext, ReactNode } from "react";
+import React, { createContext, useContext } from "react";
 
 // Create the context for the props with a default value of null
 const VizPropsContext = createContext(null);
