@@ -2,15 +2,16 @@ import { useState, useEffect, useContext } from "react";
 import { NerdGraphQuery, PlatformStateContext } from "nr1";
 
 import { nerdGraphQuery } from "../queries";
-import { FETCH_INTERVAL_DEFAULT } from "../constants";
 import { deriveStatus, formatValues } from "../utils/dataFormatting";
 import { useProps } from "../context/VizPropsProvider";
+
+const FETCH_INTERVAL_DEFAULT = 300; // fetch interval in s - 5 minutes
 
 export const useNerdGraphQuery = (query: string) => {
   const { timeRange } = useContext(PlatformStateContext);
   const {
     accountId,
-    fetchInterval = FETCH_INTERVAL_DEFAULT,
+    fetchInterval,
     ignorePicker = false,
     defaultSince = "",
   } = useProps();
@@ -20,6 +21,7 @@ export const useNerdGraphQuery = (query: string) => {
   useEffect(() => {
     if (!query || query === null || query === undefined) {
       console.log("Query is required to fetch data.");
+      setData([]);
       return;
     }
 
@@ -44,8 +46,16 @@ export const useNerdGraphQuery = (query: string) => {
     };
 
     fetchData();
+
+    if (fetchInterval < 1) {
+      console.log(
+        `Fetch interval less than 1 second is not allowed. Setting to default: ${FETCH_INTERVAL_DEFAULT}s.`
+      );
+      return;
+    }
+
     const fetchIntervalms = (fetchInterval || FETCH_INTERVAL_DEFAULT) * 1000;
-    const intervalId = setInterval(fetchData, fetchIntervalms * 1000);
+    const intervalId = setInterval(fetchData, fetchIntervalms);
 
     return () => clearInterval(intervalId);
   }, [query, accountId, timeRange, fetchInterval, ignorePicker, defaultSince]);

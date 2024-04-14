@@ -46,7 +46,7 @@ const useHeatmap = (): HeatmapHook => {
       let index = Math.floor(ratio * (gradientArray.length - 1));
       return gradientArray[index];
     },
-    [minValue, maxValue, gradientArray]
+    [minValue, maxValue, gradientArray],
   );
 
   useEffect(() => {

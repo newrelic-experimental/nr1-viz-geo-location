@@ -30,7 +30,7 @@ type ColorsInput = {
 const useCustomColors = (
   markerColors: string,
   hasCluster: boolean = true,
-  defaultColors: ColorsInput = COLORS
+  defaultColors: ColorsInput = COLORS,
 ): { customColors: ColorsInput } => {
   const [customColors, setCustomColors] = useState<ColorsInput>(defaultColors);
 
