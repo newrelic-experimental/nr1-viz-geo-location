@@ -104,11 +104,14 @@ More details regarding region setup can be found [here](./visualizations/store-m
 
 #### Precision, prefix and suffix
 
-Its possible to specify the precision of numbers and add prefix/suffix to values. These adjustments can be made to the `icon_label`` and `tooltip_xxx`` fields by providing extra fields:
+Its possible to specify the precision of numbers and add prefix/suffix to values. These adjustments can be made to the `icon_label` and `tooltip_xxx` fields by providing extra fields:
 
 - **`_precision`:** Sets the number of decimal places to display. e.g. `select ... 2 as 'icon_label_precision'...`
 - **`_prefix`:** Adds a prefix to the value. e.g. `select ... '$' as 'tooltip_sales_prefix' ...`
 - **`_suffix`:** Adds a suffix to the value. e.g. `select ... 'rpm' as 'tooltip_thoughput_suffix' ...`
+
+You may also override the default precision (2) of the icon value by setting `value_precision` if you are not providing an icon label.
+
 
 #### Example Query
 
