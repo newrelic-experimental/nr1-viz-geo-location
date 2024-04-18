@@ -69,8 +69,11 @@ const Markers = () => {
       }}
       polygonOptions={getPoligonOptions()}
     >
-      {locations.map((location,idx) => (
-        <Marker
+      {locations.map((location,idx) => {
+        if(isNaN(location?.latitude) || isNaN(location?.longitude)) {
+          return null;
+        }
+        return (<Marker
           key={`${idx}-${location.value}-${lastUpdateStamp}`}
           position={[location.latitude, location.longitude]}
           icon={createCustomIcon(location, customColors)}
@@ -82,7 +85,7 @@ const Markers = () => {
         >
           <LocationPopup location={location} config={tooltipConfig} />
         </Marker>
-      ))}
+    );})}
     </MarkerClusterGroup>
   );
 };
