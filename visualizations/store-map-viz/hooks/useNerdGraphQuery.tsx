@@ -24,6 +24,8 @@ export const useNerdGraphQuery = (query: string) => {
       console.log("Query is required to fetch data.");
       setData([]);
       return;
+    } else {
+      query = query.replace('\\','\\\\'); // double escape escape chars in query so they dont break the graphQL but are directly comaptiable with query builder.
     }
 
     const fetchData = async () => {
