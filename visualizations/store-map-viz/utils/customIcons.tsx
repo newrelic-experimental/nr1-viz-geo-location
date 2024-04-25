@@ -28,7 +28,7 @@ function aggregateStatusCounts(locations: any[]): ClusterStatusCounts {
 function generatePieStyle(
   clusterStatusBreakdown: ClusterStatusCounts,
   totalLocations: number,
-  customColors: any,
+  customColors: any
 ): string {
   let pieStyle = `background: ${customColors[Status.CLUSTER].borderColor};`;
   const totalStatus =
@@ -38,10 +38,10 @@ function generatePieStyle(
 
   if (totalStatus > 0) {
     const criticalDegree = Math.floor(
-      (clusterStatusBreakdown.CRITICAL / totalLocations) * 360,
+      (clusterStatusBreakdown.CRITICAL / totalLocations) * 360
     );
     const warningDegree = Math.floor(
-      (clusterStatusBreakdown.WARNING / totalLocations) * 360,
+      (clusterStatusBreakdown.WARNING / totalLocations) * 360
     );
 
     pieStyle = `background: conic-gradient(${
@@ -83,7 +83,7 @@ function calculateAggregatedLabel(cluster, aggregationMode) {
       cluster_label_precision,
     } = child.options.children.props.location;
 
-    total += value;
+    total += Number(value);
     minValue = Math.min(minValue, value);
     maxValue = Math.max(maxValue, value);
 
@@ -116,7 +116,7 @@ function calculateAggregatedLabel(cluster, aggregationMode) {
 export const createClusterCustomIcon = (
   cluster,
   customColors,
-  aggregationMode,
+  aggregationMode
 ) => {
   const locations = cluster.getAllChildMarkers();
   const clusterStatusBreakdown = aggregateStatusCounts(locations);
@@ -124,7 +124,7 @@ export const createClusterCustomIcon = (
   let pieStyle = generatePieStyle(
     clusterStatusBreakdown,
     locations.length,
-    customColors,
+    customColors
   );
 
   let clusterLabel = calculateAggregatedLabel(cluster, aggregationMode);
