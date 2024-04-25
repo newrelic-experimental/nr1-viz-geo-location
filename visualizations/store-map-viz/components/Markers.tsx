@@ -1,87 +1,34 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Marker } from "react-leaflet";
 import MarkerClusterGroup from "react-leaflet-markercluster";
-import { NerdGraphQuery, PlatformStateContext } from "nr1";
+import { useNerdGraphQuery } from "../hooks/useNerdGraphQuery";
+import { useCustomColors, Status } from "../hooks/useCustomColors";
 
-import { nerdGraphMarkerQuery } from "../queries";
-import { FETCH_INTERVAL_DEFAULT } from "../constants";
 import {
   createClusterCustomIcon,
   createCustomIcon,
   generateTooltipConfig,
-} from "../utils/map";
+} from "../utils";
 import LocationPopup from "./LocationPopup";
 import { useProps } from "../context/VizPropsProvider";
-import { DEFAULT_DISABLE_CLUSTER_ZOOM, MARKER_COLOURS } from "../constants";
-
-import { deriveStatus, formatValues } from "../utils/dataFormatting";
+import { DEFAULT_DISABLE_CLUSTER_ZOOM } from "../constants";
 
 const Markers = () => {
-  // const nerdletState = useContext(NerdletStateContext);
-  const {
-    accountId,
-    markersQuery,
-    disableClusterZoom,
-    fetchInterval,
-    ignorePicker,
-    defaultSince,
-  } = useProps();
-  const defSinceString =
-    defaultSince === undefined || defaultSince === null
-      ? ""
-      : " " + defaultSince;
+  const { markersQuery, disableClusterZoom, markerColors, markerAggregation } =
+    useProps();
 
-  if (markersQuery === null || markersQuery === undefined) {
-    return null;
-  }
+  const { data: locations, lastUpdateStamp } = useNerdGraphQuery(markersQuery);
 
-  // timeRange formatting happens in the query (nerdGraphMarkerQuery)
-  const { timeRange } = useContext(PlatformStateContext);
+  const { customColors } = useCustomColors(markerColors);
+  const customColorsRef = useRef(customColors);
 
-  const [locations, setLocations] = useState([]);
   useEffect(() => {
-    const fetchData = async () => {
-      const query = nerdGraphMarkerQuery(
-        markersQuery,
-        timeRange,
-        defSinceString,
-        ignorePicker
-      );
-      const variables = { id: parseInt(accountId) };
-
-      try {
-        const response = await NerdGraphQuery.query({ query, variables });
-        const results = response?.data?.actor?.account?.markers?.results;
-        if (results && Array.isArray(results)) {
-          results.forEach((location) => {
-            deriveStatus(location);
-            formatValues(location);
-          });
-        }
-        setLocations(response?.data?.actor?.account?.markers?.results);
-      } catch (error) {
-        console.error("Error fetching data:", error);
-        // Handle error appropriately
-      }
-    };
-
-    // Perform the immediate fetch to populate the initial data
-    fetchData();
-
-    // Then set an interval to continue fetching
-    const fetchIntervalms = (fetchInterval || FETCH_INTERVAL_DEFAULT) * 1000;
-
-    if (fetchIntervalms >= 1000) {
-      const intervalId = setInterval(fetchData, fetchIntervalms);
-      // Clear the interval when the component unmounts
-      return () => clearInterval(intervalId);
-    } else {
-      return null;
-    }
-  }, [timeRange, fetchInterval]);
+    customColorsRef.current = customColors;
+    // Update the renderKey when customColors or markerAggregation changes
+    setRenderKey(Math.random());
+  }, [customColors, markerAggregation,lastUpdateStamp]);
 
   // This is a hack to force a re-render when markers show up for the first time.
-  // Without this, the createCustomIcon icon (/utils/map.tsx) does not render as expected.
   const [renderKey, setRenderKey] = useState(Math.random());
   useEffect(() => {
     if (locations) {
@@ -94,8 +41,18 @@ const Markers = () => {
   if (locations === undefined) {
     return null;
   }
+
+  const getPoligonOptions = () => ({
+    fillColor: customColors[Status.CLUSTER].borderColor,
+    color: customColors[Status.CLUSTER].color,
+    weight: 3,
+    opacity: 0.9,
+    fillOpacity: 0.4,
+  });
+
   return (
     <MarkerClusterGroup
+      key={`${markerAggregation}-${lastUpdateStamp}`}
       singleMarkerMode={true}
       spiderfyOnMaxZoom={7}
       disableClusteringAtZoom={
@@ -103,20 +60,23 @@ const Markers = () => {
           ? DEFAULT_DISABLE_CLUSTER_ZOOM
           : disableClusterZoom
       }
-      iconCreateFunction={createClusterCustomIcon}
-      polygonOptions={{
-        fillColor: MARKER_COLOURS.groupBorder,
-        color: MARKER_COLOURS.groupBorder,
-        weight: 3,
-        opacity: 0.9,
-        fillOpacity: 0.4,
+      iconCreateFunction={(cluster) => {
+        return createClusterCustomIcon(
+          cluster,
+          customColorsRef.current,
+          markerAggregation,
+        );
       }}
+      polygonOptions={getPoligonOptions()}
     >
-      {locations.map((location) => (
-        <Marker
-          key={location.storeNumber}
+      {locations.map((location,idx) => {
+        if(isNaN(location?.latitude) || isNaN(location?.longitude)) {
+          return null;
+        }
+        return (<Marker
+          key={`${idx}-${location.value}-${lastUpdateStamp}`}
           position={[location.latitude, location.longitude]}
-          icon={createCustomIcon(location)}
+          icon={createCustomIcon(location, customColors)}
           onClick={() => {
             if (location.link) {
               window.open(location.link, "_blank");
@@ -125,7 +85,7 @@ const Markers = () => {
         >
           <LocationPopup location={location} config={tooltipConfig} />
         </Marker>
-      ))}
+    );})}
     </MarkerClusterGroup>
   );
 };

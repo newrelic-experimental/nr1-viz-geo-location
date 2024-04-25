@@ -1,29 +1,70 @@
 import React, { useMemo } from "react";
 import { GeoJSON } from "react-leaflet";
-import { regionStatusColor } from "../utils/map";
 import LocationPopup from "./LocationPopup";
+import { useRegionFeature } from "../hooks/useRegionFeature";
+import { useProps } from "../context/VizPropsProvider";
+import { useCustomColors } from "../hooks/useCustomColors";
 
-const Region = ({ region, location, tooltipConfig, defaultHeader }) => {
-  // memoize to avoid unnecessary recalculations
-  const style = useMemo(
-    () => ({
-      color: regionStatusColor(location.status).borderColor,
-      fillColor: regionStatusColor(location.status).color,
-      opacity: 0.5,
-    }),
-    [location.status],
-  );
+const Region = ({
+  key,
+  location,
+  tooltipConfig,
+  heatMapSteps,
+  getGradientColor,
+}: any) => {
+  const regionFeature = useRegionFeature(location);
+  const { regionColors } = useProps();
+  const { customColors } = useCustomColors(regionColors, false);
+
+  if (!regionFeature) {
+    console.log("Region not found for data, will not render", location);
+    return null;
+  }
+
+  const gradientColor = getGradientColor(location.value);
+
+  const style = useMemo(() => {
+    if (location.custom_color) {
+      return {
+        color: location.custom_color,
+        fillColor: location.custom_color,
+        opacity: 0.5,
+        fillOpacity: 0.7,
+      };
+    } else if (heatMapSteps && heatMapSteps !== 0) {
+      return {
+        color: gradientColor,
+        fillColor: gradientColor,
+        opacity: 0.5,
+        fillOpacity: 0.7,
+      };
+    } else {
+      return {
+        color: customColors[location.status].borderColor,
+        fillColor: customColors[location.status].color,
+        opacity: 0.7,
+      };
+    }
+  }, [
+    location.value,
+    heatMapSteps,
+    customColors,
+    gradientColor,
+    location.status,
+  ]);
 
   // determine the tooltip title, memoized to avoid unnecessary recalculations
   const getTooltipTitle = () => {
     if (location.tooltip_header === "NONE" || location.tooltip_header === "") {
       return null;
     }
-    return location.tooltip_header ? location.tooltip_header : defaultHeader;
+    return location.tooltip_header
+      ? location.tooltip_header
+      : regionFeature.name;
   };
   const tooltipTitle = useMemo(getTooltipTitle, [
     location.tooltip_header,
-    defaultHeader,
+    regionFeature.name,
   ]);
 
   // extracted onClick handler
@@ -34,7 +75,12 @@ const Region = ({ region, location, tooltipConfig, defaultHeader }) => {
   };
 
   return (
-    <GeoJSON key={location.status} data={region} style={style} onClick={handleRegionClick}>
+    <GeoJSON
+      key={key + "-" + location.value + "-" + style.fillColor}
+      data={regionFeature}
+      style={style}
+      onClick={handleRegionClick}
+    >
       <LocationPopup
         location={location}
         config={tooltipConfig}

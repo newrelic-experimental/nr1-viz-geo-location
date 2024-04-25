@@ -17,16 +17,63 @@
       "type": "nrql"
     },
     {
+      "name": "markerAggregation",
+      "title": "Marker aggregation",
+      "description": "How should clustered markers be treated",
+      "type": "enum",
+      "items": [
+        {
+          "title": "Show count of markers",
+          "value": "count"
+        },
+        {
+          "title": "Show sum of markers",
+          "value": "sum"
+        },
+        {
+          "title": "Show mean average of markers",
+          "value": "average"
+        },
+        {
+          "title": "Show max of markers",
+          "value": "max"
+        },
+        {
+          "title": "Show min of markers",
+          "value": "min"
+        }
+      ]
+    },
+    {
+      "name": "markerColors",
+      "title": "Marker colors",
+      "description": "A comma seperated list of hex colours in the order: cluster,no-status,ok,warning,critical",
+      "type": "string"
+    },
+    {
       "name": "regionsQuery",
       "title": "Regions query",
       "description": "Query to gather reqgions",
       "type": "nrql"
     },
     {
+      "name": "heatMapSteps",
+      "title": "Heatmap steps",
+      "description": "The nnumber of steps in the heat map gradient. Empty or 0 disables heat map.",
+      "type": "string"
+    },
+    {
+      "name": "regionColors",
+      "title": "Region colors",
+      "description": "A comma seperated list of hex colours. Used to create heatmap or control threshold coloring. For critical/warning states provide no-status,ok,warning,critical ",
+      "type": "string"
+    },
+    {
       "name": "defaultSince",
       "title": "Default since/until clause",
       "description": "The since/until to use if no time picker value is chosen",
-      "type": "string"
+      "type": "string",
+      "default": ""
     },
     {
       "name": "ignorePicker",
@@ -245,6 +292,12 @@
           "value": "24"
         }
       ]
+    },
+    {
+      "name": "noWrap",
+      "title": "Toggle map tile repetition",
+      "description": "Enable to prevent map tiles from repeating horizontally when panning, creating a bounded map experience.",
+      "type": "boolean"
     },
     {
       "name": "centerLatLng",

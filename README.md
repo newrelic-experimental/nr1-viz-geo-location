@@ -8,6 +8,7 @@ Geo Location Map Visualization is a dynamic web application designed to visually
 ![Visualization Overview with status](./docs/status-screenshot.jpg)
 ![Visualisation showing Regions only](./docs/screenshot_regions.jpg)
 ![Visualisation showing regions and markers together](./docs/screenshot_regionsandmarkers.jpg)
+![Visualisation showing heatmap onUS region](./docs/heatmap-usa.jpg)
 
 ## Features
 
@@ -16,7 +17,8 @@ Geo Location Map Visualization is a dynamic web application designed to visually
 - **Interactive Map Clusters:** Locations are clustered on the map for a cleaner visual representation. Clicking on a cluster zooms into that area, revealing individual markers. Clusters also provide a summary representation of the underlying marker status.
 - **Real-time Data Updates:** The application periodically fetches and updates data, ensuring the information displayed is current and accurate.
 - **Flexible Configuration:** Easily configure via configuration options and query values.
-- **Country regions:** Display whole countries with threshold colourings.
+- **Country Regions:** Display whole countries with threshold colourings.
+- **Regional Heatmaps:** Dynamicaly shade regions to generate heat maps based on value.
 
 ## Prerequisites
 
@@ -69,6 +71,8 @@ The following options can be configured using the visualization configuration pa
 
 - **Account ID:** Choose the account you wish the query to work against. (The custom visualization needs to be deplopyed to all accounts that you require data from.)
 - **Markers query:** This is an NRQL query that returns the markers to render on the map. You must supply a longitude and latitude value for each location, along with the data to render. See below for more details on the query structure.
+- **Markers colors**: Allows you to override the colours used for markers states. Specify hex colors in a comma seperated list in the order: cluster,no-status,ok,warning,critical
+- **Regions query:** This is an NRQL query that returns the regions to render on the map. You must supply a valid region field. See below for more details on the query structure.
 - **Default Since/Until:** The since.until clause to use when no picker value (i.e. default) is selected.
 - **Ignore time picker:** If checked changes to the time picker will not be applied to the maerk query.
 - **Default zoom:** This allows you to select how zoomed in the map is when it first loads.
@@ -96,16 +100,20 @@ Regions can be rendered as an alternative or in additon to markers. Use the same
 - **`geoUSState`:** A US state 2 letter code, number or name
 - **`geoUKRegion`:** A Uk Region name
 - **`tooltip_header`**: By default the country name is displayed as tool tip header. You can override by supplying a value here. Specify empty string or NONE to remove the header entirely.
+- **`custom_color`:** Provide a hex color code for this region (overrides all other colors)
 
 More details regarding region setup can be found [here](./visualizations/store-map-viz/geo/readme.md).
 
 #### Precision, prefix and suffix
 
-Its possible to specify the precision of numbers and add prefix/suffix to values. These adjustments can be made to the `icon_label`` and `tooltip_xxx`` fields by providing extra fields:
+Its possible to specify the precision of numbers and add prefix/suffix to values. These adjustments can be made to the `icon_label` and `tooltip_xxx` fields by providing extra fields:
 
 - **`_precision`:** Sets the number of decimal places to display. e.g. `select ... 2 as 'icon_label_precision'...`
 - **`_prefix`:** Adds a prefix to the value. e.g. `select ... '$' as 'tooltip_sales_prefix' ...`
 - **`_suffix`:** Adds a suffix to the value. e.g. `select ... 'rpm' as 'tooltip_thoughput_suffix' ...`
+
+You may also override the default precision (2) of the icon value by setting `value_precision` if you are not providing an icon label.
+
 
 #### Example Query
 

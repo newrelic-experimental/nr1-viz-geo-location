@@ -3,7 +3,7 @@ import { Map, TileLayer } from "react-leaflet";
 
 import Markers from "./Markers";
 import Regions from "./Regions";
-import { useStoreMap } from "../context/StoreMapContext";
+import { useMap } from "../context/MapContextProvider";
 
 // there are some issues with the default zoom and center from the context
 // so just in case we'll set them here
@@ -25,10 +25,11 @@ L.Marker.prototype.options.icon = DefaultIcon;
 
 const MapView = () => {
   // get the zoom and center from the context (StoreMapContext.tsx)
-  const storeMap = useStoreMap();
+  const mapProps = useMap();
   // Handle null values explicitly
-  const zoom = storeMap.zoom !== null ? storeMap.zoom : DEFAULT_ZOOM;
-  const center = storeMap.center !== null ? storeMap.center : DEFAULT_CENTER;
+  const zoom = mapProps.zoom !== null ? mapProps.zoom : DEFAULT_ZOOM;
+  const center = mapProps.center !== null ? mapProps.center : DEFAULT_CENTER;
+  const noWrap = mapProps.noWrap;
 
   // use ref for the map to refresh it in Viz's config mode
   const mapRef = useRef(null);
@@ -51,6 +52,8 @@ const MapView = () => {
   return (
     <Map ref={mapRef} center={center} zoom={zoom} style={mapStyle}>
       <TileLayer
+        key={noWrap}
+        noWrap={noWrap}
         attribution='&copy; <a href="http://osm.org/copyright">Map tiles by Carto, under CC BY 3.0. Data by OpenStreetMap, under ODbL.'
         url="https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png"
       />

@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { PlatformStateContext, NerdletStateContext } from "nr1";
 
 import App from "./App";
-import { StoreMapProvider } from "./context/StoreMapContext";
+import { MapProvider } from "./context/MapContextProvider";
 import { VizPropsProvider } from "./context/VizPropsProvider";
 
 const Hours12 = "43200000";
@@ -27,7 +27,7 @@ const StoreMapVizVisualization = (props) => {
     setSwitchState(!switchState);
   };
 
-  const { zoom, centerLatLng } = props;
+  const { zoom, centerLatLng, noWrap } = props;
   const theCenter = centerLatLng ? `[${centerLatLng}]` : null;
 
   return (
@@ -38,7 +38,7 @@ const StoreMapVizVisualization = (props) => {
         {(platformContextState) => (
           <NerdletStateContext.Consumer>
             {(nerdletContextState) => (
-              <StoreMapProvider zoom={zoom} center={theCenter}>
+              <MapProvider zoom={zoom} center={theCenter} noWrap={noWrap}>
                 <VizPropsProvider {...props}>
                   <App
                     platformState={platformContextState}
@@ -48,7 +48,7 @@ const StoreMapVizVisualization = (props) => {
                     {...props}
                   />
                 </VizPropsProvider>
-              </StoreMapProvider>
+              </MapProvider>
             )}
           </NerdletStateContext.Consumer>
         )}
