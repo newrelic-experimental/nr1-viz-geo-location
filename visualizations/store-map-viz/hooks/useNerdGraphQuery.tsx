@@ -17,6 +17,7 @@ export const useNerdGraphQuery = (query: string) => {
   } = useProps();
   const [data, setData] = useState([]);
   const [error, setError] = useState(null);
+  const [lastUpdateStamp, setLastUpdateStamp] = useState(0);
 
   useEffect(() => {
     if (!query || query === null || query === undefined) {
@@ -38,6 +39,7 @@ export const useNerdGraphQuery = (query: string) => {
             formatValues(location);
           });
           setData(results);
+          setLastUpdateStamp(Date.now());
         }
       } catch (error) {
         console.error("Error fetching data:", error);
@@ -60,5 +62,5 @@ export const useNerdGraphQuery = (query: string) => {
     return () => clearInterval(intervalId);
   }, [query, accountId, timeRange, fetchInterval, ignorePicker, defaultSince]);
 
-  return { data, error };
+  return { data, error, lastUpdateStamp };
 };

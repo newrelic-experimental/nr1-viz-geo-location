@@ -2,12 +2,14 @@ import { timeRangeToNrql } from "../utils";
 
 const nrqlQuery = (query, timeRange, defaultSince, ignorePicker) => {
   if (ignorePicker === true) {
-    return query.replace(/(\r\n|\n|\r)/gm, " ") + defaultSince;
+    return (
+      query.replace(/(\r\n|\n|\r)/gm, " ").replace("\\", "\\\\") + defaultSince
+    );
   } else {
     // Generate the time range part of the NRQL query
     const timeRangePart = timeRangeToNrql(timeRange);
     // Construct the full NRQL query, remove line breaks
-    let q = `${query.replace(/(\r\n|\n|\r)/gm, " ")} ${
+    let q = `${query.replace(/(\r\n|\n|\r)/gm, " ").replace("\\", "\\\\")} ${
       timeRangePart === "" ? defaultSince || "" : timeRangePart
     }`;
     return q;
@@ -19,7 +21,7 @@ const gqlQuery = (query, timeRange, defaultSince, ignorePicker) => {
     query,
     timeRange,
     defaultSince,
-    ignorePicker,
+    ignorePicker
   )}" ) { results }`;
 };
 
@@ -27,7 +29,7 @@ export const nerdGraphQuery = (
   query,
   timeRange,
   defaultSince,
-  ignorePicker,
+  ignorePicker
 ) => {
   return `
   query($id: Int!) {

@@ -17,7 +17,7 @@ const Markers = () => {
   const { markersQuery, disableClusterZoom, markerColors, markerAggregation } =
     useProps();
 
-  const { data: locations } = useNerdGraphQuery(markersQuery);
+  const { data: locations, lastUpdateStamp } = useNerdGraphQuery(markersQuery);
 
   const { customColors } = useCustomColors(markerColors);
   const customColorsRef = useRef(customColors);
@@ -26,7 +26,7 @@ const Markers = () => {
     customColorsRef.current = customColors;
     // Update the renderKey when customColors or markerAggregation changes
     setRenderKey(Math.random());
-  }, [customColors, markerAggregation]);
+  }, [customColors, markerAggregation,lastUpdateStamp]);
 
   // This is a hack to force a re-render when markers show up for the first time.
   const [renderKey, setRenderKey] = useState(Math.random());
@@ -52,7 +52,7 @@ const Markers = () => {
 
   return (
     <MarkerClusterGroup
-      key={`${markerAggregation}`}
+      key={`${markerAggregation}-${lastUpdateStamp}`}
       singleMarkerMode={true}
       spiderfyOnMaxZoom={7}
       disableClusteringAtZoom={
@@ -69,9 +69,12 @@ const Markers = () => {
       }}
       polygonOptions={getPoligonOptions()}
     >
-      {locations.map((location) => (
-        <Marker
-          key={location.storeNumber}
+      {locations.map((location,idx) => {
+        if(isNaN(location?.latitude) || isNaN(location?.longitude)) {
+          return null;
+        }
+        return (<Marker
+          key={`${idx}-${location.value}-${lastUpdateStamp}`}
           position={[location.latitude, location.longitude]}
           icon={createCustomIcon(location, customColors)}
           onClick={() => {
@@ -82,7 +85,7 @@ const Markers = () => {
         >
           <LocationPopup location={location} config={tooltipConfig} />
         </Marker>
-      ))}
+    );})}
     </MarkerClusterGroup>
   );
 };

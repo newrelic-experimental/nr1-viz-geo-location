@@ -151,7 +151,7 @@ export const createCustomIcon = (location, customColors) => {
   if (location.icon_label !== undefined) {
     markerLabel = location.icon_label;
   } else if (location.value !== undefined) {
-    markerLabel = location.value;
+    markerLabel = location.formatted_value;
   }
 
   return L.divIcon({
