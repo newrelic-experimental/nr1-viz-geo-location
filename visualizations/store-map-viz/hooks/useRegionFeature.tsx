@@ -15,7 +15,7 @@ const useRegionFeature = (location) => {
         ),
       );
       if (feature) {
-        feature.name = feature.properties.NAME;
+        feature.name = feature.properties.ADMIN;
       }
     } else if (location.geoUSState) {
       feature = geoUSStates.features.find((f) =>

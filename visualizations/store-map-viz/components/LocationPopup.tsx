@@ -3,16 +3,20 @@ import { Tooltip } from "react-leaflet";
 
 const LocationPopup = ({ location, config, title, sticky }) => {
   const items = config.map((item) => {
-    return (
-      <>
-        <div className="popup-label">{item.label}:</div>
-        <div>
-          {typeof item.formatFn === "function"
-            ? item.formatFn?.(location[item.queryField])
-            : location[item.queryField]}
-        </div>
-      </>
-    );
+    if(!location[item.queryField]) {
+      return null;
+    } else {
+      return (
+        <>
+          <div className="popup-label">{item.label}:</div>
+          <div>
+            {typeof item.formatFn === "function"
+              ? item.formatFn?.(location[item.queryField])
+              : location[item.queryField]}
+          </div>
+        </>
+      );
+    }
   });
 
   return (
