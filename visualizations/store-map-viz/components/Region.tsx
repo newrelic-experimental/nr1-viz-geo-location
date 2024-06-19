@@ -16,11 +16,7 @@ const Region = ({
   const { regionColors } = useProps();
   const { customColors } = useCustomColors(regionColors, false);
 
-  if (!regionFeature) {
-    console.log("Region not found for data, will not render", location);
-    return null;
-  }
-
+  
   const gradientColor = getGradientColor(location.value);
 
   const style = useMemo(() => {
@@ -53,6 +49,8 @@ const Region = ({
     location.status,
   ]);
 
+
+
   // determine the tooltip title, memoized to avoid unnecessary recalculations
   const getTooltipTitle = () => {
     if (location.tooltip_header === "NONE" || location.tooltip_header === "") {
@@ -60,11 +58,11 @@ const Region = ({
     }
     return location.tooltip_header
       ? location.tooltip_header
-      : regionFeature.name;
+      : regionFeature?.name;
   };
   const tooltipTitle = useMemo(getTooltipTitle, [
     location.tooltip_header,
-    regionFeature.name,
+    regionFeature?.name,
   ]);
 
   // extracted onClick handler
@@ -73,6 +71,11 @@ const Region = ({
       window.open(location.link, "_blank");
     }
   };
+
+  if (!regionFeature) {
+    console.log("Region not found for data, will not render", location);
+    return null;
+  }
 
   return (
     <GeoJSON
