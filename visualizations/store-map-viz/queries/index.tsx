@@ -9,7 +9,7 @@ const nrqlQuery = (query, timeRange, defaultSince, ignorePicker) => {
     // Generate the time range part of the NRQL query
     const timeRangePart = timeRangeToNrql(timeRange);
     // Construct the full NRQL query, remove line breaks
-    let q = `${query.replace(/(\r\n|\n|\r)/gm, " ").replace(/\\/g, "\\\\")} ${
+    let q = `${query.replace(/(\r\n|\n|\r)/gm, " ").replace(/\\/g, "\\\\").replace(/"/g,"\\\"")} ${
       timeRangePart === "" ? defaultSince || "" : timeRangePart
     }`;
     return q;

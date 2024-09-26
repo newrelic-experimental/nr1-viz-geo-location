@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import { Marker } from "react-leaflet";
+import { Marker, CircleMarker } from "react-leaflet";
 import MarkerClusterGroup from "react-leaflet-markercluster";
 import { useNerdGraphQuery } from "../hooks/useNerdGraphQuery";
 import { useCustomColors, Status } from "../hooks/useCustomColors";
@@ -73,19 +73,38 @@ const Markers = () => {
         if(isNaN(location?.latitude) || isNaN(location?.longitude)) {
           return null;
         }
-        return (<Marker
-          key={`${idx}-${location.value}-${lastUpdateStamp}`}
-          position={[location.latitude, location.longitude]}
-          icon={createCustomIcon(location, customColors)}
-          onClick={() => {
-            if (location.link) {
-              window.open(location.link, "_blank");
-            }
-          }}
-        >
-          <LocationPopup location={location} config={tooltipConfig} />
-        </Marker>
-    );})}
+
+        if(location?.icon_radius && !isNaN(location?.icon_radius)) {
+          return <CircleMarker 
+            key={`${idx}-${location.value}-${lastUpdateStamp}`}
+            center={[location.latitude, location.longitude]}
+            radius={location.icon_radius}
+            color={customColors[location.status].color}
+            stroke={location.icon_radius < 5 ? false : true}
+            fillOpacity={location.icon_radius < 5 ? 1 : 0.5}
+          >
+              <LocationPopup location={location} config={tooltipConfig} />
+          </CircleMarker>
+        } else {
+          return (<Marker
+            key={`${idx}-${location.value}-${lastUpdateStamp}`}
+            position={[location.latitude, location.longitude]}
+            icon={createCustomIcon(location, customColors)}
+            onClick={() => {
+              if (location.link) {
+                window.open(location.link, "_blank");
+              }
+            }}
+          >
+            <LocationPopup location={location} config={tooltipConfig} />
+          </Marker>
+         );         
+        }
+
+
+
+        
+    })}
     </MarkerClusterGroup>
   );
 };

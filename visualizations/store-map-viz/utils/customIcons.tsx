@@ -154,9 +154,31 @@ export const createCustomIcon = (location, customColors) => {
     markerLabel = location.formatted_value;
   }
 
-  return L.divIcon({
-    html: `<div style="color: ${textColor}; background-color: ${color}; box-shadow:0 0 0 6px ${borderColor};"><span>${markerLabel}</span></div>`,
-    className: "custom-marker-icon",
-    iconSize: [42, 42],
-  });
+  const iconSize = (location.icon_size && !isNaN(location.icon_size)) ? location.icon_size : 20;
+  //Image icon
+  if(location.icon_url && location.icon_url!==""){
+    //Icon - expect an http url to icon file
+      return new L.Icon({
+        iconUrl: location.icon_url,
+        iconSize: [iconSize,iconSize]
+      });
+    } else if(location.icon_svg && location.icon_svg!=="") {
+      //SVG icon - expect a string containing <path> elements
+      return L.divIcon({
+        html: `<svg xmlns="http://www.w3.org/2000/svg"  fill="${color}" class="bi bi-dash-square-fill" viewBox="0 0 16 16">${location.icon_svg}</svg>`,
+        className: "",
+        iconSize: [iconSize, iconSize],
+      });
+
+
+  } else {
+    //classic circle with label icon
+    return L.divIcon({
+      html: `<div style="color: ${textColor}; background-color: ${color}; box-shadow:0 0 0 6px ${borderColor};"><span>${markerLabel}</span></div>`,
+      className: "custom-marker-icon",
+      iconSize: [42, 42],
+    });
+  }
+
+
 };
