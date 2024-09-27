@@ -172,7 +172,7 @@ export const createCustomIcon = (location, customColors, gradientColor) => {
     } else if(location.icon_svg && location.icon_svg!=="") {
       //SVG icon - expect a string containing <path> elements -- examples see https://icons.getbootstrap.com/
       return L.divIcon({
-        html: `<svg xmlns="http://www.w3.org/2000/svg"  fill="${color}" class="bi bi-dash-square-fill" viewBox="0 0 16 16">${location.icon_svg}</svg>`,
+        html: `<svg xmlns="http://www.w3.org/2000/svg"  fill="${color}"  viewBox="0 0 16 16">${location.icon_svg}</svg>`,
         className: "",
         iconSize: [iconSize, iconSize],
       });
