@@ -71,8 +71,10 @@ The following options can be configured using the visualization configuration pa
 
 - **Account ID:** Choose the account you wish the query to work against. (The custom visualization needs to be deplopyed to all accounts that you require data from.)
 - **Markers query:** This is an NRQL query that returns the markers to render on the map. You must supply a longitude and latitude value for each location, along with the data to render. See below for more details on the query structure.
-- **Markers colors**: Allows you to override the colours used for markers states. Specify hex colors in a comma seperated list in the order: cluster,no-status,ok,warning,critical
+- **Markers colors**: Allows you to override the colours used for markers states. Specify hex colors in a comma seperated list in the order: cluster,no-status,ok,warning,critical. If using the heatmnap feature then supply here a list of comma seperated of hex color stops.
+- **Marker heatmap steps:** This is the number of color steps to use in marker heatmap gradient. If ommitted or zero heatmap is disabled.
 - **Regions query:** This is an NRQL query that returns the regions to render on the map. You must supply a valid region field. See below for more details on the query structure.
+- **Region heatmap steps:** This is the number of color steps to use in regions heatmap gradient. If ommitted or zero heatmap is disabled.
 - **Default Since/Until:** The since.until clause to use when no picker value (i.e. default) is selected.
 - **Ignore time picker:** If checked changes to the time picker will not be applied to the maerk query.
 - **Default zoom:** This allows you to select how zoomed in the map is when it first loads.
@@ -91,6 +93,10 @@ For the most flexibility, you can provide a number of configuration and data val
 - **`icon_label`:** If this field is provided then it will be used to display on the marker. This is useful for displaying a different value than that which you are setting the status colour from.
 - **`link`:** A URL. If present then clicking on a marker will take the user to the URL provided. You can use this to link to other New Relic pages or your own systems.
 - **`tooltip_label_of_your_choice`:** The tooltip that appears when you hover over a marker can display as many values as you require. Simply provide as many 'tooltip*' fields as you require. The label will be automatically created from the text after the "tooltip*" string. Pro tip: Prefix your tooltip label to affect sorting. e.g. "atooltip_zoo_name" will appear above "ztooltip_aardvark" in the tool tip.
+- **`icon_radius`:** If present this triggers high denisty mode where markers are drawn as small circles and clustering is disabled. Specify the radius in pixels. (Takes precedence over other marker types)
+- **`icon_url`**: If present then an icon is displayed instead of the circular marker. Provide a valid http URL for the image.
+- **`icon_svg`**: Allows an SVG path(s) to be provided. This allows for custom icons that can be colored using the status or heatmap features. Specify the XML for paths as a string. e.g: `'<path d="xxx xxx xxx"><path d="yyy yyy yyy">' as icon_svg` (see https://icons.getbootstrap.com/ for inspiration)
+- **`icon_size`**: Allows you to sepcify the size of the icon in pixels (for url and SVG only). This can be dynamic allowing for icons to be displayed at different sizes based upon the data.
 
 ### Regions Query
 
