@@ -51,6 +51,12 @@
       "type": "string"
     },
     {
+      "name": "heatMapStepsMarkers",
+      "title": "Markers heatmap steps",
+      "description": "The number of steps in the heat map gradient. Empty or 0 disables heat map.",
+      "type": "string"
+    },
+    {
       "name": "regionsQuery",
       "title": "Regions query",
       "description": "Query to gather reqgions",
@@ -58,8 +64,8 @@
     },
     {
       "name": "heatMapSteps",
-      "title": "Heatmap steps",
-      "description": "The nnumber of steps in the heat map gradient. Empty or 0 disables heat map.",
+      "title": "Region heatmap steps",
+      "description": "The number of steps in the heat map gradient. Empty or 0 disables heat map.",
       "type": "string"
     },
     {

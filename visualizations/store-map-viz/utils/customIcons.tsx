@@ -143,9 +143,15 @@ export const createClusterCustomIcon = (
 };
 
 // Function to generate a custom icon based on the location property
-export const createCustomIcon = (location, customColors) => {
+export const createCustomIcon = (location, customColors, gradientColor) => {
   const status = location.status || "NONE";
-  const { color, borderColor, textColor } = customColors[status];
+  let { color, borderColor, textColor } = customColors[status];
+
+  if(gradientColor) {
+    color = gradientColor;
+    borderColor = gradientColor + "cc";
+    textColor="#fff";
+  }
 
   let markerLabel = " ";
   if (location.icon_label !== undefined) {
@@ -156,6 +162,7 @@ export const createCustomIcon = (location, customColors) => {
 
   const iconSize = (location.icon_size && !isNaN(location.icon_size)) ? location.icon_size : 20;
   //Image icon
+
   if(location.icon_url && location.icon_url!==""){
     //Icon - expect an http url to icon file
       return new L.Icon({
@@ -163,7 +170,7 @@ export const createCustomIcon = (location, customColors) => {
         iconSize: [iconSize,iconSize]
       });
     } else if(location.icon_svg && location.icon_svg!=="") {
-      //SVG icon - expect a string containing <path> elements
+      //SVG icon - expect a string containing <path> elements -- examples see https://icons.getbootstrap.com/
       return L.divIcon({
         html: `<svg xmlns="http://www.w3.org/2000/svg"  fill="${color}" class="bi bi-dash-square-fill" viewBox="0 0 16 16">${location.icon_svg}</svg>`,
         className: "",
