@@ -51,7 +51,7 @@ export const useNerdGraphQuery = (query: string) => {
 
     if (fetchInterval < 1) {
       console.log(
-        `Fetch interval less than 1 second is not allowed. Setting to default: ${FETCH_INTERVAL_DEFAULT}s.`
+        `Fetch interval less than 1 second is not allowed. Setting to default: ${FETCH_INTERVAL_DEFAULT}s.`,
       );
       return;
     }
