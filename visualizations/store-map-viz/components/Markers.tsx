@@ -12,7 +12,6 @@ import {
 } from "../utils";
 import LocationPopup from "./LocationPopup";
 import { useProps } from "../context/VizPropsProvider";
-import { DEFAULT_DISABLE_CLUSTER_ZOOM } from "../constants";
 
 const Markers = () => {
   const { markersQuery, disableClusterZoom, markerColors, markerAggregation } =
@@ -23,17 +22,17 @@ const Markers = () => {
   const { customColors } = useCustomColors(markerColors);
   const customColorsRef = useRef(customColors);
 
-  const { setRangeMarkers, heatMapStepsMarkers, getGradientColorMarkers } = useHeatmap();
+  const { setRangeMarkers, heatMapStepsMarkers, getGradientColorMarkers } =
+    useHeatmap();
   useEffect(() => {
     setRangeMarkers(locations);
   }, [locations]);
-
 
   useEffect(() => {
     customColorsRef.current = customColors;
     // Update the renderKey when customColors or markerAggregation changes
     setRenderKey(Math.random());
-  }, [customColors, markerAggregation,lastUpdateStamp]);
+  }, [customColors, markerAggregation, lastUpdateStamp]);
 
   // This is a hack to force a re-render when markers show up for the first time.
   const [renderKey, setRenderKey] = useState(Math.random());
@@ -57,10 +56,8 @@ const Markers = () => {
     fillOpacity: 0.4,
   });
 
-  let disableClusteringAtZoom = heatMapStepsMarkers && heatMapStepsMarkers!=0 
-          ? 1 : disableClusterZoom === "default"
-          ? DEFAULT_DISABLE_CLUSTER_ZOOM
-          : disableClusterZoom
+  let disableClusteringAtZoom =
+    heatMapStepsMarkers && heatMapStepsMarkers != 0 ? 1 : disableClusterZoom;
 
   return (
     <MarkerClusterGroup
@@ -77,46 +74,51 @@ const Markers = () => {
       }}
       polygonOptions={getPoligonOptions()}
     >
-      {locations.map((location,idx) => {
-        if(isNaN(location?.latitude) || isNaN(location?.longitude)) {
+      {locations.map((location, idx) => {
+        if (isNaN(location?.latitude) || isNaN(location?.longitude)) {
           return null;
         }
 
-        const gradientColor = heatMapStepsMarkers && heatMapStepsMarkers!=0 ? getGradientColorMarkers(location.value) : null;
-        
-        const iconColor = gradientColor!=null  ? gradientColor : customColors[location.status].color;
+        const gradientColor =
+          heatMapStepsMarkers && heatMapStepsMarkers != 0
+            ? getGradientColorMarkers(location.value)
+            : null;
 
-        if(location?.icon_radius && !isNaN(location?.icon_radius)) {
-          return <CircleMarker 
-            key={`${idx}-${location.value}-${lastUpdateStamp}`}
-            center={[location.latitude, location.longitude]}
-            radius={location.icon_radius}
-            color={iconColor}
-            stroke={location.icon_radius < 8 ? false : true}
-            fillOpacity={location.icon_radius < 8 ? 1 : 0.5}
-          >
+        const iconColor =
+          gradientColor != null
+            ? gradientColor
+            : customColors[location.status].color;
+
+        if (location?.icon_radius && !isNaN(location?.icon_radius)) {
+          return (
+            <CircleMarker
+              key={`${idx}-${location.value}-${lastUpdateStamp}`}
+              center={[location.latitude, location.longitude]}
+              radius={location.icon_radius}
+              color={iconColor}
+              stroke={location.icon_radius < 8 ? false : true}
+              fillOpacity={location.icon_radius < 8 ? 1 : 0.5}
+            >
               <LocationPopup location={location} config={tooltipConfig} />
-          </CircleMarker>
+            </CircleMarker>
+          );
         } else {
-          return (<Marker
-            key={`${idx}-${location.value}-${lastUpdateStamp}`}
-            position={[location.latitude, location.longitude]}
-            icon={createCustomIcon(location, customColors, gradientColor)}
-            onClick={() => {
-              if (location.link) {
-                window.open(location.link, "_blank");
-              }
-            }}
-          >
-            <LocationPopup location={location} config={tooltipConfig} />
-          </Marker>
-         );         
+          return (
+            <Marker
+              key={`${idx}-${location.value}-${lastUpdateStamp}`}
+              position={[location.latitude, location.longitude]}
+              icon={createCustomIcon(location, customColors, gradientColor)}
+              onClick={() => {
+                if (location.link) {
+                  window.open(location.link, "_blank");
+                }
+              }}
+            >
+              <LocationPopup location={location} config={tooltipConfig} />
+            </Marker>
+          );
         }
-
-
-
-        
-    })}
+      })}
     </MarkerClusterGroup>
   );
 };

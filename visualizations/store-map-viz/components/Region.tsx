@@ -16,7 +16,6 @@ const Region = ({
   const { regionColors } = useProps();
   const { customColors } = useCustomColors(regionColors, false);
 
-  
   const gradientColor = getGradientColor(location.value);
 
   const style = useMemo(() => {
@@ -48,8 +47,6 @@ const Region = ({
     gradientColor,
     location.status,
   ]);
-
-
 
   // determine the tooltip title, memoized to avoid unnecessary recalculations
   const getTooltipTitle = () => {

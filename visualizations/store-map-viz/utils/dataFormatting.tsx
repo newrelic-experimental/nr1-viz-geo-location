@@ -40,17 +40,19 @@ export const formatValues = (location) => {
   const label_precision = location.icon_label_precision;
 
   //Format the icon value so it fits in the icon nicely
-  location.formatted_value=location.value;
-  if(location.value_precision !==undefined) {
+  location.formatted_value = location.value;
+  if (location.value_precision !== undefined) {
     //precision for value was supplied in query
-    location.formatted_value = location.value.toFixed(parseInt(location.value_precision))
+    location.formatted_value = location.value.toFixed(
+      parseInt(location.value_precision),
+    );
   } else {
     //precision of value needs to be determined
-    if(!isNaN(location.value)) {
-      //the value is a number (we dont try and fix its decimal places if its not) 
+    if (!isNaN(location.value)) {
+      //the value is a number (we dont try and fix its decimal places if its not)
       // We need to round to something sensible only if it has decimals already
-      let isDecimal = (location.value - Math.floor(location.value)) !== 0; 
-      if(isDecimal) {
+      let isDecimal = location.value - Math.floor(location.value) !== 0;
+      if (isDecimal) {
         location.formatted_value = location.value.toFixed(2);
       }
     }

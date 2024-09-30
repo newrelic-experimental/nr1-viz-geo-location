@@ -17,7 +17,8 @@ interface HeatmapHook {
 }
 
 const useHeatmap = (): HeatmapHook => {
-  const { heatMapSteps, heatMapStepsMarkers, regionColors, markerColors } = useProps();
+  const { heatMapSteps, heatMapStepsMarkers, regionColors, markerColors } =
+    useProps();
 
   //regions
   const [gradientArray, setGradientArray] = useState<string[]>([]);
@@ -25,36 +26,38 @@ const useHeatmap = (): HeatmapHook => {
   const [maxValue, setMaxValue] = useState<number>(-Infinity);
 
   //markers
-  const [gradientArrayMarkers, setGradientArrayMarkers] = useState<string[]>([]);
+  const [gradientArrayMarkers, setGradientArrayMarkers] = useState<string[]>(
+    [],
+  );
   const [minValueMarkers, setMinValueMarkers] = useState<number>(Infinity);
   const [maxValueMarkers, setMaxValueMarkers] = useState<number>(-Infinity);
 
-
-
   // Function to set the min and max values based on regions
-  const setRangeMinMax = useCallback((regions: Region[], setterMin, setterMax) => {
-    let min = Infinity;
-    let max = -Infinity;
-    regions.forEach((region) => {
-      if (region.value < min) min = region.value;
-      if (region.value > max) max = region.value;
-    });
-    setterMin(min);
-    setterMax(max);
-  }, []);
-
+  const setRangeMinMax = useCallback(
+    (regions: Region[], setterMin, setterMax) => {
+      let min = Infinity;
+      let max = -Infinity;
+      regions.forEach((region) => {
+        if (region.value < min) min = region.value;
+        if (region.value > max) max = region.value;
+      });
+      setterMin(min);
+      setterMax(max);
+    },
+    [],
+  );
 
   //for regions
   const setRange = useCallback((regions: Region[]) => {
-    setRangeMinMax(regions,setMinValue,setMaxValue );
+    setRangeMinMax(regions, setMinValue, setMaxValue);
   }, []);
 
   // for markers
   const setRangeMarkers = useCallback((regions: Region[]) => {
-    setRangeMinMax(regions,setMinValueMarkers,setMaxValueMarkers );
+    setRangeMinMax(regions, setMinValueMarkers, setMaxValueMarkers);
   }, []);
 
-  const  getGradientColorForRange = (value, gradArray, min, max)=>{
+  const getGradientColorForRange = (value, gradArray, min, max) => {
     if (
       !gradArray.length ||
       min === Infinity ||
@@ -72,7 +75,7 @@ const useHeatmap = (): HeatmapHook => {
   // for regions
   const getGradientColor = useCallback(
     (value: number) => {
-      return getGradientColorForRange(value,gradientArray,minValue,maxValue);
+      return getGradientColorForRange(value, gradientArray, minValue, maxValue);
     },
     [minValue, maxValue, gradientArray],
   );
@@ -80,13 +83,17 @@ const useHeatmap = (): HeatmapHook => {
   //for markers
   const getGradientColorMarkers = useCallback(
     (value: number) => {
-      return getGradientColorForRange(value,gradientArrayMarkers,minValueMarkers,maxValueMarkers);
+      return getGradientColorForRange(
+        value,
+        gradientArrayMarkers,
+        minValueMarkers,
+        maxValueMarkers,
+      );
     },
     [minValueMarkers, maxValueMarkers, gradientArrayMarkers],
   );
 
-
-  const generateGradient = (hmSteps,colorPallete,setGrad) => {
+  const generateGradient = (hmSteps, colorPallete, setGrad) => {
     let steps = hmSteps && hmSteps !== "" ? parseInt(hmSteps, 10) : 0;
     steps = isNaN(steps) ? 0 : steps;
 
@@ -99,21 +106,29 @@ const useHeatmap = (): HeatmapHook => {
       .setColorGradient(...colors)
       .setMidpoint(steps)
       .getColors();
-      setGrad(gradient);
+    setGrad(gradient);
   };
 
   useEffect(() => {
-    generateGradient(heatMapSteps,regionColors,setGradientArray);
+    generateGradient(heatMapSteps, regionColors, setGradientArray);
   }, [heatMapSteps, regionColors, minValue, maxValue]);
 
   useEffect(() => {
-    generateGradient(heatMapStepsMarkers,markerColors,setGradientArrayMarkers);
+    generateGradient(
+      heatMapStepsMarkers,
+      markerColors,
+      setGradientArrayMarkers,
+    );
   }, [heatMapStepsMarkers, markerColors, minValueMarkers, maxValueMarkers]);
 
-
-
-
-  return { getGradientColor, getGradientColorMarkers, heatMapSteps, heatMapStepsMarkers, setRange, setRangeMarkers };
+  return {
+    getGradientColor,
+    getGradientColorMarkers,
+    heatMapSteps,
+    heatMapStepsMarkers,
+    setRange,
+    setRangeMarkers,
+  };
 };
 
 export { useHeatmap };

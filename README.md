@@ -120,7 +120,6 @@ Its possible to specify the precision of numbers and add prefix/suffix to values
 
 You may also override the default precision (2) of the icon value by setting `value_precision` if you are not providing an icon label.
 
-
 #### Example Query
 
 Here is a basic example query, that utilises a lookup table (containing storeID/lat/lng/city) to supply the latitude, longitude to the data:

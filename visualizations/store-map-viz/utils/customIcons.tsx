@@ -28,7 +28,7 @@ function aggregateStatusCounts(locations: any[]): ClusterStatusCounts {
 function generatePieStyle(
   clusterStatusBreakdown: ClusterStatusCounts,
   totalLocations: number,
-  customColors: any
+  customColors: any,
 ): string {
   let pieStyle = `background: ${customColors[Status.CLUSTER].borderColor};`;
   const totalStatus =
@@ -38,10 +38,10 @@ function generatePieStyle(
 
   if (totalStatus > 0) {
     const criticalDegree = Math.floor(
-      (clusterStatusBreakdown.CRITICAL / totalLocations) * 360
+      (clusterStatusBreakdown.CRITICAL / totalLocations) * 360,
     );
     const warningDegree = Math.floor(
-      (clusterStatusBreakdown.WARNING / totalLocations) * 360
+      (clusterStatusBreakdown.WARNING / totalLocations) * 360,
     );
 
     pieStyle = `background: conic-gradient(${
@@ -116,7 +116,7 @@ function calculateAggregatedLabel(cluster, aggregationMode) {
 export const createClusterCustomIcon = (
   cluster,
   customColors,
-  aggregationMode
+  aggregationMode,
 ) => {
   const locations = cluster.getAllChildMarkers();
   const clusterStatusBreakdown = aggregateStatusCounts(locations);
@@ -124,7 +124,7 @@ export const createClusterCustomIcon = (
   let pieStyle = generatePieStyle(
     clusterStatusBreakdown,
     locations.length,
-    customColors
+    customColors,
   );
 
   let clusterLabel = calculateAggregatedLabel(cluster, aggregationMode);
@@ -147,10 +147,10 @@ export const createCustomIcon = (location, customColors, gradientColor) => {
   const status = location.status || "NONE";
   let { color, borderColor, textColor } = customColors[status];
 
-  if(gradientColor) {
+  if (gradientColor) {
     color = gradientColor;
     borderColor = gradientColor + "cc";
-    textColor="#fff";
+    textColor = "#fff";
   }
 
   let markerLabel = " ";
@@ -160,24 +160,23 @@ export const createCustomIcon = (location, customColors, gradientColor) => {
     markerLabel = location.formatted_value;
   }
 
-  const iconSize = (location.icon_size && !isNaN(location.icon_size)) ? location.icon_size : 20;
+  const iconSize =
+    location.icon_size && !isNaN(location.icon_size) ? location.icon_size : 20;
   //Image icon
 
-  if(location.icon_url && location.icon_url!==""){
+  if (location.icon_url && location.icon_url !== "") {
     //Icon - expect an http url to icon file
-      return new L.Icon({
-        iconUrl: location.icon_url,
-        iconSize: [iconSize,iconSize]
-      });
-    } else if(location.icon_svg && location.icon_svg!=="") {
-      //SVG icon - expect a string containing <path> elements -- examples see https://icons.getbootstrap.com/
-      return L.divIcon({
-        html: `<svg xmlns="http://www.w3.org/2000/svg"  fill="${color}"  viewBox="0 0 16 16">${location.icon_svg}</svg>`,
-        className: "",
-        iconSize: [iconSize, iconSize],
-      });
-
-
+    return new L.Icon({
+      iconUrl: location.icon_url,
+      iconSize: [iconSize, iconSize],
+    });
+  } else if (location.icon_svg && location.icon_svg !== "") {
+    //SVG icon - expect a string containing <path> elements -- examples see https://icons.getbootstrap.com/
+    return L.divIcon({
+      html: `<svg xmlns="http://www.w3.org/2000/svg"  fill="${color}"  viewBox="0 0 16 16">${location.icon_svg}</svg>`,
+      className: "",
+      iconSize: [iconSize, iconSize],
+    });
   } else {
     //classic circle with label icon
     return L.divIcon({
@@ -186,6 +185,4 @@ export const createCustomIcon = (location, customColors, gradientColor) => {
       iconSize: [42, 42],
     });
   }
-
-
 };
