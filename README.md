@@ -171,6 +171,12 @@ facet city as 'name' limit max
 
 The Geo regions are defined in [countries.geojson.json](./visualizations/store-map-viz/geo/countries.geojson.json). This is a GEOJSON file contiaing the country region polygons. You may want to edit these to suit your needs.
 
+## Geo Lookup Tables
+The following data tables may be useful to join your data to. Upload as lookup tables and join to them through NRQL:
+
+- [UK/Ireland Regions](./assets/lookup_tables/UK-IRE-regions.csv): Region names and lat/lng for central points.
+- [UK Postcode Areas](./assets/lookup_tables/UKPostcodeAreaData.csv): Post code areas mapped to UK regions plus lat/lng for postcode areas.
+
 ## Architecture
 
 The following diagram illustrates the architecture of the visualization:
