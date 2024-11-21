@@ -97,10 +97,12 @@ For the most flexibility, you can provide a number of configuration and data val
 - **`icon_label`:** If this field is provided then it will be used to display on the marker. This is useful for displaying a different value than that which you are setting the status colour from.
 - **`link`:** A URL. If present then clicking on a marker will take the user to the URL provided. You can use this to link to other New Relic pages or your own systems.
 - **`tooltip_label_of_your_choice`:** The tooltip that appears when you hover over a marker can display as many values as you require. Simply provide as many 'tooltip*' fields as you require. The label will be automatically created from the text after the "tooltip*" string. Pro tip: Prefix your tooltip label to affect sorting. e.g. "atooltip_zoo_name" will appear above "ztooltip_aardvark" in the tool tip.
+- **`tooltip_header`**: Title for the tooltip, displayed larger.
 - **`icon_radius`:** If present this triggers **high denisty mode** where markers are drawn as small circles and clustering is disabled. Specify the radius in pixels. (Takes precedence over other marker types)
 - **`icon_url`**: If present then an icon is displayed instead of the circular marker. Provide a valid http URL for the image.
 - **`icon_svg`**: Allows an SVG path(s) to be provided. This allows for custom icons that can be colored using the status or heatmap features. Specify the XML for paths as a string. e.g: `'<path d="xxx xxx xxx"><path d="yyy yyy yyy">' as icon_svg` (see https://icons.getbootstrap.com/ for inspiration)
 - **`icon_size`**: Allows you to sepcify the size of the icon in pixels (for url and SVG only). This can be dynamic allowing for icons to be displayed at different sizes based upon the data.
+- **`popup_visibility`**: Set to "ALWAYS" for the tool tip to always show or "NEVER" to never show. Otherwise tooltip appears on hover.
 
 ### Regions Query
 
@@ -109,8 +111,9 @@ Regions can be rendered as an alternative or in additon to markers. Use the same
 - **`geoISOCountry`:** The ISO A3 or ISO A2 country code (e.g. "GBR" or "GB") (Replaces latitide/longitude)
 - **`geoUSState`:** A US state 2 letter code, number or name
 - **`geoUKRegion`:** A Uk Region name
-- **`tooltip_header`**: By default the country name is displayed as tool tip header. You can override by supplying a value here. Specify empty string or NONE to remove the header entirely.
+- **`tooltip_header`**: By default the region name is displayed as tool tip header. You can override by supplying a value here. Specify empty string or NONE to remove the header entirely.
 - **`custom_color`:** Provide a hex color code for this region (overrides all other colors)
+- **`popup_visibility`**: Set to "ALWAYS" for the tool tip to always show (not recommended on regions) or "NEVER" to never show. Otherwise tooltip appears on hover.
 
 More details regarding region setup can be found [here](./visualizations/store-map-viz/geo/readme.md).
 
@@ -170,6 +173,14 @@ facet city as 'name' limit max
 ## Geo Regions
 
 The Geo regions are defined in [countries.geojson.json](./visualizations/store-map-viz/geo/countries.geojson.json). This is a GEOJSON file contiaing the country region polygons. You may want to edit these to suit your needs.
+
+## Geo Lookup Tables
+
+The following data tables may be useful to join your data to. Upload as lookup tables and join to them through NRQL:
+
+- [World Countries](./assets/lookup_tables/World_Countries.csv): Provides lat/lng position of individual countries matching those in the region map data. Allows you to plot a single marker per country.
+- [UK/Ireland Regions](./assets/lookup_tables/UK-IRE-regions.csv): Region names and lat/lng for central points.
+- [UK Postcode Areas](./assets/lookup_tables/UKPostcodeAreaData.csv): Post code areas mapped to UK regions plus lat/lng for postcode areas.
 
 ## Architecture
 
