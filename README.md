@@ -101,6 +101,7 @@ For the most flexibility, you can provide a number of configuration and data val
 - **`icon_url`**: If present then an icon is displayed instead of the circular marker. Provide a valid http URL for the image.
 - **`icon_svg`**: Allows an SVG path(s) to be provided. This allows for custom icons that can be colored using the status or heatmap features. Specify the XML for paths as a string. e.g: `'<path d="xxx xxx xxx"><path d="yyy yyy yyy">' as icon_svg` (see https://icons.getbootstrap.com/ for inspiration)
 - **`icon_size`**: Allows you to sepcify the size of the icon in pixels (for url and SVG only). This can be dynamic allowing for icons to be displayed at different sizes based upon the data.
+- **`popup_visibility`**: Set to "ALWAYS" for the tool tip to always showor "NEVER" to never show. Otherwise tooltip appears on hover.
 
 ### Regions Query
 
@@ -111,6 +112,7 @@ Regions can be rendered as an alternative or in additon to markers. Use the same
 - **`geoUKRegion`:** A Uk Region name
 - **`tooltip_header`**: By default the country name is displayed as tool tip header. You can override by supplying a value here. Specify empty string or NONE to remove the header entirely.
 - **`custom_color`:** Provide a hex color code for this region (overrides all other colors)
+- **`popup_visibility`**: Set to "ALWAYS" for the tool tip to always show (not recommended on regions) or "NEVER" to never show. Otherwise tooltip appears on hover.
 
 More details regarding region setup can be found [here](./visualizations/store-map-viz/geo/readme.md).
 

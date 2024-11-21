@@ -88,7 +88,6 @@ const Markers = () => {
           gradientColor != null
             ? gradientColor
             : customColors[location.status].color;
-
         if (location?.icon_radius && !isNaN(location?.icon_radius)) {
           return (
             <CircleMarker
