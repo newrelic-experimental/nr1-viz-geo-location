@@ -88,6 +88,8 @@ const Markers = () => {
           gradientColor != null
             ? gradientColor
             : customColors[location.status].color;
+
+        const popupTitle = location.tooltip_header || null;
         if (location?.icon_radius && !isNaN(location?.icon_radius)) {
           return (
             <CircleMarker
@@ -98,7 +100,7 @@ const Markers = () => {
               stroke={location.icon_radius < 8 ? false : true}
               fillOpacity={location.icon_radius < 8 ? 1 : 0.5}
             >
-              <LocationPopup location={location} config={tooltipConfig} />
+              <LocationPopup location={location} title={popupTitle} config={tooltipConfig} />
             </CircleMarker>
           );
         } else {
@@ -113,7 +115,7 @@ const Markers = () => {
                 }
               }}
             >
-              <LocationPopup location={location} config={tooltipConfig} />
+              <LocationPopup location={location} title={popupTitle} config={tooltipConfig} />
             </Marker>
           );
         }
