@@ -86,6 +86,7 @@ const Region = ({
         config={tooltipConfig}
         sticky={true}
         title={tooltipTitle}
+        isRegion={true}
       />
     </GeoJSON>
   );
