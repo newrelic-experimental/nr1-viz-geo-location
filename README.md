@@ -101,7 +101,7 @@ For the most flexibility, you can provide a number of configuration and data val
 - **`icon_url`**: If present then an icon is displayed instead of the circular marker. Provide a valid http URL for the image.
 - **`icon_svg`**: Allows an SVG path(s) to be provided. This allows for custom icons that can be colored using the status or heatmap features. Specify the XML for paths as a string. e.g: `'<path d="xxx xxx xxx"><path d="yyy yyy yyy">' as icon_svg` (see https://icons.getbootstrap.com/ for inspiration)
 - **`icon_size`**: Allows you to sepcify the size of the icon in pixels (for url and SVG only). This can be dynamic allowing for icons to be displayed at different sizes based upon the data.
-- **`popup_visibility`**: Set to "ALWAYS" for the tool tip to always showor "NEVER" to never show. Otherwise tooltip appears on hover.
+- **`popup_visibility`**: Set to "ALWAYS" for the tool tip to always show or "NEVER" to never show. Otherwise tooltip appears on hover.
 
 ### Regions Query
 
