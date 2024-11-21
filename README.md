@@ -174,6 +174,7 @@ facet city as 'name' limit max
 The Geo regions are defined in [countries.geojson.json](./visualizations/store-map-viz/geo/countries.geojson.json). This is a GEOJSON file contiaing the country region polygons. You may want to edit these to suit your needs.
 
 ## Geo Lookup Tables
+
 The following data tables may be useful to join your data to. Upload as lookup tables and join to them through NRQL:
 
 - [World Countries](./assets/lookup_tables/World_Countries.csv): Provides lat/lng position of individual countries matching those in the region map data. Allows you to plot a single marker per country.

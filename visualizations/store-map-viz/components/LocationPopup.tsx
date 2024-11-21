@@ -30,21 +30,20 @@ const AttributesList = ({ location, config }: AttributesListProps) => {
   return <div className="popup-grid">{items}</div>;
 };
 
-
 const LocationPopup = ({
   location,
   config,
   title,
-  sticky
+  sticky,
 }: LocationPopupProps) => {
-
   let isPermanent = false;
   let isSticky = sticky;
-  if(location.popup_visibility === "ALWAYS") { //best avoided for regions!
-    isSticky=false;
-    isPermanent=true;
+  if (location.popup_visibility === "ALWAYS") {
+    //best avoided for regions!
+    isSticky = false;
+    isPermanent = true;
   }
-  if(location.popup_visibility === "NEVER") { 
+  if (location.popup_visibility === "NEVER") {
     return null;
   }
   return (
