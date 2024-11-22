@@ -1,7 +1,7 @@
 {
   "private": true,
   "name": "location-geo-map",
-  "version": "2.4.5",
+  "version": "2.4.6",
   "scripts": {
     "start": "nr1 nerdpack:serve",
     "prettier": "prettier --write ."
