@@ -2,9 +2,10 @@ import { timeRangeToNrql } from "../utils";
 
 const nrqlQuery = (query, timeRange, defaultSince, ignorePicker) => {
   if (ignorePicker === true) {
-    return (
-      query.replace(/(\r\n|\n|\r)/gm, " ").replace(/\\/g, "\\\\") + defaultSince
-    );
+    let q = `${query.replace(/(\r\n|\n|\r)/gm, " ").replace(/\\/g, "\\\\")} ${
+      defaultSince ?? ""
+    }`;
+    return q;
   } else {
     // Generate the time range part of the NRQL query
     const timeRangePart = timeRangeToNrql(timeRange);
