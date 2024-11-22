@@ -179,8 +179,29 @@ The Geo regions are defined in [countries.geojson.json](./visualizations/store-m
 The following data tables may be useful to join your data to. Upload as lookup tables and join to them through NRQL:
 
 - [World Countries](./assets/lookup_tables/World_Countries.csv): Provides lat/lng position of individual countries matching those in the region map data. Allows you to plot a single marker per country.
-- [UK/Ireland Regions](./assets/lookup_tables/UK-IRE-regions.csv): Region names and lat/lng for central points.
-- [UK Postcode Areas](./assets/lookup_tables/UKPostcodeAreaData.csv): Post code areas mapped to UK regions plus lat/lng for postcode areas.
+- [UK/Ireland Regions](./assets/lookup_tables/UK_IRE_regions.csv): Region names and lat/lng for central points.
+- [UK Postcode Areas](./assets/lookup_tables/UK_Postcode_Areas.csv): Postcode prefix mapped to UK regions including single point lat/lng for postcode areas. 
+- [UK Postcode outcodes](./assets/lookup_tables/UK_Postcode_Outcodes.csv): Full set of postcode "outcodes" including single point lat/lng for each plus mapped to UK regions.
+
+> Tip: If you need to convert a UK post code to the 'outcode' format in order to perform a join, convert it using `capture(postcode,r'^(?P<outcode>[\d\w]+)\s*\d[A-Z]{2}') as outcode`. Here's an example:
+
+```
+with capture(my_full_delivery_postcode,r'^(?P<outcode>[\d\w]+)\s*\d[A-Z]{2}') as outcode 
+ FROM MyOrderEvent 
+ left JOIN (
+  FROM lookup(uk_postcode_outcodes) select postcode, latitude, longitude, region_latitude, region_longitude, area,post_town, region 
+ ) ON outcode = postcode
+ SELECT count(*) as value, 
+   2 + (count(*)*3) as icon_radius,
+   latest(postcode) as atooltip_postcode,
+   latest(post_town) as btooltip_town,
+   latest(area) as ctooltip_area,
+   latest(longitude) as longitude,
+   latest(latitude) as latitude
+ where outcode is not null
+ facet postcode
+ limit 100
+```
 
 ## Architecture
 
