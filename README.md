@@ -183,6 +183,25 @@ The following data tables may be useful to join your data to. Upload as lookup t
 - [UK Postcode Areas](./assets/lookup_tables/UK_Postcode_Areas.csv): Postcode prefix mapped to UK regions including single point lat/lng for postcode areas. 
 - [UK Postcode outcodes](./assets/lookup_tables/UK_Postcode_Outcodes.csv): Full set of postcode "outcodes" including single point lat/lng for each plus mapped to UK regions.
 
+> Tip: If you need to convert a UK post code to the 'outcode' format in order to perform a join, convert it using `capture(postcode,r'^(?P<outcode>[\d\w]+)\s*\d[A-Z]{2}') as outcode`. Here's an example:
+
+```
+with capture(my_full_delivery_postcode,r'^(?P<outcode>[\d\w]+)\s*\d[A-Z]{2}') as outcode 
+ FROM MyOrderEvent 
+ left JOIN (
+  FROM lookup(uk_postcode_outcodes) select postcode, latitude, longitude, region_latitude, region_longitude, area,post_town, region 
+ ) ON outcode = postcode
+ SELECT count(*) as value, 
+   2 + (count(*)*3) as icon_radius,
+   latest(postcode) as atooltip_postcode,
+   latest(post_town) as btooltip_town,
+   latest(area) as ctooltip_area,
+   latest(longitude) as longitude,
+   latest(latitude) as latitude
+ where outcode is not null
+ facet postcode
+ limit 100
+```
 
 ## Architecture
 
