@@ -47,7 +47,7 @@
     {
       "name": "markerColors",
       "title": "Marker colors",
-      "description": "A comma seperated list of hex colours in the order: cluster,no-status,ok,warning,critical",
+      "description": "A comma separated list of hex colours in the order: cluster,no-status,ok,warning,critical",
       "type": "string"
     },
     {
@@ -71,7 +71,7 @@
     {
       "name": "regionColors",
       "title": "Region colors",
-      "description": "A comma seperated list of hex colours. Used to create heatmap or control threshold coloring. For critical/warning states provide no-status,ok,warning,critical ",
+      "description": "A comma separated list of hex colours. Used to create heatmap or control threshold coloring. For critical/warning states provide no-status,ok,warning,critical ",
       "type": "string"
     },
     {
