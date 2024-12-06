@@ -1,7 +1,7 @@
 {
   "private": true,
   "name": "location-geo-map",
-  "version": "2.4.7",
+  "version": "2.4.8",
   "scripts": {
     "start": "nr1 nerdpack:serve",
     "prettier": "prettier --write ."
@@ -12,7 +12,7 @@
     "prop-types": "15.7.2",
     "react": "17.0.2",
     "react-dom": "17.0.2",
-    "react-leaflet": "^2.7.0",
+    "react-leaflet": "^2.8.0",
     "react-leaflet-markercluster": "^2.0.0",
     "recharts": "^2.9.3",
     "text-case": "^1.0.9"
