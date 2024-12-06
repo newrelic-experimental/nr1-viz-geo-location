@@ -75,7 +75,7 @@ The following options can be configured using the visualization configuration pa
 
 - **Account ID:** Choose the account you wish the query to work against. (The custom visualization needs to be deplopyed to all accounts that you require data from.)
 - **Markers query:** This is an NRQL query that returns the markers to render on the map. You must supply a longitude and latitude value for each location, along with the data to render. See below for more details on the query structure.
-- **Markers colors**: Allows you to override the colours used for markers states. Specify hex colors in a comma seperated list in the order: cluster,no-status,ok,warning,critical. If using the heatmnap feature then supply here a list of comma seperated of hex color stops.
+- **Markers colors**: Allows you to override the colours used for markers states. Specify hex colors in a comma separated list in the order: cluster,no-status,ok,warning,critical. If using the heatmnap feature then supply here a list of comma separated of hex color stops.
 - **Marker heatmap steps:** This is the number of color steps to use in marker heatmap gradient. If ommitted or zero heatmap is disabled.
 - **Regions query:** This is an NRQL query that returns the regions to render on the map. You must supply a valid region field. See below for more details on the query structure.
 - **Region heatmap steps:** This is the number of color steps to use in regions heatmap gradient. If ommitted or zero heatmap is disabled.
@@ -227,3 +227,5 @@ If you believe you have found a security vulnerability in this project or any of
 ## License
 
 New Relic Store Map Visualisation is licensed under the [Apache 2.0](http://apache.org/licenses/LICENSE-2.0.txt) License.
+
+
