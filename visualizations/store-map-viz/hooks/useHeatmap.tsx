@@ -94,19 +94,21 @@ const useHeatmap = (): HeatmapHook => {
   );
 
   const generateGradient = (hmSteps, colorPallete, setGrad) => {
-    let steps = hmSteps && hmSteps !== "" ? parseInt(hmSteps, 10) : 0;
-    steps = isNaN(steps) ? 0 : steps;
 
-    const colors =
-      colorPallete && colorPallete.split(",").length > 1
-        ? colorPallete.split(",")
-        : COLORS.HEATMAP.default;
+      let steps = hmSteps && hmSteps !== "" ? parseInt(hmSteps, 10) : 0;
+      steps = isNaN(steps) ? 0 : steps;
 
-    const gradient = new Gradient()
-      .setColorGradient(...colors)
-      .setMidpoint(steps)
-      .getColors();
-    setGrad(gradient);
+      const colors =
+        colorPallete && colorPallete.split(",").length > 1
+          ? colorPallete.split(",")
+          : COLORS.HEATMAP.default;
+
+      const gradient = new Gradient()
+        .setColorGradient(...colors)
+        .setMidpoint(steps < colors.length ? colors.length : steps)
+        .getColors();
+      setGrad(gradient);
+    
   };
 
   useEffect(() => {
