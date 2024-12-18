@@ -17,8 +17,7 @@ interface HeatmapHook {
 }
 
 const useHeatmap = (): HeatmapHook => {
-  const { heatMapSteps, heatMapStepsMarkers, regionColors, markerColors } =
-    useProps();
+  const { heatMapSteps, heatMapStepsMarkers, regionColors, markerColors } =useProps();
 
   //regions
   const [gradientArray, setGradientArray] = useState<string[]>([]);
@@ -97,7 +96,7 @@ const useHeatmap = (): HeatmapHook => {
 
       let steps = hmSteps && hmSteps !== "" ? parseInt(hmSteps, 10) : 0;
       steps = isNaN(steps) ? 0 : steps;
-      if(steps !== 0) {
+      if(steps != 0) {
         const colors =
           colorPallete && colorPallete.split(",").length > 1
             ? colorPallete.split(",")
