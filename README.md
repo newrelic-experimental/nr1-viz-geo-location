@@ -179,7 +179,7 @@ The Geo regions are defined in [countries.geojson.json](./visualizations/store-m
 The following data tables may be useful to join your data to. Upload as lookup tables and join to them through NRQL:
 
 - [World Countries](./assets/lookup_tables/World_Countries.csv): Provides lat/lng position of individual countries matching those in the region map data. Allows you to plot a single marker per country.
-- [UK/Ireland Regions](./assets/lookup_tables/UK_IRE_regions.csv): Region names and lat/lng for central points.
+- [UK/Ireland Regions](./assets/lookup_tables/UK_IRE_Regions.csv): Region names and lat/lng for central points.
 - [UK Postcode Areas](./assets/lookup_tables/UK_Postcode_Areas.csv): Postcode prefix mapped to UK regions including single point lat/lng for postcode areas. 
 - [UK Postcode outcodes](./assets/lookup_tables/UK_Postcode_Outcodes.csv): Full set of postcode "outcodes" including single point lat/lng for each plus mapped to UK regions.
 
