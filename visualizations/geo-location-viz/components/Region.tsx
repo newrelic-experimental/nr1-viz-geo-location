@@ -26,7 +26,7 @@ const Region = ({
         opacity: 0.5,
         fillOpacity: 0.7,
       };
-    } else if (heatMapSteps && heatMapSteps !== 0) {
+    } else if (heatMapSteps && heatMapSteps != 0) {
       return {
         color: gradientColor,
         fillColor: gradientColor,
