@@ -4,7 +4,7 @@ import MarkerClusterGroup from "react-leaflet-markercluster";
 import { useNerdGraphQuery } from "../hooks/useNerdGraphQuery";
 import { useCustomColors, Status } from "../hooks/useCustomColors";
 import { useHeatmap } from "../hooks/useHeatmap";
-import { navigation} from 'nr1';
+import { useOpenDashboard } from "../hooks/useOpenDashboard";
 
 import {
   createClusterCustomIcon,
@@ -17,6 +17,8 @@ import { useProps } from "../context/VizPropsProvider";
 const Markers = () => {
   const { markersQuery, disableClusterZoom, markerColors, markerAggregation } =
     useProps();
+
+  const openDashboard = useOpenDashboard();
 
   const { data: locations, lastUpdateStamp } = useNerdGraphQuery(markersQuery);
 
@@ -70,7 +72,7 @@ const Markers = () => {
         return createClusterCustomIcon(
           cluster,
           customColorsRef.current,
-          markerAggregation,
+          markerAggregation
         );
       }}
       polygonOptions={getPoligonOptions()}
@@ -101,7 +103,11 @@ const Markers = () => {
               stroke={location.icon_radius < 8 ? false : true}
               fillOpacity={location.icon_radius < 8 ? 1 : 0.5}
             >
-              <LocationPopup location={location} title={popupTitle} config={tooltipConfig} />
+              <LocationPopup
+                location={location}
+                title={popupTitle}
+                config={tooltipConfig}
+              />
             </CircleMarker>
           );
         } else {
@@ -111,33 +117,18 @@ const Markers = () => {
               position={[location.latitude, location.longitude]}
               icon={createCustomIcon(location, customColors, gradientColor)}
               onClick={() => {
-
-                if(location.dash_guid) {
-
-                  let selectedVars={}
-                  try {
-                    if(location.dash_variables) {
-                      selectedVars = JSON.parse(location.dash_variables);
-                    }
-                  } catch (e) {
-                    console.error('Error parsing dash_variables:', e);
-                  }
-                  
-                  navigation.openStackedNerdlet({
-                    id: 'dashboards.detail',
-                    urlState: {
-                      entityGuid: location.dash_guid,
-                      filters: location.dash_filter || '',
-                      useDefaultTimeRange: false,
-                      selectedVariables: selectedVars
-                    }
-                  });
+                if (location.dash_guid) {
+                  openDashboard(location);
                 } else if (location.link) {
                   window.open(location.link, "_blank");
                 }
               }}
             >
-              <LocationPopup location={location} title={popupTitle} config={tooltipConfig} />
+              <LocationPopup
+                location={location}
+                title={popupTitle}
+                config={tooltipConfig}
+              />
             </Marker>
           );
         }
