@@ -72,7 +72,7 @@ const Markers = () => {
         return createClusterCustomIcon(
           cluster,
           customColorsRef.current,
-          markerAggregation
+          markerAggregation,
         );
       }}
       polygonOptions={getPoligonOptions()}

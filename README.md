@@ -183,18 +183,18 @@ The following data tables may be useful to join your data to. Upload as lookup t
 
 - [World Countries](./assets/lookup_tables/World_Countries.csv): Provides lat/lng position of individual countries matching those in the region map data. Allows you to plot a single marker per country.
 - [UK/Ireland Regions](./assets/lookup_tables/UK_IRE_Regions.csv): Region names and lat/lng for central points.
-- [UK Postcode Areas](./assets/lookup_tables/UK_Postcode_Areas.csv): Postcode prefix mapped to UK regions including single point lat/lng for postcode areas. 
+- [UK Postcode Areas](./assets/lookup_tables/UK_Postcode_Areas.csv): Postcode prefix mapped to UK regions including single point lat/lng for postcode areas.
 - [UK Postcode outcodes](./assets/lookup_tables/UK_Postcode_Outcodes.csv): Full set of postcode "outcodes" including single point lat/lng for each plus mapped to UK regions.
 
 > Tip: If you need to convert a UK post code to the 'outcode' format in order to perform a join, convert it using `capture(postcode,r'^(?P<outcode>[\d\w]+)\s*\d[A-Z]{2}') as outcode`. Here's an example:
 
 ```
-with capture(my_full_delivery_postcode,r'^(?P<outcode>[\d\w]+)\s*\d[A-Z]{2}') as outcode 
- FROM MyOrderEvent 
+with capture(my_full_delivery_postcode,r'^(?P<outcode>[\d\w]+)\s*\d[A-Z]{2}') as outcode
+ FROM MyOrderEvent
  left JOIN (
-  FROM lookup(uk_postcode_outcodes) select postcode, latitude, longitude, region_latitude, region_longitude, area,post_town, region 
+  FROM lookup(uk_postcode_outcodes) select postcode, latitude, longitude, region_latitude, region_longitude, area,post_town, region
  ) ON outcode = postcode
- SELECT count(*) as value, 
+ SELECT count(*) as value,
    2 + (count(*)*3) as icon_radius,
    latest(postcode) as atooltip_postcode,
    latest(post_town) as btooltip_town,
@@ -230,5 +230,3 @@ If you believe you have found a security vulnerability in this project or any of
 ## License
 
 New Relic Store Map Visualisation is licensed under the [Apache 2.0](http://apache.org/licenses/LICENSE-2.0.txt) License.
-
-

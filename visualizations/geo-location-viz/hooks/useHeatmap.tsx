@@ -17,7 +17,8 @@ interface HeatmapHook {
 }
 
 const useHeatmap = (): HeatmapHook => {
-  const { heatMapSteps, heatMapStepsMarkers, regionColors, markerColors } =useProps();
+  const { heatMapSteps, heatMapStepsMarkers, regionColors, markerColors } =
+    useProps();
 
   //regions
   const [gradientArray, setGradientArray] = useState<string[]>([]);
@@ -93,22 +94,20 @@ const useHeatmap = (): HeatmapHook => {
   );
 
   const generateGradient = (hmSteps, colorPallete, setGrad) => {
+    let steps = hmSteps && hmSteps !== "" ? parseInt(hmSteps, 10) : 0;
+    steps = isNaN(steps) ? 0 : steps;
+    if (steps != 0) {
+      const colors =
+        colorPallete && colorPallete.split(",").length > 1
+          ? colorPallete.split(",")
+          : COLORS.HEATMAP.default;
 
-      let steps = hmSteps && hmSteps !== "" ? parseInt(hmSteps, 10) : 0;
-      steps = isNaN(steps) ? 0 : steps;
-      if(steps != 0) {
-        const colors =
-          colorPallete && colorPallete.split(",").length > 1
-            ? colorPallete.split(",")
-            : COLORS.HEATMAP.default;
-
-        const gradient = new Gradient()
-          .setColorGradient(...colors)
-          .setMidpoint(steps < colors.length ? colors.length : steps) // we always have as many points as colors
-          .getColors();
-        setGrad(gradient);
-      }
-    
+      const gradient = new Gradient()
+        .setColorGradient(...colors)
+        .setMidpoint(steps < colors.length ? colors.length : steps) // we always have as many points as colors
+        .getColors();
+      setGrad(gradient);
+    }
   };
 
   useEffect(() => {
