@@ -95,7 +95,6 @@ For the most flexibility, you can provide a number of configuration and data val
 - **`value`:** This field should contain the key value you want to display, it is the value that the thresholds to indicate status are compared with. Note: If you are selecting a value that is affected by changes to the time window (such as a `count()`) you may consider wrapping in a `rate()` function so that the thresholds specificed continue to work over different time ranges. e.g. `...rate(count(*), 1 minute) as 'value'`
 - **`threshold_critical` & `threshold_warning`:** Specify one or both of these values to determine the marker status color. As with standard billboard widgets, if the critical threshold is larger than warning threshold then the status will be determined by the `>=` operator. Conversely if the warning threshold is larger than the critical then the status is determined by the `<=` operator (comparisons are made against the `value` field).
 - **`icon_label`:** If this field is provided then it will be used to display on the marker. This is useful for displaying a different value than that which you are setting the status colour from.
-- **`link`:** A URL. If present then clicking on a marker will take the user to the URL provided. You can use this to link to other New Relic pages or your own systems.
 - **`tooltip_label_of_your_choice`:** The tooltip that appears when you hover over a marker can display as many values as you require. Simply provide as many 'tooltip*' fields as you require. The label will be automatically created from the text after the "tooltip*" string. Pro tip: Prefix your tooltip label to affect sorting. e.g. "atooltip_zoo_name" will appear above "ztooltip_aardvark" in the tool tip.
 - **`tooltip_header`**: Title for the tooltip, displayed larger.
 - **`icon_radius`:** If present this triggers **high denisty mode** where markers are drawn as small circles and clustering is disabled. Specify the radius in pixels. (Takes precedence over other marker types)
@@ -103,6 +102,10 @@ For the most flexibility, you can provide a number of configuration and data val
 - **`icon_svg`**: Allows an SVG path(s) to be provided. This allows for custom icons that can be colored using the status or heatmap features. Specify the XML for paths as a string. e.g: `'<path d="xxx xxx xxx"><path d="yyy yyy yyy">' as icon_svg` (see https://icons.getbootstrap.com/ for inspiration)
 - **`icon_size`**: Allows you to sepcify the size of the icon in pixels (for url and SVG only). This can be dynamic allowing for icons to be displayed at different sizes based upon the data.
 - **`popup_visibility`**: Set to "ALWAYS" for the tool tip to always show or "NEVER" to never show. Otherwise tooltip appears on hover.
+- **`link`:** A URL. If present then clicking on a marker will take the user to the URL provided. You can use this to link to other New Relic pages or your own systems.
+- **`dash_guid`**: GUID of New Relic dashboard (or page). If present overrides link above.
+- **`dash_filters`**: A filter string for dashboard. e.g. `latest(concat('fitlerName = \'',filterValue,'\'')) as dash_filter`
+- **`dash_variables`**: A selected variable stringified JSON object for dashboard. e.g. `'{ "varName": "varValue" }' as dash_variables`
 
 ### Regions Query
 

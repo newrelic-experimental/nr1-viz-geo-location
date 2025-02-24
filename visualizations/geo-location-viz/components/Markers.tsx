@@ -4,6 +4,7 @@ import MarkerClusterGroup from "react-leaflet-markercluster";
 import { useNerdGraphQuery } from "../hooks/useNerdGraphQuery";
 import { useCustomColors, Status } from "../hooks/useCustomColors";
 import { useHeatmap } from "../hooks/useHeatmap";
+import { navigation} from 'nr1';
 
 import {
   createClusterCustomIcon,
@@ -110,7 +111,28 @@ const Markers = () => {
               position={[location.latitude, location.longitude]}
               icon={createCustomIcon(location, customColors, gradientColor)}
               onClick={() => {
-                if (location.link) {
+
+                if(location.dash_guid) {
+
+                  let selectedVars={}
+                  try {
+                    if(location.dash_variables) {
+                      selectedVars = JSON.parse(location.dash_variables);
+                    }
+                  } catch (e) {
+                    console.error('Error parsing dash_variables:', e);
+                  }
+                  
+                  navigation.openStackedNerdlet({
+                    id: 'dashboards.detail',
+                    urlState: {
+                      entityGuid: location.dash_guid,
+                      filters: location.dash_filter || '',
+                      useDefaultTimeRange: false,
+                      selectedVariables: selectedVars
+                    }
+                  });
+                } else if (location.link) {
                   window.open(location.link, "_blank");
                 }
               }}
