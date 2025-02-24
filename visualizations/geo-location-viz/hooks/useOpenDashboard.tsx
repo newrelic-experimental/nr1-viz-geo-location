@@ -1,31 +1,31 @@
 import { navigation } from "nr1";
 
 type Location = {
-  dash_guid: string | null;
-  dash_filter: string | null;
-  dash_variables: string | null;
+  dash_guid?: string | null;
+  dash_filter?: string | null;
+  dash_variables?: string | null;
 };
 
 const useOpenDashboard = () => {
-  return (location: Location) => {
-    if (!location.dash_guid) return;
+  return ({ dash_guid, dash_filter = "", dash_variables }: Location) => {
+    if (!dash_guid) return;
 
-    let selectedVars = {};
-    try {
-      if (location.dash_variables) {
-        selectedVars = JSON.parse(location.dash_variables);
+    let selectedVariables = {};
+    if (dash_variables) {
+      try {
+        selectedVariables = JSON.parse(dash_variables);
+      } catch (e) {
+        console.error("Error parsing dash_variables:", e);
       }
-    } catch (e) {
-      console.error("Error parsing dash_variables:", e);
     }
 
     navigation.openStackedNerdlet({
       id: "dashboards.detail",
       urlState: {
-        entityGuid: location.dash_guid,
-        filters: location.dash_filter || "",
+        entityGuid: dash_guid,
+        filters: dash_filter,
         useDefaultTimeRange: false,
-        selectedVariables: selectedVars,
+        selectedVariables,
       },
     });
   };
