@@ -102,6 +102,13 @@ const Markers = () => {
               color={iconColor}
               stroke={location.icon_radius < 8 ? false : true}
               fillOpacity={location.icon_radius < 8 ? 1 : 0.5}
+              onClick={() => {
+                if (location.dash_guid) {
+                  openDashboard(location);
+                } else if (location.link) {
+                  window.open(location.link, "_blank");
+                }
+              }}
             >
               <LocationPopup
                 location={location}
