@@ -4,6 +4,7 @@ import MarkerClusterGroup from "react-leaflet-markercluster";
 import { useNerdGraphQuery } from "../hooks/useNerdGraphQuery";
 import { useCustomColors, Status } from "../hooks/useCustomColors";
 import { useHeatmap } from "../hooks/useHeatmap";
+import { useOpenDashboard } from "../hooks/useOpenDashboard";
 
 import {
   createClusterCustomIcon,
@@ -16,6 +17,8 @@ import { useProps } from "../context/VizPropsProvider";
 const Markers = () => {
   const { markersQuery, disableClusterZoom, markerColors, markerAggregation } =
     useProps();
+
+  const openDashboard = useOpenDashboard();
 
   const { data: locations, lastUpdateStamp } = useNerdGraphQuery(markersQuery);
 
@@ -100,7 +103,11 @@ const Markers = () => {
               stroke={location.icon_radius < 8 ? false : true}
               fillOpacity={location.icon_radius < 8 ? 1 : 0.5}
             >
-              <LocationPopup location={location} title={popupTitle} config={tooltipConfig} />
+              <LocationPopup
+                location={location}
+                title={popupTitle}
+                config={tooltipConfig}
+              />
             </CircleMarker>
           );
         } else {
@@ -110,12 +117,18 @@ const Markers = () => {
               position={[location.latitude, location.longitude]}
               icon={createCustomIcon(location, customColors, gradientColor)}
               onClick={() => {
-                if (location.link) {
+                if (location.dash_guid) {
+                  openDashboard(location);
+                } else if (location.link) {
                   window.open(location.link, "_blank");
                 }
               }}
             >
-              <LocationPopup location={location} title={popupTitle} config={tooltipConfig} />
+              <LocationPopup
+                location={location}
+                title={popupTitle}
+                config={tooltipConfig}
+              />
             </Marker>
           );
         }
