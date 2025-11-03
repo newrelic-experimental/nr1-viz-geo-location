@@ -320,13 +320,13 @@
     {
       "name": "thresholdQuery",
       "title": "Threshold query (optional)",
-      "description": "Optional query to determine marker thresholds. Must return 'threshold_critical', 'threshold_warning', and the match field.",
+      "description": "Optional query to determine marker and region thresholds. Must return 'threshold_critical', 'threshold_warning', and the match field.",
       "type": "nrql"
     },
     {
       "name": "thresholdMatchField",
       "title": "Threshold match field",
-      "description": "Field name used to match threshold data to markers (default: 'name')",
+      "description": "Field name used to match threshold data to markers and regions (default: 'name')",
       "type": "string",
       "default": "name"
     }
