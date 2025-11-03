@@ -1,4 +1,41 @@
-export const deriveStatus = (location) => {
+export const mergeThresholdData = (markers: any[], thresholds: any[], matchField = 'name') => {
+  if (!thresholds || thresholds.length === 0) {
+    return markers;
+  }
+
+  const thresholdLookup: any = {};
+  
+  // Build lookup map from threshold data
+  thresholds.forEach((threshold: any) => {
+    const matchValue = threshold[matchField];
+    if (matchValue) {
+      thresholdLookup[matchValue] = {
+        threshold_critical: threshold.threshold_critical,
+        threshold_warning: threshold.threshold_warning
+      };
+    }
+  });
+  
+  // Apply thresholds to markers
+  return markers.map((marker: any) => {
+    const matchValue = marker[matchField];
+    const thresholdData = thresholdLookup[matchValue];
+    
+    if (thresholdData) {
+      // Override with threshold query data
+      return {
+        ...marker,
+        threshold_critical: thresholdData.threshold_critical ?? marker.threshold_critical,
+        threshold_warning: thresholdData.threshold_warning ?? marker.threshold_warning
+      };
+    }
+    
+    // Keep original threshold data as fallback
+    return marker;
+  });
+};
+
+export const deriveStatus = (location: any) => {
   const {
     threshold_critical: critical,
     threshold_warning: warning,
@@ -34,7 +71,7 @@ export const deriveStatus = (location) => {
   location.status = status;
 };
 
-export const formatValues = (location) => {
+export const formatValues = (location: any) => {
   const label_prefix = location.icon_label_prefix;
   const label_suffix = location.icon_label_suffix;
   const label_precision = location.icon_label_precision;

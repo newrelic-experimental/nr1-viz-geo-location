@@ -1,7 +1,7 @@
 {
   "schemaType": "VISUALIZATION",
   "id": "location-geomap-viz",
-  "displayName": "Location Geo Map",
+  "displayName": "Location Geo Map (custom thresholds)",
   "description": "Plot data on a world map",
   "configuration": [
     {
@@ -316,6 +316,19 @@
       "title": "Fetch interval (s)",
       "description": "Zero for no refresh",
       "type": "number"
+    },
+    {
+      "name": "thresholdQuery",
+      "title": "Threshold query (optional)",
+      "description": "Optional query to determine marker thresholds. Must return 'threshold_critical', 'threshold_warning', and the match field.",
+      "type": "nrql"
+    },
+    {
+      "name": "thresholdMatchField",
+      "title": "Threshold match field",
+      "description": "Field name used to match threshold data to markers (default: 'name')",
+      "type": "string",
+      "default": "name"
     }
   ]
 }

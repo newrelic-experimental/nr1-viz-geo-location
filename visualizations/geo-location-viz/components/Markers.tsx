@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Marker, CircleMarker } from "react-leaflet";
 import MarkerClusterGroup from "react-leaflet-markercluster";
-import { useNerdGraphQuery } from "../hooks/useNerdGraphQuery";
+import { useDualQuery } from "../hooks/useNerdGraphQuery";
 import { useCustomColors, Status } from "../hooks/useCustomColors";
 import { useHeatmap } from "../hooks/useHeatmap";
 import { useOpenDashboard } from "../hooks/useOpenDashboard";
@@ -15,12 +15,22 @@ import LocationPopup from "./LocationPopup";
 import { useProps } from "../context/VizPropsProvider";
 
 const Markers = () => {
-  const { markersQuery, disableClusterZoom, markerColors, markerAggregation } =
-    useProps();
+  const { 
+    markersQuery, 
+    thresholdQuery,
+    thresholdMatchField = 'name',
+    disableClusterZoom, 
+    markerColors, 
+    markerAggregation 
+  } = useProps();
 
   const openDashboard = useOpenDashboard();
 
-  const { data: locations, lastUpdateStamp } = useNerdGraphQuery(markersQuery);
+  const { data: locations, lastUpdateStamp } = useDualQuery(
+    markersQuery, 
+    thresholdQuery, 
+    thresholdMatchField
+  );
 
   const { customColors } = useCustomColors(markerColors);
   const customColorsRef = useRef(customColors);
