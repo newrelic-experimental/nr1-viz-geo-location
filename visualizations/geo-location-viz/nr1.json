@@ -342,6 +342,62 @@
       "description": "The since/until to use for threshold query if time picker is ignored",
       "type": "string",
       "default": ""
+    },
+    {
+      "name": "enableHistoricalThresholds",
+      "title": "Enable historical thresholds",
+      "description": "Use historical data to calculate dynamic thresholds instead of static threshold overrides",
+      "type": "boolean",
+      "default": false
+    },
+    {
+      "name": "historicalPeriods",
+      "title": "Historical periods count",
+      "description": "Number of previous periods to query for historical threshold calculation (e.g., 7 for 7 previous days)",
+      "type": "number",
+      "default": 7
+    },
+    {
+      "name": "historicalPeriodUnit",
+      "title": "Historical period unit",
+      "description": "Time unit for historical periods",
+      "type": "enum",
+      "items": [
+        {
+          "title": "Days",
+          "value": "days"
+        },
+        {
+          "title": "Hours",
+          "value": "hours"
+        }
+      ],
+      "default": "days"
+    },
+    {
+      "name": "historicalAggregation",
+      "title": "Historical aggregation method",
+      "description": "How to combine threshold values from multiple historical periods",
+      "type": "enum",
+      "items": [
+        {
+          "title": "Average",
+          "value": "average"
+        },
+        {
+          "title": "Minimum",
+          "value": "min"
+        },
+        {
+          "title": "Maximum",
+          "value": "max"
+        },
+        {
+          "title": "Sum",
+          "value": "sum"
+        }
+      ],
+      "default": "average"
     }
   ]
 }

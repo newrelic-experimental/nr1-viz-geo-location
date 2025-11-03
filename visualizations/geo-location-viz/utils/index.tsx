@@ -39,3 +39,4 @@ export const formatCurrency = (amount, currency = "GBP", locale = "en-GB") => {
 
 export { createCustomIcon, createClusterCustomIcon } from "./customIcons";
 export { generateTooltipConfig } from "./map";
+export * from "./historicalThresholds";

@@ -2,7 +2,8 @@ import React, { useEffect } from "react";
 
 import { generateTooltipConfig } from "../utils";
 import { useProps } from "../context/VizPropsProvider";
-import { useDualQuery } from "../hooks/useNerdGraphQuery";
+import { useEnhancedDualQuery } from "../hooks/useNerdGraphQuery";
+import { HistoricalConfig } from "../utils/historicalThresholds";
 import { useHeatmap } from "../hooks/useHeatmap";
 
 import Region from "./Region";
@@ -11,17 +12,32 @@ const Regions = () => {
   const { 
     regionsQuery, 
     thresholdQuery,
-    thresholdMatchField = 'name'
+    thresholdMatchField = 'name',
+    // Historical threshold configuration
+    enableHistoricalThresholds = false,
+    historicalPeriods = 7,
+    historicalPeriodUnit = 'days',
+    historicalAggregation = 'average'
   } = useProps();
   
   if (regionsQuery === null || regionsQuery === undefined) {
     return null;
   }
 
-  const { data: regions } = useDualQuery(
+  // Create historical configuration object
+  const historicalConfig: HistoricalConfig = {
+    enableHistoricalThresholds,
+    historicalPeriods,
+    historicalPeriodUnit: historicalPeriodUnit as 'hours' | 'days',
+    historicalAggregation: historicalAggregation as 'average' | 'min' | 'max' | 'sum'
+  };
+
+  // Always use enhanced dual query, but pass the configuration to control behavior
+  const { data: regions } = useEnhancedDualQuery(
     regionsQuery, 
     thresholdQuery, 
-    thresholdMatchField
+    thresholdMatchField, 
+    historicalConfig
   );
 
   const { setRange, heatMapSteps, getGradientColor } = useHeatmap();

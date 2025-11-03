@@ -1,7 +1,8 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Marker, CircleMarker } from "react-leaflet";
 import MarkerClusterGroup from "react-leaflet-markercluster";
-import { useDualQuery } from "../hooks/useNerdGraphQuery";
+import { useEnhancedDualQuery } from "../hooks/useNerdGraphQuery";
+import { HistoricalConfig } from "../utils/historicalThresholds";
 import { useCustomColors, Status } from "../hooks/useCustomColors";
 import { useHeatmap } from "../hooks/useHeatmap";
 import { useOpenDashboard } from "../hooks/useOpenDashboard";
@@ -21,15 +22,30 @@ const Markers = () => {
     thresholdMatchField = 'name',
     disableClusterZoom, 
     markerColors, 
-    markerAggregation 
+    markerAggregation,
+    // Historical threshold configuration
+    enableHistoricalThresholds = false,
+    historicalPeriods = 7,
+    historicalPeriodUnit = 'days',
+    historicalAggregation = 'average'
   } = useProps();
 
   const openDashboard = useOpenDashboard();
 
-  const { data: locations, lastUpdateStamp } = useDualQuery(
+  // Create historical configuration object
+  const historicalConfig: HistoricalConfig = {
+    enableHistoricalThresholds,
+    historicalPeriods,
+    historicalPeriodUnit: historicalPeriodUnit as 'hours' | 'days',
+    historicalAggregation: historicalAggregation as 'average' | 'min' | 'max' | 'sum'
+  };
+
+  // Always use enhanced dual query, but pass the configuration to control behavior
+  const { data: locations, lastUpdateStamp } = useEnhancedDualQuery(
     markersQuery, 
     thresholdQuery, 
-    thresholdMatchField
+    thresholdMatchField, 
+    historicalConfig
   );
 
   const { customColors } = useCustomColors(markerColors);
