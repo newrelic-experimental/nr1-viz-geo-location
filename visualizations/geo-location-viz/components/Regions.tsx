@@ -17,7 +17,9 @@ const Regions = () => {
     enableHistoricalThresholds = false,
     historicalPeriods = 7,
     historicalPeriodUnit = 'days',
-    historicalAggregation = 'average'
+    historicalAggregation = 'average',
+    // Tooltip configuration
+    showThresholdsInTooltips = false
   } = useProps();
   
   if (regionsQuery === null || regionsQuery === undefined) {
@@ -48,7 +50,7 @@ const Regions = () => {
   if (!regions || regions.length == 0) {
     return null; //no regions to display
   } else {
-    const tooltipConfig = generateTooltipConfig(regions);
+    const tooltipConfig = generateTooltipConfig(regions, showThresholdsInTooltips);
 
     const regionElements = regions.map((location, index) => (
       <Region

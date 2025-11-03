@@ -398,6 +398,13 @@
         }
       ],
       "default": "average"
+    },
+    {
+      "name": "showThresholdsInTooltips",
+      "title": "Show thresholds in tooltips",
+      "description": "Display warning and critical threshold values in marker and region tooltips",
+      "type": "boolean",
+      "default": false
     }
   ]
 }

@@ -27,7 +27,9 @@ const Markers = () => {
     enableHistoricalThresholds = false,
     historicalPeriods = 7,
     historicalPeriodUnit = 'days',
-    historicalAggregation = 'average'
+    historicalAggregation = 'average',
+    // Tooltip configuration
+    showThresholdsInTooltips = false
   } = useProps();
 
   const openDashboard = useOpenDashboard();
@@ -72,7 +74,7 @@ const Markers = () => {
     }
   }, [locations]);
 
-  const tooltipConfig = generateTooltipConfig(locations);
+  const tooltipConfig = generateTooltipConfig(locations, showThresholdsInTooltips);
   if (locations === undefined) {
     return null;
   }
