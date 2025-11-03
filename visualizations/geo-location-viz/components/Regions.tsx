@@ -33,7 +33,7 @@ const Regions = () => {
   };
 
   // Always use enhanced dual query, but pass the configuration to control behavior
-  const { data: regions } = useEnhancedDualQuery(
+  const { data: regions, loading, dataReady } = useEnhancedDualQuery(
     regionsQuery, 
     thresholdQuery, 
     thresholdMatchField, 

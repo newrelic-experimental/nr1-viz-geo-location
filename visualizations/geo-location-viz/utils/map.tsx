@@ -23,5 +23,23 @@ export const generateTooltipConfig = (locations) => {
     config.unshift({ label: "Name", queryField: "name" });
   }
 
+  // Add threshold values to tooltip if they exist
+  const firstLocation = locations[0];
+  if (firstLocation.threshold_warning !== undefined && firstLocation.threshold_warning !== null) {
+    config.push({ 
+      label: "Warning Threshold", 
+      queryField: "threshold_warning",
+      formatFn: (value: any) => typeof value === 'number' ? value.toFixed(2) : value
+    } as any);
+  }
+  
+  if (firstLocation.threshold_critical !== undefined && firstLocation.threshold_critical !== null) {
+    config.push({ 
+      label: "Critical Threshold", 
+      queryField: "threshold_critical",
+      formatFn: (value: any) => typeof value === 'number' ? value.toFixed(2) : value
+    } as any);
+  }
+
   return config.length > 0 ? config : defaultConfig;
 };

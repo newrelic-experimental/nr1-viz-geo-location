@@ -41,7 +41,7 @@ const Markers = () => {
   };
 
   // Always use enhanced dual query, but pass the configuration to control behavior
-  const { data: locations, lastUpdateStamp } = useEnhancedDualQuery(
+  const { data: locations, lastUpdateStamp, loading, dataReady } = useEnhancedDualQuery(
     markersQuery, 
     thresholdQuery, 
     thresholdMatchField, 
