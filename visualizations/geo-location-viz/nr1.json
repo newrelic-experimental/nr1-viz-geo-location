@@ -329,6 +329,19 @@
       "description": "Field name used to match threshold data to markers and regions (default: 'name')",
       "type": "string",
       "default": "name"
+    },
+    {
+      "name": "thresholdIgnorePicker",
+      "title": "Threshold query ignore time picker",
+      "description": "Don't adjust the threshold query based on selected time picker",
+      "type": "boolean"
+    },
+    {
+      "name": "thresholdDefaultSince",
+      "title": "Threshold query default since/until clause",
+      "description": "The since/until to use for threshold query if time picker is ignored",
+      "type": "string",
+      "default": ""
     }
   ]
 }
