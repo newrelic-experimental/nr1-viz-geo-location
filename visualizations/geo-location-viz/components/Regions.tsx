@@ -5,6 +5,7 @@ import { useProps } from "../context/VizPropsProvider";
 import { useEnhancedDualQuery } from "../hooks/useNerdGraphQuery";
 import { HistoricalConfig } from "../utils/historicalThresholds";
 import { useHeatmap } from "../hooks/useHeatmap";
+import { useSharedHistoricalThresholds } from "../context/HistoricalThresholdProvider";
 
 import Region from "./Region";
 
@@ -26,6 +27,9 @@ const Regions = () => {
     return null;
   }
 
+  // Get shared historical threshold data
+  const { data: historicalThresholdData, loading: historicalLoading, error: historicalError } = useSharedHistoricalThresholds();
+
   // Create historical configuration object
   const historicalConfig: HistoricalConfig = {
     enableHistoricalThresholds,
@@ -34,12 +38,15 @@ const Regions = () => {
     historicalAggregation: historicalAggregation as 'average' | 'min' | 'max' | 'sum'
   };
 
-  // Always use enhanced dual query, but pass the configuration to control behavior
+  // Use enhanced dual query with shared historical threshold data
   const { data: regions, loading, dataReady } = useEnhancedDualQuery(
     regionsQuery, 
     thresholdQuery, 
     thresholdMatchField, 
-    historicalConfig
+    historicalConfig,
+    historicalThresholdData,
+    historicalLoading,
+    historicalError
   );
 
   const { setRange, heatMapSteps, getGradientColor } = useHeatmap();

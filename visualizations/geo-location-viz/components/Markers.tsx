@@ -6,6 +6,7 @@ import { HistoricalConfig } from "../utils/historicalThresholds";
 import { useCustomColors, Status } from "../hooks/useCustomColors";
 import { useHeatmap } from "../hooks/useHeatmap";
 import { useOpenDashboard } from "../hooks/useOpenDashboard";
+import { useSharedHistoricalThresholds } from "../context/HistoricalThresholdProvider";
 
 import {
   createClusterCustomIcon,
@@ -34,6 +35,9 @@ const Markers = () => {
 
   const openDashboard = useOpenDashboard();
 
+  // Get shared historical threshold data
+  const { data: historicalThresholdData, loading: historicalLoading, error: historicalError } = useSharedHistoricalThresholds();
+
   // Create historical configuration object
   const historicalConfig: HistoricalConfig = {
     enableHistoricalThresholds,
@@ -42,12 +46,15 @@ const Markers = () => {
     historicalAggregation: historicalAggregation as 'average' | 'min' | 'max' | 'sum'
   };
 
-  // Always use enhanced dual query, but pass the configuration to control behavior
+  // Use enhanced dual query with shared historical threshold data
   const { data: locations, lastUpdateStamp, loading, dataReady } = useEnhancedDualQuery(
     markersQuery, 
     thresholdQuery, 
     thresholdMatchField, 
-    historicalConfig
+    historicalConfig,
+    historicalThresholdData,
+    historicalLoading,
+    historicalError
   );
 
   const { customColors } = useCustomColors(markerColors);

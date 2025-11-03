@@ -4,6 +4,7 @@ import { Map, TileLayer } from "react-leaflet";
 import Markers from "./Markers";
 import Regions from "./Regions";
 import { useMap } from "../context/MapContextProvider";
+import { HistoricalThresholdProvider } from "../context/HistoricalThresholdProvider";
 
 // there are some issues with the default zoom and center from the context
 // so just in case we'll set them here
@@ -57,9 +58,11 @@ const MapView = () => {
         attribution='&copy; <a href="http://osm.org/copyright">Map tiles by Carto, under CC BY 3.0. Data by OpenStreetMap, under ODbL.'
         url="https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png"
       />
-      <Markers />
-      {/* uncomment to turn on Map GeoJson features */}
-      <Regions />
+      <HistoricalThresholdProvider>
+        <Markers />
+        {/* uncomment to turn on Map GeoJson features */}
+        <Regions />
+      </HistoricalThresholdProvider>
     </Map>
   );
 };
