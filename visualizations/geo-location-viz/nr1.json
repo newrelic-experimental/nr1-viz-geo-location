@@ -377,6 +377,10 @@
         {
           "title": "Hours",
           "value": "hours"
+        },
+        {
+          "title": "Minutes",
+          "value": "minutes"
         }
       ],
       "default": "days"
@@ -410,6 +414,13 @@
       "name": "showThresholdsInTooltips",
       "title": "Show thresholds in tooltips",
       "description": "Display warning and critical threshold values in marker and region tooltips",
+      "type": "boolean",
+      "default": false
+    },
+    {
+      "name": "disableTimezoneAwareness",
+      "title": "Disable daylight saving time handling",
+      "description": "Use legacy timestamp arithmetic that may cause incorrect comparisons during daylight saving time changes. When disabled (default), ensures historical periods use the same local time regardless of clock changes.",
       "type": "boolean",
       "default": false
     }

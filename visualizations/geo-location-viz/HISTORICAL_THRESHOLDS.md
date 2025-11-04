@@ -20,7 +20,7 @@ These properties are now available in the visualization configuration UI:
   - Example: `7` means each period is 7 units apart (combined with `historicalPeriodUnit`)
 
 - `historicalPeriodUnit` (string): Unit for the period gaps
-  - Options: `'hours'` or `'days'`
+  - Options: `'minutes'`, `'hours'` or `'days'`
   - Default: `'days'`
   - Example: `'days'` with `historicalPeriodSize: 7` means each period is 7 days apart
 
@@ -117,6 +117,18 @@ These properties are now available in the visualization configuration UI:
 }
 ```
 *Compares today with the past 7 consecutive days*
+
+### Example 6: High-Frequency Minute-Level Comparison
+```javascript
+{
+  enableHistoricalThresholds: true,
+  historicalPeriods: 10,       // Compare with 10 historical periods
+  historicalPeriodSize: 15,    // Each 15 minutes apart
+  historicalPeriodUnit: 'minutes',
+  historicalAggregation: 'max'
+}
+```
+*Compares current minute with 15, 30, 45, 60, 75, 90, 105, 120, 135, and 150 minutes ago*
 
 ## Backward Compatibility
 

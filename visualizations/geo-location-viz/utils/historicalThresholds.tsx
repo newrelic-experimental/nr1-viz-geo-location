@@ -3,7 +3,7 @@ const HOUR = 60 * MINUTE;
 const DAY = 24 * HOUR;
 
 export type AggregationMethod = 'average' | 'min' | 'max' | 'sum';
-export type PeriodUnit = 'hours' | 'days';
+export type PeriodUnit = 'hours' | 'days' | 'minutes';
 
 export interface HistoricalConfig {
   enableHistoricalThresholds: boolean;
@@ -109,6 +109,9 @@ const subtractCalendarPeriod = (date: Date, periods: number, unit: PeriodUnit, t
   } else if (unit === 'hours') {
     // Use setHours to handle DST transitions correctly
     newDate.setHours(newDate.getHours() - periods);
+  } else if (unit === 'minutes') {
+    // Use setMinutes to handle minute-level calculations
+    newDate.setMinutes(newDate.getMinutes() - periods);
   }
   
   return newDate;
@@ -177,6 +180,9 @@ const generateHistoricalTimeRangesFromReference = (
     } else if (config.historicalPeriodUnit === 'hours') {
       historicalEndDate.setUTCHours(historicalEndDate.getUTCHours() - totalOffset);
       historicalBeginDate.setUTCHours(historicalBeginDate.getUTCHours() - totalOffset);
+    } else if (config.historicalPeriodUnit === 'minutes') {
+      historicalEndDate.setUTCMinutes(historicalEndDate.getUTCMinutes() - totalOffset);
+      historicalBeginDate.setUTCMinutes(historicalBeginDate.getUTCMinutes() - totalOffset);
     }
     
     const historicalEndTime = historicalEndDate.getTime();
@@ -204,7 +210,8 @@ const generateHistoricalTimeRangesLegacyFromTimestamp = (
   console.log('🕰️ Using legacy timestamp arithmetic (timezone awareness disabled)');
   
   const duration = periodDuration || HOUR; // Use provided duration or default to 1 hour
-  const unitMultiplier = config.historicalPeriodUnit === 'days' ? DAY : HOUR;
+  const unitMultiplier = config.historicalPeriodUnit === 'days' ? DAY : 
+                        config.historicalPeriodUnit === 'hours' ? HOUR : MINUTE;
   
   const ranges: Array<{ beginTime: number; endTime: number }> = [];
   
@@ -325,7 +332,8 @@ const generateHistoricalTimeRangesLegacy = (
   console.log('🕰️ Using legacy timestamp arithmetic (timezone awareness disabled)');
   
   const periodDuration = parseTimeRangeDuration(timeRange, defaultSince);
-  const unitMultiplier = config.historicalPeriodUnit === 'days' ? DAY : HOUR;
+  const unitMultiplier = config.historicalPeriodUnit === 'days' ? DAY : 
+                        config.historicalPeriodUnit === 'hours' ? HOUR : MINUTE;
   
   const ranges: Array<{ beginTime: number; endTime: number }> = [];
   const now = Date.now();
