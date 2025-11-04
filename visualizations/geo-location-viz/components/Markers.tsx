@@ -84,7 +84,16 @@ const Markers = () => {
   }, [locations]);
 
   const tooltipConfig = generateTooltipConfig(locations, showThresholdsInTooltips);
+  
+  // Only wait for dataReady on initial load to prevent flickering
+  // On subsequent loads, show data as soon as locations are available
   if (locations === undefined) {
+    return null;
+  }
+  
+  // If historical thresholds are enabled and we don't have any data yet, wait for dataReady
+  // This prevents the initial flickering but allows subsequent reloads to show immediately
+  if (enableHistoricalThresholds && locations.length === 0 && !dataReady) {
     return null;
   }
 

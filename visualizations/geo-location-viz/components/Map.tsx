@@ -3,8 +3,10 @@ import { Map, TileLayer } from "react-leaflet";
 
 import Markers from "./Markers";
 import Regions from "./Regions";
+import LoadingState from "./LoadingState";
 import { useMap } from "../context/MapContextProvider";
-import { HistoricalThresholdProvider } from "../context/HistoricalThresholdProvider";
+import { HistoricalThresholdProvider, useSharedHistoricalThresholds } from "../context/HistoricalThresholdProvider";
+import { useProps } from "../context/VizPropsProvider";
 
 // there are some issues with the default zoom and center from the context
 // so just in case we'll set them here
@@ -51,19 +53,61 @@ const MapView = () => {
 
   //map ratser tiles: https://wiki.openstreetmap.org/wiki/Raster_tile_providers
   return (
-    <Map ref={mapRef} center={center} zoom={zoom} style={mapStyle}>
-      <TileLayer
-        key={noWrap}
-        noWrap={noWrap}
-        attribution='&copy; <a href="http://osm.org/copyright">Map tiles by Carto, under CC BY 3.0. Data by OpenStreetMap, under ODbL.'
-        url="https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png"
-      />
-      <HistoricalThresholdProvider>
-        <Markers />
-        {/* uncomment to turn on Map GeoJson features */}
-        <Regions />
-      </HistoricalThresholdProvider>
-    </Map>
+    <div style={{ position: "relative", height: "100%", width: "100%" }}>
+      <Map ref={mapRef} center={center} zoom={zoom} style={mapStyle}>
+        <TileLayer
+          key={noWrap}
+          noWrap={noWrap}
+          attribution='&copy; <a href="http://osm.org/copyright">Map tiles by Carto, under CC BY 3.0. Data by OpenStreetMap, under ODbL.'
+          url="https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png"
+        />
+        <HistoricalThresholdProvider>
+          <MapContent />
+        </HistoricalThresholdProvider>
+      </Map>
+    </div>
+  );
+};
+
+// Component to handle loading state and render markers/regions
+const MapContent = () => {
+  const { 
+    markersQuery, 
+    regionsQuery,
+    enableHistoricalThresholds = false
+  } = useProps();
+  
+  const { loading: historicalLoading } = useSharedHistoricalThresholds();
+  
+  // Track if we've had any successful data load to avoid showing loading on reloads
+  const [hasHadInitialData, setHasHadInitialData] = React.useState(false);
+  
+  // Check if either markers or regions have data ready
+  const markersDataReady = markersQuery ? true : false; // Will be updated by individual components
+  const regionsDataReady = regionsQuery ? true : false; // Will be updated by individual components
+  
+  // Show loading state only if:
+  // 1. Historical thresholds are enabled and still loading
+  // 2. We have queries that would use the data
+  // 3. We haven't had any initial data load yet (to prevent showing on reloads)
+  const shouldShowLoading = enableHistoricalThresholds && 
+                           historicalLoading && 
+                           (markersQuery || regionsQuery) &&
+                           !hasHadInitialData;
+
+  // Track when we've had our first successful data load
+  React.useEffect(() => {
+    if (!historicalLoading && !hasHadInitialData) {
+      setHasHadInitialData(true);
+    }
+  }, [historicalLoading, hasHadInitialData]);
+
+  return (
+    <>
+      {shouldShowLoading && <LoadingState />}
+      <Markers />
+      <Regions />
+    </>
   );
 };
 

@@ -56,7 +56,19 @@ const Regions = () => {
     setRange(regions);
   }, [regions]);
 
-  if (!regions || regions.length == 0) {
+  // Only wait for dataReady on initial load to prevent flickering
+  // On subsequent loads, show data as soon as regions are available
+  if (!regions) {
+    return null; //no regions to display
+  }
+  
+  // If historical thresholds are enabled and we don't have any data yet, wait for dataReady
+  // This prevents the initial flickering but allows subsequent reloads to show immediately
+  if (enableHistoricalThresholds && regions.length === 0 && !dataReady) {
+    return null;
+  }
+  
+  if (regions.length == 0) {
     return null; //no regions to display
   } else {
     const tooltipConfig = generateTooltipConfig(regions, showThresholdsInTooltips);

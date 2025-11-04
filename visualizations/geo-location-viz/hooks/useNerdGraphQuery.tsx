@@ -96,6 +96,7 @@ export const useEnhancedDualQuery = (
   const [mainQueryData, setMainQueryData] = useState([]);
   const [mainQueryLoading, setMainQueryLoading] = useState(false);
   const [dataReady, setDataReady] = useState(false);
+  const [hasInitialLoad, setHasInitialLoad] = useState(false);
 
   // Historical threshold data is now passed as parameters from the shared provider
 
@@ -160,23 +161,20 @@ export const useEnhancedDualQuery = (
     const processAllData = async () => {
       // Don't process if main query is still loading
       if (mainQueryLoading) {
+        setDataReady(false);
         return;
       }
       
       // Don't process if we don't have main data yet
       if (!mainQueryData || mainQueryData.length === 0) {
+        setDataReady(false);
         return;
       }
       
-      // If historical thresholds are enabled and still loading, show main data first
-      if (historicalConfig?.enableHistoricalThresholds && historicalLoading) {
-        let tempProcessedData = [...mainQueryData];
-        tempProcessedData.forEach((location: any) => {
-          deriveStatus(location);
-          formatValues(location);
-        });
-        setData(tempProcessedData);
-        setLastUpdateStamp(Date.now());
+      // Only wait for historical thresholds on the initial load to prevent flickering
+      // On subsequent reloads, show data immediately to avoid disappearing markers/regions
+      if (historicalConfig?.enableHistoricalThresholds && historicalLoading && !hasInitialLoad) {
+        setDataReady(false);
         return;
       }
       
@@ -217,6 +215,11 @@ export const useEnhancedDualQuery = (
           setData(processedData);
           setLastUpdateStamp(Date.now());
           setDataReady(true);
+          
+          // Mark that we've completed the initial load
+          if (!hasInitialLoad) {
+            setHasInitialLoad(true);
+          }
         }
         
       } catch (error) {
