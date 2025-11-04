@@ -100,16 +100,39 @@ if (enableHistoricalThresholds && locations.length === 0 && !dataReady) {
 - **Historical thresholds enabled**: Waits for historical data before rendering
 - **No queries configured**: Handles gracefully with no unnecessary loading states
 
+### 5. Auto-Refresh for Historical Thresholds
+**File**: `hooks/useHistoricalThresholdQuery.tsx`
+
+**Changes**:
+- Added `fetchInterval` parameter from props to enable auto-refresh functionality
+- Implemented interval-based refetching logic similar to main queries
+- Historical thresholds now recalculate at the same interval as markers and regions
+- Ensures threshold data stays current with the configured refresh rate
+
+**Key Logic**:
+```typescript
+// Set up interval for auto-refresh if fetchInterval is configured
+if (fetchInterval && fetchInterval >= 1) {
+  const fetchIntervalms = fetchInterval * 1000;
+  const intervalId = setInterval(fetchHistoricalThresholds, fetchIntervalms);
+  return () => clearInterval(intervalId);
+}
+```
+
 ## Files Modified
 1. `hooks/useNerdGraphQuery.tsx` - Enhanced data loading coordination
-2. `components/Markers.tsx` - Added dataReady check
-3. `components/Regions.tsx` - Added dataReady check  
+2. `components/Markers.tsx` - Added refined dataReady check
+3. `components/Regions.tsx` - Added refined dataReady check  
 4. `components/Map.tsx` - Added loading state management
 5. `components/LoadingState.tsx` - New loading indicator component
+6. `hooks/useHistoricalThresholdQuery.tsx` - Added auto-refresh functionality
 
 ## Testing Recommendations
 1. Test with historical thresholds enabled and disabled
-2. Verify no flickering occurs during data loading
-3. Confirm loading indicator appears during data fetch
-4. Test with various query configurations (markers only, regions only, both)
-5. Verify error handling still works correctly
+2. Verify no flickering occurs during initial data loading
+3. Confirm loading indicator appears only during initial load, not reloads
+4. Test auto-refresh functionality with various fetch intervals
+5. Verify historical thresholds are recalculated during auto-refresh
+6. Test with various query configurations (markers only, regions only, both)
+7. Verify error handling still works correctly
+8. Confirm markers/regions don't disappear during data reloads

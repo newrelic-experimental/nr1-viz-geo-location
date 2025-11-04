@@ -314,7 +314,7 @@
     {
       "name": "fetchInterval",
       "title": "Fetch interval (s)",
-      "description": "Zero for no refresh",
+      "description": "Zero for no refresh, default is 5 minutes",
       "type": "number"
     },
     {

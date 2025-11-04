@@ -1,4 +1,4 @@
-import { useState, useEffect, useContext } from "react";
+import { useState, useEffect, useContext, useMemo, useRef } from "react";
 import { NerdGraphQuery, PlatformStateContext } from "nr1";
 
 import { nerdGraphQuery } from "../queries";
@@ -8,6 +8,12 @@ import { useHistoricalThresholdQuery } from "./useHistoricalThresholdQuery";
 import { HistoricalConfig } from "../utils/historicalThresholds";
 
 const FETCH_INTERVAL_DEFAULT = 300; // fetch interval in s - 5 minutes
+
+// Global deduplication state for main queries
+const globalMainQueryState = {
+  activeQueries: new Map(),
+  completedQueries: new Map()
+};
 
 export const useNerdGraphQuery = (query: string) => {
   const { timeRange } = useContext(PlatformStateContext);
@@ -100,6 +106,25 @@ export const useEnhancedDualQuery = (
 
   // Historical threshold data is now passed as parameters from the shared provider
 
+  // Memoize time range values to prevent unnecessary re-renders
+  const timeRangeKey = useMemo(() => {
+    if (!timeRange) return 'none';
+    return `${timeRange.beginTime || ''}-${timeRange.endTime || ''}-${timeRange.duration || ''}`;
+  }, [timeRange?.beginTime, timeRange?.endTime, timeRange?.duration]);
+
+  // Query deduplication state for main query
+  const queryStateRef = useRef({
+    currentQueryKey: null,
+    isQueryInProgress: false,
+    lastCompletedQuery: null,
+    lastCompletedTime: 0
+  });
+
+  // Generate unique query key for main query deduplication
+  const mainQueryKey = useMemo(() => {
+    return `main-${markersQuery}-${timeRangeKey}-${accountId}-${ignorePicker}-${defaultSince}`;
+  }, [markersQuery, timeRangeKey, accountId, ignorePicker, defaultSince]);
+
   // Fetch main query data
   useEffect(() => {
     if (!markersQuery || markersQuery === null || markersQuery === undefined) {
@@ -109,7 +134,55 @@ export const useEnhancedDualQuery = (
       return;
     }
 
+    // Query deduplication logic for main query
+    const now = Date.now();
+    const DEDUPLICATION_WINDOW = 5000; // 5 seconds
+    
+    console.log('🔍 Main query useEffect triggered');
+    console.log('🔍 Main query key:', mainQueryKey);
+    console.log('🔍 Global main query state:', {
+      activeQueries: Array.from(globalMainQueryState.activeQueries.keys()),
+      completedQueries: Array.from(globalMainQueryState.completedQueries.keys())
+    });
+
+    // Global deduplication - check if same query is already in progress globally
+    if (globalMainQueryState.activeQueries.has(mainQueryKey)) {
+      console.log('🔄 Main query already in progress globally, skipping duplicate:', mainQueryKey);
+      return;
+    }
+
+    // Global deduplication - check if same query was completed recently globally
+    const globalCompletion = globalMainQueryState.completedQueries.get(mainQueryKey);
+    if (globalCompletion && (now - globalCompletion) < DEDUPLICATION_WINDOW) {
+      console.log('🔄 Main query completed recently globally, skipping duplicate:', mainQueryKey, 
+        'Time since last:', now - globalCompletion, 'ms');
+      return;
+    }
+
+    // Local deduplication - check if same query is already in progress locally
+    if (queryStateRef.current.isQueryInProgress && queryStateRef.current.currentQueryKey === mainQueryKey) {
+      console.log('🔄 Main query already in progress locally, skipping duplicate:', mainQueryKey);
+      return;
+    }
+
+    // Local deduplication - check if same query was completed recently locally
+    if (
+      queryStateRef.current.lastCompletedQuery === mainQueryKey &&
+      (now - queryStateRef.current.lastCompletedTime) < DEDUPLICATION_WINDOW
+    ) {
+      console.log('🔄 Main query completed recently locally, skipping duplicate:', mainQueryKey, 
+        'Time since last:', now - queryStateRef.current.lastCompletedTime, 'ms');
+      return;
+    }
+
     const fetchMainData = async () => {
+      // Mark query as in progress both locally and globally
+      queryStateRef.current.isQueryInProgress = true;
+      queryStateRef.current.currentQueryKey = mainQueryKey;
+      globalMainQueryState.activeQueries.set(mainQueryKey, Date.now());
+      
+      console.log('🚀 Starting main query:', mainQueryKey);
+      
       setMainQueryLoading(true);
       setDataReady(false);
       
@@ -130,6 +203,28 @@ export const useEnhancedDualQuery = (
         setError(error);
         setMainQueryData([]);
       } finally {
+        // Mark query as completed both locally and globally
+        const completionTime = Date.now();
+        
+        queryStateRef.current.isQueryInProgress = false;
+        queryStateRef.current.lastCompletedQuery = mainQueryKey;
+        queryStateRef.current.lastCompletedTime = completionTime;
+        queryStateRef.current.currentQueryKey = null;
+        
+        // Update global state
+        globalMainQueryState.activeQueries.delete(mainQueryKey);
+        globalMainQueryState.completedQueries.set(mainQueryKey, completionTime);
+        
+        // Clean up old completed queries to prevent memory leaks
+        const CLEANUP_WINDOW = 30000; // 30 seconds
+        for (const [key, time] of globalMainQueryState.completedQueries.entries()) {
+          if (completionTime - time > CLEANUP_WINDOW) {
+            globalMainQueryState.completedQueries.delete(key);
+          }
+        }
+        
+        console.log('✅ Main query completed:', mainQueryKey);
+        
         setMainQueryLoading(false);
       }
     };
@@ -150,7 +245,7 @@ export const useEnhancedDualQuery = (
   }, [
     markersQuery, 
     accountId, 
-    timeRange, 
+    timeRangeKey, 
     fetchInterval, 
     ignorePicker, 
     defaultSince
