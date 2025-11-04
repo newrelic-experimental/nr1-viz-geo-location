@@ -358,9 +358,16 @@
       "default": 7
     },
     {
+      "name": "historicalPeriodSize",
+      "title": "Historical period gap size",
+      "description": "Gap between each historical period (e.g., 7 for weekly comparison, 1 for consecutive days)",
+      "type": "number",
+      "default": 1
+    },
+    {
       "name": "historicalPeriodUnit",
       "title": "Historical period unit",
-      "description": "Time unit for historical periods",
+      "description": "Time unit for historical period gaps",
       "type": "enum",
       "items": [
         {

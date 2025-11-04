@@ -172,6 +172,7 @@ export const useHistoricalThresholdQuery = (
     thresholdQuery,
     config.enableHistoricalThresholds,
     config.historicalPeriods,
+    config.historicalPeriodSize,
     config.historicalPeriodUnit,
     config.historicalAggregation,
     config.disableTimezoneAwareness,

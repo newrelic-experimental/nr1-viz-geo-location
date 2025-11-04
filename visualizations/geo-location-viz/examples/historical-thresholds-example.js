@@ -32,66 +32,82 @@ const exampleConfig = {
   // NEW: Historical threshold configuration
   enableHistoricalThresholds: true,
   historicalPeriods: 7,
+  historicalPeriodSize: 1,  // Each 1 day apart (consecutive days)
   historicalPeriodUnit: 'days',
   historicalAggregation: 'average'
 };
 
 // How it works:
 // 1. Main query gets current data (e.g., last hour)
-// 2. Threshold query runs 7 times for the same hour from previous 7 days
-// 3. Results are averaged across those 7 days
+// 2. Threshold query runs 7 times for the same hour from previous periods
+// 3. Results are averaged across those periods
 // 4. Averaged thresholds are applied to current data
 
 // Example scenarios:
 
-// Scenario 1: Weekly baseline thresholds
-const weeklyBaseline = {
+// Scenario 1: Same day of week comparison (weekly pattern)
+const sameDayOfWeek = {
   enableHistoricalThresholds: true,
-  historicalPeriods: 7,
+  historicalPeriods: 7,        // Compare with 7 historical periods
+  historicalPeriodSize: 7,     // Each 7 days apart (same day of week)
   historicalPeriodUnit: 'days',
   historicalAggregation: 'average'
 };
 
-// Scenario 2: Peak capacity thresholds (use max from last 5 days)
-const peakCapacity = {
+// Scenario 2: Consecutive days baseline (traditional behavior)
+const consecutiveDays = {
   enableHistoricalThresholds: true,
-  historicalPeriods: 5,
+  historicalPeriods: 7,        // Compare with 7 historical periods
+  historicalPeriodSize: 1,     // Each 1 day apart (consecutive)
+  historicalPeriodUnit: 'days',
+  historicalAggregation: 'average'
+};
+
+// Scenario 3: Every other day comparison
+const everyOtherDay = {
+  enableHistoricalThresholds: true,
+  historicalPeriods: 5,        // Compare with 5 historical periods
+  historicalPeriodSize: 2,     // Each 2 days apart
   historicalPeriodUnit: 'days',
   historicalAggregation: 'max'
 };
 
-// Scenario 3: Hourly pattern thresholds (last 24 hours)
-const hourlyPattern = {
+// Scenario 4: Same hour each day
+const sameHourDaily = {
   enableHistoricalThresholds: true,
-  historicalPeriods: 24,
+  historicalPeriods: 10,       // Compare with 10 historical periods
+  historicalPeriodSize: 24,    // Each 24 hours apart
   historicalPeriodUnit: 'hours',
   historicalAggregation: 'average'
 };
 
-// Scenario 4: Conservative thresholds (use minimum from last 3 days)
-const conservative = {
+// Scenario 5: Monthly comparison (approximate)
+const monthlyPattern = {
   enableHistoricalThresholds: true,
-  historicalPeriods: 3,
+  historicalPeriods: 6,        // Compare with 6 historical periods
+  historicalPeriodSize: 30,    // Each 30 days apart
   historicalPeriodUnit: 'days',
   historicalAggregation: 'min'
 };
 
-// Scenario 5: Cross-DST comparison with timezone awareness (DEFAULT BEHAVIOR)
+// Scenario 6: Cross-DST comparison with timezone awareness (DEFAULT BEHAVIOR)
 // This ensures 3pm-4pm today compares with 3pm-4pm from previous days,
 // even if there were clock changes between them
 const crossDSTAware = {
   enableHistoricalThresholds: true,
   historicalPeriods: 7,
+  historicalPeriodSize: 1,     // Each 1 day apart (consecutive)
   historicalPeriodUnit: 'days',
   historicalAggregation: 'average'
   // disableTimezoneAwareness: false (default - timezone-aware calculations)
 };
 
-// Scenario 6: Legacy behavior (opt-out of timezone awareness)
+// Scenario 7: Legacy behavior (opt-out of timezone awareness)
 // Use this only if you need the old Unix timestamp arithmetic behavior
 const legacyBehavior = {
   enableHistoricalThresholds: true,
   historicalPeriods: 7,
+  historicalPeriodSize: 1,     // Each 1 day apart (consecutive)
   historicalPeriodUnit: 'days',
   historicalAggregation: 'average',
   disableTimezoneAwareness: true  // Disable timezone-aware calculations
@@ -99,10 +115,11 @@ const legacyBehavior = {
 
 export {
   exampleConfig,
-  weeklyBaseline,
-  peakCapacity,
-  hourlyPattern,
-  conservative,
+  sameDayOfWeek,
+  consecutiveDays,
+  everyOtherDay,
+  sameHourDaily,
+  monthlyPattern,
   crossDSTAware,
   legacyBehavior
 };

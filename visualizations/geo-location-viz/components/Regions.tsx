@@ -17,6 +17,7 @@ const Regions = () => {
     // Historical threshold configuration
     enableHistoricalThresholds = false,
     historicalPeriods = 7,
+    historicalPeriodSize = 1,
     historicalPeriodUnit = 'days',
     historicalAggregation = 'average',
     // Tooltip configuration
@@ -34,6 +35,7 @@ const Regions = () => {
   const historicalConfig: HistoricalConfig = {
     enableHistoricalThresholds,
     historicalPeriods,
+    historicalPeriodSize,
     historicalPeriodUnit: historicalPeriodUnit as 'hours' | 'days',
     historicalAggregation: historicalAggregation as 'average' | 'min' | 'max' | 'sum'
   };

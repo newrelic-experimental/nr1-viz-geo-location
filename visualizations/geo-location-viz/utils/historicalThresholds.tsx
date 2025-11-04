@@ -8,6 +8,7 @@ export type PeriodUnit = 'hours' | 'days';
 export interface HistoricalConfig {
   enableHistoricalThresholds: boolean;
   historicalPeriods: number;
+  historicalPeriodSize: number; // Gap between each historical period
   historicalPeriodUnit: PeriodUnit;
   historicalAggregation: AggregationMethod;
   disableTimezoneAwareness?: boolean; // defaults to false - when true, uses legacy Unix timestamp arithmetic
@@ -160,19 +161,22 @@ const generateHistoricalTimeRangesFromReference = (
   console.log(`🕰️ Current period: ${currentBeginDate.toISOString()} - ${currentEndDate.toISOString()}`);
   console.log(`🕰️ Period duration: ${duration / MINUTE} minutes`);
   
-  // Generate historical periods using UTC calendar arithmetic
+  // Generate historical periods using UTC calendar arithmetic with configurable gaps
   for (let i = 1; i <= config.historicalPeriods; i++) {
     // Create new dates for this historical period
     const historicalEndDate = new Date(currentEndDate);
     const historicalBeginDate = new Date(currentBeginDate);
     
+    // Calculate the total offset for this period (period index * period size)
+    const totalOffset = i * config.historicalPeriodSize;
+    
     // Subtract periods using UTC calendar arithmetic to match New Relic's UTC timestamps
     if (config.historicalPeriodUnit === 'days') {
-      historicalEndDate.setUTCDate(historicalEndDate.getUTCDate() - i);
-      historicalBeginDate.setUTCDate(historicalBeginDate.getUTCDate() - i);
+      historicalEndDate.setUTCDate(historicalEndDate.getUTCDate() - totalOffset);
+      historicalBeginDate.setUTCDate(historicalBeginDate.getUTCDate() - totalOffset);
     } else if (config.historicalPeriodUnit === 'hours') {
-      historicalEndDate.setUTCHours(historicalEndDate.getUTCHours() - i);
-      historicalBeginDate.setUTCHours(historicalBeginDate.getUTCHours() - i);
+      historicalEndDate.setUTCHours(historicalEndDate.getUTCHours() - totalOffset);
+      historicalBeginDate.setUTCHours(historicalBeginDate.getUTCHours() - totalOffset);
     }
     
     const historicalEndTime = historicalEndDate.getTime();
@@ -209,9 +213,10 @@ const generateHistoricalTimeRangesLegacyFromTimestamp = (
   
   console.log(`🕰️ Period duration: ${duration / MINUTE} minutes`);
   
-  // Generate historical periods using fixed millisecond arithmetic
+  // Generate historical periods using fixed millisecond arithmetic with configurable gaps
   for (let i = 1; i <= config.historicalPeriods; i++) {
-    const offsetMs = i * unitMultiplier;
+    const totalOffset = i * config.historicalPeriodSize;
+    const offsetMs = totalOffset * unitMultiplier;
     const historicalEndTime = currentEndTime - offsetMs;
     const historicalBeginTime = currentBeginTime - offsetMs;
     

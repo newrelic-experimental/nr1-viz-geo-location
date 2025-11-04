@@ -18,6 +18,7 @@ export const HistoricalThresholdProvider = ({ children }) => {
     // Historical threshold configuration
     enableHistoricalThresholds = false,
     historicalPeriods = 7,
+    historicalPeriodSize = 1,
     historicalPeriodUnit = 'days',
     historicalAggregation = 'average'
   } = useProps();
@@ -26,6 +27,7 @@ export const HistoricalThresholdProvider = ({ children }) => {
   const historicalConfig: HistoricalConfig = {
     enableHistoricalThresholds,
     historicalPeriods,
+    historicalPeriodSize,
     historicalPeriodUnit: historicalPeriodUnit as 'hours' | 'days',
     historicalAggregation: historicalAggregation as 'average' | 'min' | 'max' | 'sum'
   };

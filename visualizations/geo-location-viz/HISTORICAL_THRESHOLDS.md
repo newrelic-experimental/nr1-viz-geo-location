@@ -11,14 +11,18 @@ These properties are now available in the visualization configuration UI:
   - Default: `false`
 
 ### Optional Properties (when historical thresholds are enabled)
-- `historicalPeriods` (number): Number of previous periods to query
+- `historicalPeriods` (number): Number of historical periods to query
   - Default: `7`
-  - Example: `7` means query the previous 7 periods
+  - Example: `5` means query 5 historical periods
 
-- `historicalPeriodUnit` (string): Unit for historical periods
+- `historicalPeriodSize` (number): Gap between each historical period
+  - Default: `1`
+  - Example: `7` means each period is 7 units apart (combined with `historicalPeriodUnit`)
+
+- `historicalPeriodUnit` (string): Unit for the period gaps
   - Options: `'hours'` or `'days'`
   - Default: `'days'`
-  - Example: `'days'` with `historicalPeriods: 7` means query the same time window for the previous 7 days
+  - Example: `'days'` with `historicalPeriodSize: 7` means each period is 7 days apart
 
 - `historicalAggregation` (string): How to combine results from multiple periods
   - Options: `'average'`, `'min'`, `'max'`, `'sum'`
@@ -31,56 +35,88 @@ These properties are now available in the visualization configuration UI:
 
 ## How It Works
 
-### Example Scenario
-- Main query: Gets current data for "SINCE 1 hour ago"
+### Example Scenario: Same Day of Week Comparison
+- Main query: Gets current data for "SINCE 1 hour ago" (Tuesday 10am-11am)
 - Historical threshold configuration:
   - `enableHistoricalThresholds: true`
-  - `historicalPeriods: 7`
+  - `historicalPeriods: 5`
+  - `historicalPeriodSize: 7`
   - `historicalPeriodUnit: 'days'`
   - `historicalAggregation: 'average'`
 
 ### What Happens
 1. The system detects the main query uses a 1-hour time window
-2. It creates 7 threshold queries for the same 1-hour window from previous days:
-   - Day 1: 1 hour window from 1 day ago
-   - Day 2: 1 hour window from 2 days ago
-   - Day 3: 1 hour window from 3 days ago
-   - etc.
+2. It creates 5 threshold queries for the same 1-hour window from previous Tuesdays:
+   - Period 1: 1 hour window from 7 days ago (last Tuesday 10am-11am)
+   - Period 2: 1 hour window from 14 days ago (2 Tuesdays ago 10am-11am)
+   - Period 3: 1 hour window from 21 days ago (3 Tuesdays ago 10am-11am)
+   - Period 4: 1 hour window from 28 days ago (4 Tuesdays ago 10am-11am)
+   - Period 5: 1 hour window from 35 days ago (5 Tuesdays ago 10am-11am)
 3. All threshold queries execute in parallel
 4. Results are aggregated using the specified method (average)
 5. Final aggregated thresholds are applied to current data
 
 ## Configuration Examples
 
-### Example 1: Weekly Average Thresholds
+### Example 1: Same Day of Week Comparison (Weekly Pattern)
 ```javascript
 {
   enableHistoricalThresholds: true,
-  historicalPeriods: 7,
+  historicalPeriods: 7,        // Compare with 7 historical periods
+  historicalPeriodSize: 7,     // Each 7 days apart
   historicalPeriodUnit: 'days',
   historicalAggregation: 'average'
 }
 ```
+*Compares today with the same day of week for the past 7 weeks*
 
-### Example 2: Daily Maximum Thresholds (Last 5 Days)
+### Example 2: Every Other Day Comparison
 ```javascript
 {
   enableHistoricalThresholds: true,
-  historicalPeriods: 5,
+  historicalPeriods: 5,        // Compare with 5 historical periods
+  historicalPeriodSize: 2,     // Each 2 days apart
   historicalPeriodUnit: 'days',
   historicalAggregation: 'max'
 }
 ```
+*Compares today with 2, 4, 6, 8, and 10 days ago*
 
-### Example 3: Hourly Minimum Thresholds (Last 24 Hours)
+### Example 3: Same Hour Each Day
 ```javascript
 {
   enableHistoricalThresholds: true,
-  historicalPeriods: 24,
+  historicalPeriods: 10,       // Compare with 10 historical periods
+  historicalPeriodSize: 24,    // Each 24 hours apart
   historicalPeriodUnit: 'hours',
   historicalAggregation: 'min'
 }
 ```
+*Compares this hour with the same hour for the past 10 days*
+
+### Example 4: Monthly Comparison (Approximate)
+```javascript
+{
+  enableHistoricalThresholds: true,
+  historicalPeriods: 6,        // Compare with 6 historical periods
+  historicalPeriodSize: 30,    // Each 30 days apart
+  historicalPeriodUnit: 'days',
+  historicalAggregation: 'average'
+}
+```
+*Compares today with approximately the same day for the past 6 months*
+
+### Example 5: Consecutive Days (Traditional Behavior)
+```javascript
+{
+  enableHistoricalThresholds: true,
+  historicalPeriods: 7,        // Compare with 7 historical periods
+  historicalPeriodSize: 1,     // Each 1 day apart (consecutive)
+  historicalPeriodUnit: 'days',
+  historicalAggregation: 'average'
+}
+```
+*Compares today with the past 7 consecutive days*
 
 ## Backward Compatibility
 
