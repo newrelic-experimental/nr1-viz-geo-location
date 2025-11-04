@@ -70,9 +70,9 @@ const Markers = () => {
 
   useEffect(() => {
     customColorsRef.current = customColors;
-    // Update the renderKey when customColors or markerAggregation changes
+    // Update the renderKey when customColors, markerAggregation, or disableClusterZoom changes
     setRenderKey(Math.random());
-  }, [customColors, markerAggregation, lastUpdateStamp]);
+  }, [customColors, markerAggregation, lastUpdateStamp, disableClusterZoom, heatMapStepsMarkers]);
 
   // This is a hack to force a re-render when markers show up for the first time.
   const [renderKey, setRenderKey] = useState(Math.random());
@@ -110,7 +110,7 @@ const Markers = () => {
 
   return (
     <MarkerClusterGroup
-      key={`${markerAggregation}-${lastUpdateStamp}`}
+      key={`${markerAggregation}-${lastUpdateStamp}-${disableClusterZoom}-${heatMapStepsMarkers}`}
       singleMarkerMode={true}
       spiderfyOnMaxZoom={7}
       disableClusteringAtZoom={disableClusteringAtZoom}
