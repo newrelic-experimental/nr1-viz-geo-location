@@ -21,6 +21,7 @@ const exampleConfig = {
     SELECT 
       average(duration) * 1.2 as threshold_warning,
       average(duration) * 1.5 as threshold_critical,
+      average(duration) as value,
       latest(city) as name
     FROM Transaction 
     WHERE appName = 'MyApp'
@@ -34,14 +35,26 @@ const exampleConfig = {
   historicalPeriods: 7,
   historicalPeriodSize: 1,  // Each 1 day apart (consecutive days)
   historicalPeriodUnit: 'days',
-  historicalAggregation: 'average'
+  historicalAggregation: 'average',
+  
+  // NEW: Tooltip configuration
+  showThresholdsInTooltips: true,        // Shows thresholds in tooltips
+  showHistoricalValuesInTooltips: true   // Shows historical values in tooltips (requires both historical thresholds and threshold tooltips to be enabled)
 };
 
 // How it works:
 // 1. Main query gets current data (e.g., last hour)
 // 2. Threshold query runs 7 times for the same hour from previous periods
-// 3. Results are averaged across those periods
-// 4. Averaged thresholds are applied to current data
+// 3. Results are averaged across those periods using the specified aggregation method
+// 4. Averaged thresholds AND historical values are applied to current data
+// 5. When showThresholdsInTooltips is enabled, tooltips display:
+//    - Current value
+//    - Historical threshold_warning (aggregated)
+//    - Historical threshold_critical (aggregated)
+//    - Historical value (aggregated) - NEW FEATURE
+//
+// IMPORTANT: For historical values to appear in tooltips, the threshold query 
+// must include a 'value' field that will be aggregated across historical periods.
 
 // Example scenarios:
 

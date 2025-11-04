@@ -1,7 +1,7 @@
 import { sentenceCase } from "text-case";
 
 // Tool tip config generator
-export const generateTooltipConfig = (locations, showThresholdsInTooltips = false) => {
+export const generateTooltipConfig = (locations, showThresholdsInTooltips = false, showHistoricalValuesInTooltips = false) => {
   const defaultConfig = [
     { label: "Name", queryField: "name" },
     { label: "Value", queryField: "value" },
@@ -38,6 +38,15 @@ export const generateTooltipConfig = (locations, showThresholdsInTooltips = fals
       config.push({ 
         label: "Critical Threshold", 
         queryField: "threshold_critical",
+        formatFn: (value: any) => typeof value === 'number' ? value.toFixed(2) : value
+      } as any);
+    }
+    
+    // Add historical value to tooltip if both threshold tooltips and historical values are enabled
+    if (showHistoricalValuesInTooltips && firstLocation.historical_value !== undefined && firstLocation.historical_value !== null) {
+      config.push({ 
+        label: "Historical Value", 
+        queryField: "historical_value",
         formatFn: (value: any) => typeof value === 'number' ? value.toFixed(2) : value
       } as any);
     }

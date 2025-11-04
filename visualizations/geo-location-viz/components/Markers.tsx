@@ -31,7 +31,8 @@ const Markers = () => {
     historicalPeriodUnit = 'days',
     historicalAggregation = 'average',
     // Tooltip configuration
-    showThresholdsInTooltips = false
+    showThresholdsInTooltips = false,
+    showHistoricalValuesInTooltips = false
   } = useProps();
 
   const openDashboard = useOpenDashboard();
@@ -83,7 +84,7 @@ const Markers = () => {
     }
   }, [locations]);
 
-  const tooltipConfig = generateTooltipConfig(locations, showThresholdsInTooltips);
+  const tooltipConfig = generateTooltipConfig(locations, showThresholdsInTooltips, showHistoricalValuesInTooltips);
   
   // Only wait for dataReady on initial load to prevent flickering
   // On subsequent loads, show data as soon as locations are available

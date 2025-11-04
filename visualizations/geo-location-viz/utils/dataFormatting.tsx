@@ -11,7 +11,8 @@ export const mergeThresholdData = (markers: any[], thresholds: any[], matchField
     if (matchValue) {
       thresholdLookup[matchValue] = {
         threshold_critical: threshold.threshold_critical,
-        threshold_warning: threshold.threshold_warning
+        threshold_warning: threshold.threshold_warning,
+        historical_value: threshold.historical_value
       };
     }
   });
@@ -26,7 +27,8 @@ export const mergeThresholdData = (markers: any[], thresholds: any[], matchField
       return {
         ...marker,
         threshold_critical: thresholdData.threshold_critical ?? marker.threshold_critical,
-        threshold_warning: thresholdData.threshold_warning ?? marker.threshold_warning
+        threshold_warning: thresholdData.threshold_warning ?? marker.threshold_warning,
+        historical_value: thresholdData.historical_value ?? marker.historical_value
       };
     }
     

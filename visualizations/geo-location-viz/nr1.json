@@ -418,6 +418,13 @@
       "default": false
     },
     {
+      "name": "showHistoricalValuesInTooltips",
+      "title": "Show historical values in tooltips",
+      "description": "Display aggregated historical values in marker and region tooltips (requires historical thresholds and threshold tooltips to be enabled)",
+      "type": "boolean",
+      "default": false
+    },
+    {
       "name": "disableTimezoneAwareness",
       "title": "Disable daylight saving time handling",
       "description": "Use legacy timestamp arithmetic that may cause incorrect comparisons during daylight saving time changes. When disabled (default), ensures historical periods use the same local time regardless of clock changes.",

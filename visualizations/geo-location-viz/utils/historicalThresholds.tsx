@@ -471,6 +471,22 @@ const aggregateItemGroup = (items: any[], method: AggregationMethod): any => {
     console.log(`Historical threshold calculation - Aggregated warning value (${method}):`, result.threshold_warning);
   }
   
+  // Aggregate value field for historical values
+  const historicalValues = items
+    .map(item => {
+      const val = item.value;
+      // Convert string to number if needed
+      const numVal = typeof val === 'string' ? parseFloat(val) : val;
+      return numVal;
+    })
+    .filter(val => val !== undefined && val !== null && !isNaN(val));
+    
+  console.log(`Historical value calculation - Values for aggregation:`, historicalValues);
+  if (historicalValues.length > 0) {
+    result.historical_value = aggregateValues(historicalValues, method);
+    console.log(`Historical value calculation - Aggregated historical value (${method}):`, result.historical_value);
+  }
+  
   return result;
 };
 
