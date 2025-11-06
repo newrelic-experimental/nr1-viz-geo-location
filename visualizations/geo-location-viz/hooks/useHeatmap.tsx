@@ -14,6 +14,8 @@ interface HeatmapHook {
   heatMapStepsMarkers: number;
   setRange: (regions: Region[]) => void;
   setRangeMarkers: (regions: Region[]) => void;
+  setRangePercentage: (percentageRange: { min: number, max: number }) => void;
+  setRangeMarkersPercentage: (percentageRange: { min: number, max: number }) => void;
 }
 
 const useHeatmap = (): HeatmapHook => {
@@ -34,7 +36,7 @@ const useHeatmap = (): HeatmapHook => {
 
   // Function to set the min and max values based on regions
   const setRangeMinMax = useCallback(
-    (regions: Region[], setterMin, setterMax) => {
+    (regions: Region[], setterMin: (value: number) => void, setterMax: (value: number) => void) => {
       let min = Infinity;
       let max = -Infinity;
       regions.forEach((region) => {
@@ -47,17 +49,36 @@ const useHeatmap = (): HeatmapHook => {
     [],
   );
 
+  // Function to set symmetric percentage-based ranges
+  const setRangePercentageInternal = useCallback(
+    (percentageRange: { min: number, max: number }, setterMin: (value: number) => void, setterMax: (value: number) => void) => {
+      setterMin(percentageRange.min);
+      setterMax(percentageRange.max);
+    },
+    [],
+  );
+
   //for regions
   const setRange = useCallback((regions: Region[]) => {
     setRangeMinMax(regions, setMinValue, setMaxValue);
-  }, []);
+  }, [setRangeMinMax]);
 
   // for markers
   const setRangeMarkers = useCallback((regions: Region[]) => {
     setRangeMinMax(regions, setMinValueMarkers, setMaxValueMarkers);
-  }, []);
+  }, [setRangeMinMax]);
 
-  const getGradientColorForRange = (value, gradArray, min, max) => {
+  // for regions percentage
+  const setRangePercentage = useCallback((percentageRange: { min: number, max: number }) => {
+    setRangePercentageInternal(percentageRange, setMinValue, setMaxValue);
+  }, [setRangePercentageInternal]);
+
+  // for markers percentage
+  const setRangeMarkersPercentage = useCallback((percentageRange: { min: number, max: number }) => {
+    setRangePercentageInternal(percentageRange, setMinValueMarkers, setMaxValueMarkers);
+  }, [setRangePercentageInternal]);
+
+  const getGradientColorForRange = (value: number, gradArray: string[], min: number, max: number): string => {
     if (
       !gradArray.length ||
       min === Infinity ||
@@ -93,7 +114,7 @@ const useHeatmap = (): HeatmapHook => {
     [minValueMarkers, maxValueMarkers, gradientArrayMarkers],
   );
 
-  const generateGradient = (hmSteps, colorPallete, setGrad) => {
+  const generateGradient = (hmSteps: any, colorPallete: any, setGrad: (gradient: string[]) => void) => {
     let steps = hmSteps && hmSteps !== "" ? parseInt(hmSteps, 10) : 0;
     steps = isNaN(steps) ? 0 : steps;
     if (steps != 0) {
@@ -129,6 +150,8 @@ const useHeatmap = (): HeatmapHook => {
     heatMapStepsMarkers,
     setRange,
     setRangeMarkers,
+    setRangePercentage,
+    setRangeMarkersPercentage,
   };
 };
 

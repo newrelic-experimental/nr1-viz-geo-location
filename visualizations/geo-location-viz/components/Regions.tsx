@@ -3,7 +3,7 @@ import React, { useEffect } from "react";
 import { generateTooltipConfig } from "../utils";
 import { useProps } from "../context/VizPropsProvider";
 import { useEnhancedDualQuery } from "../hooks/useNerdGraphQuery";
-import { HistoricalConfig } from "../utils/historicalThresholds";
+import { HistoricalConfig, processLocationsForPercentageHeatmap } from "../utils/historicalThresholds";
 import { useHeatmap } from "../hooks/useHeatmap";
 import { useSharedHistoricalThresholds } from "../context/HistoricalThresholdProvider";
 
@@ -22,7 +22,10 @@ const Regions = () => {
     historicalAggregation = 'average',
     // Tooltip configuration
     showThresholdsInTooltips = false,
-    showHistoricalValuesInTooltips = false
+    showHistoricalValuesInTooltips = false,
+    // Percentage heatmap configuration
+    enablePercentageHeatmap = false,
+    percentageHeatmapRange
   } = useProps();
   
   if (regionsQuery === null || regionsQuery === undefined) {
@@ -52,10 +55,27 @@ const Regions = () => {
     historicalError
   );
 
-  const { setRange, heatMapSteps, getGradientColor } = useHeatmap();
+  const { setRange, setRangePercentage, heatMapSteps, getGradientColor } = useHeatmap();
+
+  // Process regions for percentage heatmap if enabled
+  const { processedLocations, percentageRange } = processLocationsForPercentageHeatmap(
+    regions || [],
+    enablePercentageHeatmap && enableHistoricalThresholds && heatMapSteps && heatMapSteps != 0,
+    percentageHeatmapRange
+  );
+
+  // Use processed regions for rendering
+  const finalRegions = processedLocations || regions || [];
+
   useEffect(() => {
-    setRange(regions);
-  }, [regions]);
+    if (percentageRange) {
+      // Use percentage range for heatmap
+      setRangePercentage(percentageRange);
+    } else {
+      // Use normal range calculation
+      setRange(finalRegions);
+    }
+  }, [finalRegions, percentageRange, setRange, setRangePercentage]);
 
   // Only wait for dataReady on initial load to prevent flickering
   // On subsequent loads, show data as soon as regions are available
@@ -72,9 +92,9 @@ const Regions = () => {
   if (regions.length == 0) {
     return null; //no regions to display
   } else {
-    const tooltipConfig = generateTooltipConfig(regions, showThresholdsInTooltips, showHistoricalValuesInTooltips);
+    const tooltipConfig = generateTooltipConfig(regions, showThresholdsInTooltips, showHistoricalValuesInTooltips, enablePercentageHeatmap);
 
-    const regionElements = regions.map((location, index) => (
+    const regionElements = finalRegions.map((location: any, index: number) => (
       <Region
         key={index}
         location={location}

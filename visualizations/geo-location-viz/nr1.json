@@ -430,6 +430,19 @@
       "description": "Use legacy timestamp arithmetic that may cause incorrect comparisons during daylight saving time changes. When disabled (default), ensures historical periods use the same local time regardless of clock changes.",
       "type": "boolean",
       "default": false
+    },
+    {
+      "name": "enablePercentageHeatmap",
+      "title": "Enable percentage-based heatmap",
+      "description": "Color markers/regions based on percentage difference from historical average instead of absolute values. Requires historical thresholds to be enabled.",
+      "type": "boolean",
+      "default": false
+    },
+    {
+      "name": "percentageHeatmapRange",
+      "title": "Percentage heatmap range (optional)",
+      "description": "Fixed percentage range for color mapping (e.g., 50 for -50% to +50%). Leave empty to auto-calculate from data.",
+      "type": "number"
     }
   ]
 }

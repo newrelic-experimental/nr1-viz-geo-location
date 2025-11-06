@@ -507,3 +507,83 @@ const aggregateValues = (values: number[], method: AggregationMethod): number =>
       return values[0];
   }
 };
+
+/**
+ * Calculate percentage difference between current and historical values
+ */
+export const calculatePercentageDifference = (current: number, historical: number): number | null => {
+  if (historical === null || historical === undefined || historical === 0) {
+    console.log(`Percentage calculation - Cannot calculate percentage for historical value: ${historical}`);
+    return null;
+  }
+  
+  const percentage = ((current - historical) / historical) * 100;
+  console.log(`Percentage calculation - Current: ${current}, Historical: ${historical}, Percentage: ${percentage.toFixed(2)}%`);
+  return percentage;
+};
+
+/**
+ * Process locations to add percentage differences for heatmap visualization
+ */
+export const processLocationsForPercentageHeatmap = (
+  locations: any[],
+  enablePercentageHeatmap: boolean,
+  percentageHeatmapRange?: number
+): { processedLocations: any[], percentageRange: { min: number, max: number } | null } => {
+  if (!enablePercentageHeatmap || !locations || locations.length === 0) {
+    return { processedLocations: locations, percentageRange: null };
+  }
+
+  console.log('🎨 Processing locations for percentage heatmap...');
+  
+  // Calculate percentage differences for all locations
+  const processedLocations = locations.map(location => {
+    const percentage = calculatePercentageDifference(location.value, location.historical_value);
+    return {
+      ...location,
+      percentage_difference: percentage,
+      // Store original value for reference
+      original_value: location.value
+    };
+  });
+
+  // Filter out locations without valid percentage differences
+  const validPercentages = processedLocations
+    .map(loc => loc.percentage_difference)
+    .filter(p => p !== null && p !== undefined && !isNaN(p));
+
+  if (validPercentages.length === 0) {
+    console.log('🎨 No valid percentage differences found');
+    return { processedLocations: locations, percentageRange: null };
+  }
+
+  // Determine the percentage range
+  let percentageRange: { min: number, max: number };
+  
+  if (percentageHeatmapRange && percentageHeatmapRange > 0) {
+    // Use user-defined range
+    percentageRange = { min: -percentageHeatmapRange, max: percentageHeatmapRange };
+    console.log(`🎨 Using user-defined percentage range: ${percentageRange.min}% to ${percentageRange.max}%`);
+  } else {
+    // Auto-calculate symmetric range
+    const maxAbsPercentage = Math.max(...validPercentages.map(Math.abs));
+    percentageRange = { min: -maxAbsPercentage, max: maxAbsPercentage };
+    console.log(`🎨 Auto-calculated percentage range: ${percentageRange.min.toFixed(2)}% to ${percentageRange.max.toFixed(2)}%`);
+  }
+
+  // Update location values to be percentage differences for heatmap calculation
+  const finalProcessedLocations = processedLocations.map(location => {
+    if (location.percentage_difference !== null && location.percentage_difference !== undefined) {
+      return {
+        ...location,
+        // Replace value with percentage for heatmap color calculation
+        value: location.percentage_difference
+      };
+    }
+    return location;
+  });
+
+  console.log(`🎨 Processed ${finalProcessedLocations.length} locations for percentage heatmap`);
+  
+  return { processedLocations: finalProcessedLocations, percentageRange };
+};

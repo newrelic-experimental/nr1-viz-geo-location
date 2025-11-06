@@ -7,6 +7,7 @@ import { useCustomColors, Status } from "../hooks/useCustomColors";
 import { useHeatmap } from "../hooks/useHeatmap";
 import { useOpenDashboard } from "../hooks/useOpenDashboard";
 import { useSharedHistoricalThresholds } from "../context/HistoricalThresholdProvider";
+import { processLocationsForPercentageHeatmap } from "../utils/historicalThresholds";
 
 import {
   createClusterCustomIcon,
@@ -32,7 +33,10 @@ const Markers = () => {
     historicalAggregation = 'average',
     // Tooltip configuration
     showThresholdsInTooltips = false,
-    showHistoricalValuesInTooltips = false
+    showHistoricalValuesInTooltips = false,
+    // Percentage heatmap configuration
+    enablePercentageHeatmap = false,
+    percentageHeatmapRange
   } = useProps();
 
   const openDashboard = useOpenDashboard();
@@ -63,11 +67,32 @@ const Markers = () => {
   const { customColors } = useCustomColors(markerColors);
   const customColorsRef = useRef(customColors);
 
-  const { setRangeMarkers, heatMapStepsMarkers, getGradientColorMarkers } =
+  const { setRangeMarkers, setRangeMarkersPercentage, getGradientColorMarkers } =
     useHeatmap();
+
+  // Get heatMapStepsMarkers directly from props since the hook version is undefined
+  const { heatMapStepsMarkers } = useProps();
+
+
+  // Process locations for percentage heatmap if enabled
+  const { processedLocations, percentageRange } = processLocationsForPercentageHeatmap(
+    locations || [],
+    enablePercentageHeatmap && enableHistoricalThresholds && heatMapStepsMarkers && heatMapStepsMarkers != 0,
+    percentageHeatmapRange
+  );
+
+  // Use processed locations for rendering
+  const finalLocations = processedLocations || locations || [];
+
   useEffect(() => {
-    setRangeMarkers(locations);
-  }, [locations]);
+    if (percentageRange) {
+      // Use percentage range for heatmap
+      setRangeMarkersPercentage(percentageRange);
+    } else {
+      // Use normal range calculation
+      setRangeMarkers(finalLocations);
+    }
+  }, [finalLocations, percentageRange, setRangeMarkers, setRangeMarkersPercentage]);
 
   useEffect(() => {
     customColorsRef.current = customColors;
@@ -84,7 +109,7 @@ const Markers = () => {
     }
   }, [locations]);
 
-  const tooltipConfig = generateTooltipConfig(locations, showThresholdsInTooltips, showHistoricalValuesInTooltips);
+  const tooltipConfig = generateTooltipConfig(finalLocations, showThresholdsInTooltips, showHistoricalValuesInTooltips, enablePercentageHeatmap);
   
   // Only wait for dataReady on initial load to prevent flickering
   // On subsequent loads, show data as soon as locations are available
@@ -115,7 +140,7 @@ const Markers = () => {
       singleMarkerMode={true}
       spiderfyOnMaxZoom={7}
       disableClusteringAtZoom={disableClusteringAtZoom}
-      iconCreateFunction={(cluster) => {
+      iconCreateFunction={(cluster: any) => {
         return createClusterCustomIcon(
           cluster,
           customColorsRef.current,
@@ -124,7 +149,7 @@ const Markers = () => {
       }}
       polygonOptions={getPoligonOptions()}
     >
-      {locations.map((location, idx) => {
+      {finalLocations.map((location: any, idx: number) => {
         if (isNaN(location?.latitude) || isNaN(location?.longitude)) {
           return null;
         }
