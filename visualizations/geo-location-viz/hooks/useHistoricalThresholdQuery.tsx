@@ -276,7 +276,19 @@ export const useHistoricalThresholdQuery = (
         // Aggregate results across periods
         console.log("Historical threshold calculation - Aggregation method:", config.historicalAggregation);
         console.log("Historical threshold calculation - Match field:", matchField);
-        console.log("Historical threshold calculation - Period results:", periodResults);
+        console.log("Historical threshold calculation - Period results summary:");
+        
+        // Log summary of each period's results for debugging
+        periodResults.forEach((periodData, index) => {
+          if (periodData && Array.isArray(periodData)) {
+            console.log(`  Period ${index + 1}: ${periodData.length} results`);
+            if (periodData.length === 0) {
+              console.log(`    ⚠️ Period ${index + 1} returned no data - this may cause missing historical values`);
+            }
+          } else {
+            console.log(`  Period ${index + 1}: Invalid or empty data`);
+          }
+        });
         
         const aggregatedData = aggregateThresholdData(
           periodResults,
@@ -285,6 +297,24 @@ export const useHistoricalThresholdQuery = (
         );
         
         console.log("Historical threshold calculation - Final aggregated data:", aggregatedData);
+        
+        // Log data coverage summary
+        const locationsWithHistoricalData = aggregatedData.filter(item => 
+          item.historical_value !== undefined && item.historical_value !== null
+        );
+        const locationsWithoutHistoricalData = aggregatedData.filter(item => 
+          item.historical_value === undefined || item.historical_value === null
+        );
+        
+        console.log(`📊 Historical data coverage summary:`);
+        console.log(`  ✅ Locations with historical data: ${locationsWithHistoricalData.length}`);
+        console.log(`  ❌ Locations without historical data: ${locationsWithoutHistoricalData.length}`);
+        
+        if (locationsWithoutHistoricalData.length > 0) {
+          console.log(`  ⚠️ Locations that will be excluded from percentage calculations:`, 
+            locationsWithoutHistoricalData.map(item => item.name || item.locationId || item.facet || 'unknown')
+          );
+        }
         
         setData(aggregatedData);
         

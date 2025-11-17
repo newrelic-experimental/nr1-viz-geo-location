@@ -438,6 +438,7 @@ const aggregateItemGroup = (items: any[], method: AggregationMethod): any => {
   
   // Start with the first item as base
   const result = { ...items[0] };
+  const locationName = result.name || result.locationId || result.facet || 'unknown';
   
   // Aggregate threshold_critical values
   const criticalValues = items
@@ -449,10 +450,14 @@ const aggregateItemGroup = (items: any[], method: AggregationMethod): any => {
     })
     .filter(val => val !== undefined && val !== null && !isNaN(val));
     
-  console.log(`Historical threshold calculation - Critical values for aggregation:`, criticalValues);
+  console.log(`Historical threshold calculation - Location "${locationName}": Critical values for aggregation:`, criticalValues);
   if (criticalValues.length > 0) {
     result.threshold_critical = aggregateValues(criticalValues, method);
-    console.log(`Historical threshold calculation - Aggregated critical value (${method}):`, result.threshold_critical);
+    console.log(`Historical threshold calculation - Location "${locationName}": Aggregated critical value (${method}):`, result.threshold_critical);
+  } else {
+    console.log(`Historical threshold calculation - Location "${locationName}": No valid critical values found, keeping undefined`);
+    // Explicitly set to undefined to indicate missing data
+    result.threshold_critical = undefined;
   }
   
   // Aggregate threshold_warning values
@@ -465,13 +470,17 @@ const aggregateItemGroup = (items: any[], method: AggregationMethod): any => {
     })
     .filter(val => val !== undefined && val !== null && !isNaN(val));
     
-  console.log(`Historical threshold calculation - Warning values for aggregation:`, warningValues);
+  console.log(`Historical threshold calculation - Location "${locationName}": Warning values for aggregation:`, warningValues);
   if (warningValues.length > 0) {
     result.threshold_warning = aggregateValues(warningValues, method);
-    console.log(`Historical threshold calculation - Aggregated warning value (${method}):`, result.threshold_warning);
+    console.log(`Historical threshold calculation - Location "${locationName}": Aggregated warning value (${method}):`, result.threshold_warning);
+  } else {
+    console.log(`Historical threshold calculation - Location "${locationName}": No valid warning values found, keeping undefined`);
+    // Explicitly set to undefined to indicate missing data
+    result.threshold_warning = undefined;
   }
   
-  // Aggregate value field for historical values
+  // Aggregate value field for historical values - this is critical for percentage calculations
   const historicalValues = items
     .map(item => {
       const val = item.value;
@@ -481,10 +490,14 @@ const aggregateItemGroup = (items: any[], method: AggregationMethod): any => {
     })
     .filter(val => val !== undefined && val !== null && !isNaN(val));
     
-  console.log(`Historical value calculation - Values for aggregation:`, historicalValues);
+  console.log(`Historical value calculation - Location "${locationName}": Values for aggregation:`, historicalValues);
   if (historicalValues.length > 0) {
     result.historical_value = aggregateValues(historicalValues, method);
-    console.log(`Historical value calculation - Aggregated historical value (${method}):`, result.historical_value);
+    console.log(`Historical value calculation - Location "${locationName}": Aggregated historical value (${method}):`, result.historical_value);
+  } else {
+    console.log(`Historical value calculation - Location "${locationName}": No valid historical values found - this location will be excluded from percentage calculations`);
+    // Explicitly set to undefined to indicate missing data
+    result.historical_value = undefined;
   }
   
   return result;
@@ -511,14 +524,32 @@ const aggregateValues = (values: number[], method: AggregationMethod): number =>
 /**
  * Calculate percentage difference between current and historical values
  */
-export const calculatePercentageDifference = (current: number, historical: number): number | null => {
-  if (historical === null || historical === undefined || historical === 0) {
-    console.log(`Percentage calculation - Cannot calculate percentage for historical value: ${historical}`);
+export const calculatePercentageDifference = (current: number, historical: number, locationName?: string): number | null => {
+  // Enhanced validation with better error messages
+  if (historical === null || historical === undefined) {
+    console.log(`Percentage calculation - Cannot calculate percentage for location "${locationName || 'unknown'}" - historical value is ${historical}. This location will be excluded from percentage heatmap.`);
+    return null;
+  }
+  
+  if (historical === 0) {
+    console.log(`Percentage calculation - Cannot calculate percentage for location "${locationName || 'unknown'}" - historical value is zero (division by zero). This location will be excluded from percentage heatmap.`);
+    return null;
+  }
+  
+  // Validate current value
+  if (current === null || current === undefined || isNaN(current)) {
+    console.log(`Percentage calculation - Cannot calculate percentage for location "${locationName || 'unknown'}" - current value is invalid: ${current}. This location will be excluded from percentage heatmap.`);
+    return null;
+  }
+  
+  // Validate historical value is numeric
+  if (isNaN(historical)) {
+    console.log(`Percentage calculation - Cannot calculate percentage for location "${locationName || 'unknown'}" - historical value is not a number: ${historical}. This location will be excluded from percentage heatmap.`);
     return null;
   }
   
   const percentage = ((current - historical) / historical) * 100;
-  console.log(`Percentage calculation - Current: ${current}, Historical: ${historical}, Percentage: ${percentage.toFixed(2)}%`);
+  console.log(`Percentage calculation - Location "${locationName || 'unknown'}": Current: ${current}, Historical: ${historical}, Percentage: ${percentage.toFixed(2)}%`);
   return percentage;
 };
 
@@ -538,7 +569,8 @@ export const processLocationsForPercentageHeatmap = (
   
   // Calculate percentage differences for all locations
   const processedLocations = locations.map(location => {
-    const percentage = calculatePercentageDifference(location.value, location.historical_value);
+    const locationName = location.name || location.locationId || location.facet || 'unknown';
+    const percentage = calculatePercentageDifference(location.value, location.historical_value, locationName);
     return {
       ...location,
       percentage_difference: percentage,
