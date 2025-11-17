@@ -1,7 +1,7 @@
 import { sentenceCase } from "text-case";
 
 // Tool tip config generator
-export const generateTooltipConfig = (locations, showThresholdsInTooltips = false, showHistoricalValuesInTooltips = false, enablePercentageHeatmap = false) => {
+export const generateTooltipConfig = (locations: any[], showThresholdsInTooltips = false, showHistoricalValuesInTooltips = false, enablePercentageHeatmap = false) => {
   const defaultConfig = [
     { label: "Name", queryField: "name" },
     { label: "Value", queryField: "value" },
@@ -25,25 +25,22 @@ export const generateTooltipConfig = (locations, showThresholdsInTooltips = fals
 
   // Add threshold values to tooltip only if the configuration option is enabled
   if (showThresholdsInTooltips) {
-    const firstLocation = locations[0];
-    if (firstLocation.threshold_warning !== undefined && firstLocation.threshold_warning !== null) {
-      config.push({ 
-        label: "Warning Threshold", 
-        queryField: "threshold_warning",
-        formatFn: (value: any) => typeof value === 'number' ? value.toFixed(2) : value
-      } as any);
-    }
+    // Always add threshold fields when enabled - don't check first location's values
+    // This ensures tooltips update correctly when historical thresholds are applied
+    config.push({ 
+      label: "Warning Threshold", 
+      queryField: "threshold_warning",
+      formatFn: (value: any) => typeof value === 'number' ? value.toFixed(2) : value
+    } as any);
     
-    if (firstLocation.threshold_critical !== undefined && firstLocation.threshold_critical !== null) {
-      config.push({ 
-        label: "Critical Threshold", 
-        queryField: "threshold_critical",
-        formatFn: (value: any) => typeof value === 'number' ? value.toFixed(2) : value
-      } as any);
-    }
+    config.push({ 
+      label: "Critical Threshold", 
+      queryField: "threshold_critical",
+      formatFn: (value: any) => typeof value === 'number' ? value.toFixed(2) : value
+    } as any);
     
     // Add historical value to tooltip if both threshold tooltips and historical values are enabled
-    if (showHistoricalValuesInTooltips && firstLocation.historical_value !== undefined && firstLocation.historical_value !== null) {
+    if (showHistoricalValuesInTooltips) {
       config.push({ 
         label: "Historical Value", 
         queryField: "historical_value",

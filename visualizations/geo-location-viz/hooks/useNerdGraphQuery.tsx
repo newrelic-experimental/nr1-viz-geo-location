@@ -278,20 +278,29 @@ export const useEnhancedDualQuery = (
         let thresholdResults: any[] = [];
         
         // Determine which threshold data to use
-        if (historicalConfig?.enableHistoricalThresholds && historicalThresholdData.length > 0) {
-          thresholdResults = historicalThresholdData;
+        if (historicalConfig?.enableHistoricalThresholds) {
+          // When historical thresholds are enabled, only use historical data if available
+          // Do not fall back to regular threshold query - let main query fallback thresholds be used
+          if (historicalThresholdData.length > 0) {
+            thresholdResults = historicalThresholdData;
+            console.log("Using historical threshold data:", historicalThresholdData.length, "locations");
+          } else {
+            console.log("Historical thresholds enabled but no historical data available - using main query fallback thresholds");
+            thresholdResults = []; // No threshold merging - use main query's fallback thresholds
+          }
         } else if (thresholdQuery && thresholdQuery.trim() !== '') {
+          // Only use regular threshold query when historical thresholds are disabled
           try {
             const variables = { id: parseInt(accountId, 10) };
             const thresholdNrql = nerdGraphQuery(thresholdQuery, timeRange, thresholdDefaultSince, thresholdIgnorePicker);
-            console.log("Fallback Threshold Query NRQL:", thresholdNrql);
+            console.log("Regular Threshold Query NRQL:", thresholdNrql);
             
             const thresholdResponse = await NerdGraphQuery.query({ query: thresholdNrql, variables });
-            console.log("Fallback Threshold Query Response:", thresholdResponse);
+            console.log("Regular Threshold Query Response:", thresholdResponse);
             
             thresholdResults = thresholdResponse?.data?.actor?.account?.result?.results || [];
           } catch (thresholdError) {
-            console.warn("Error fetching fallback threshold data:", thresholdError);
+            console.warn("Error fetching regular threshold data:", thresholdError);
           }
         }
         
