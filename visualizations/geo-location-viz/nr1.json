@@ -306,6 +306,18 @@
       "type": "boolean"
     },
     {
+      "name": "tileUrl",
+      "title": "Map tile URL",
+      "description": "Leaflet tile URL template, e.g. https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png?key=YOUR_KEY. Empty uses OpenStreetMap. Provide a matching attribution.",
+      "type": "string"
+    },
+    {
+      "name": "tileAttribution",
+      "title": "Map tile attribution",
+      "description": "Attribution (HTML allowed) required by your tile provider. Empty uses the OpenStreetMap attribution.",
+      "type": "string"
+    },
+    {
       "name": "centerLatLng",
       "title": "Center lat,lng",
       "description": "Center of the map. Privide as lat,lng value",

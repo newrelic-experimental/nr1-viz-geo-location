@@ -30,6 +30,7 @@ const MapView = () => {
   const zoom = mapProps.zoom !== null ? mapProps.zoom : DEFAULT_ZOOM;
   const center = mapProps.center !== null ? mapProps.center : DEFAULT_CENTER;
   const noWrap = mapProps.noWrap;
+  const { tileUrl, tileAttribution } = mapProps;
 
   // use ref for the map to refresh it in Viz's config mode
   const mapRef = useRef(null);
@@ -52,16 +53,17 @@ const MapView = () => {
   return (
     <Map ref={mapRef} center={center} zoom={zoom} style={mapStyle}>
       <TileLayer
-        key={noWrap}
+        key={`${noWrap}|${tileUrl}`}
         noWrap={noWrap}
-        attribution='&copy; <a href="http://osm.org/copyright">Map tiles by Carto, under CC BY 3.0. Data by OpenStreetMap, under ODbL.'
-        url="https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png"
+        attribution={tileAttribution}
+        url={tileUrl}
       />
       <Markers />
       {/* uncomment to turn on Map GeoJson features */}
       <Regions />
     </Map>
   );
+
 };
 
 export default MapView;
