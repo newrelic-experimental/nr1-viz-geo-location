@@ -84,6 +84,8 @@ The following options can be configured using the visualization configuration pa
 - **Default zoom:** This allows you to select how zoomed in the map is when it first loads.
 - **Disable cluster at zoom:** You can choose at what zoom level the clustering is disabled and all markers shown. This deafults to level 7.
 - **Center lat,lng:** Specify the center of the map as two lat/lng coordinates. e.g. "51.5,0.1"
+- **Map tile URL:** A [Leaflet tile URL template](https://leafletjs.com/reference.html#tilelayer) for the base map, e.g. `https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png?key={your-api-key}`. If empty, OpenStreetMap tiles (`https://tile.openstreetmap.org/{z}/{x}/{y}.png`) are used. Some providers, such as Carto, require registration and an API key. Check your provider's terms of use.
+- **Map tile attribution:** The attribution text (HTML allowed) your tile provider requires, shown in the corner of the map. Provide this whenever you set a custom tile URL. If the tile URL is empty, the OpenStreetMap attribution is used.
 - **Fetch interval:** The number of seconds between refresh. Default is 5 minutes if empty. Specify 0 to disable auto refresh.
 
 ### Markers Query

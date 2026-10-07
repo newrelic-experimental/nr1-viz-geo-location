@@ -1,6 +1,10 @@
 export const DEFAULT_ZOOM = 1; // default zoom level
 export const DEFAULT_CENTER = [51.5074, 0.1278]; // default map center - London
 
+export const DEFAULT_TILE_URL = "https://tile.openstreetmap.org/{z}/{x}/{y}.png";
+export const DEFAULT_TILE_ATTRIBUTION =
+  '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>';
+
 export const COLORS = {
   NONE: {
     color: "#0c74df",

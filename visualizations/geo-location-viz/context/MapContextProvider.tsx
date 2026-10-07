@@ -6,7 +6,12 @@ import React, {
   ReactNode,
 } from "react";
 
-import { DEFAULT_ZOOM, DEFAULT_CENTER } from "../constants";
+import {
+  DEFAULT_ZOOM,
+  DEFAULT_CENTER,
+  DEFAULT_TILE_URL,
+  DEFAULT_TILE_ATTRIBUTION,
+} from "../constants";
 
 let centerPoints = DEFAULT_CENTER;
 
@@ -14,6 +19,9 @@ let centerPoints = DEFAULT_CENTER;
 interface MapContextData {
   zoom: number;
   center: number[]; // Center is an array of two numbers (latitude and longitude)
+  noWrap?: boolean;
+  tileUrl: string;
+  tileAttribution: string;
 }
 
 // Extending the provider's props to include zoom and center
@@ -22,6 +30,8 @@ interface MapProviderProps {
   zoom?: number; // Zoom is optional
   center?: string; // Center is a string
   noWrap?: boolean;
+  tileUrl?: string;
+  tileAttribution?: string;
 }
 
 // Create the context
@@ -33,6 +43,8 @@ export const MapProvider: React.FC<MapProviderProps> = ({
   zoom = DEFAULT_ZOOM,
   center,
   noWrap = false,
+  tileUrl,
+  tileAttribution,
 }) => {
   try {
     let centerParsed = JSON.parse(center);
@@ -59,7 +71,16 @@ export const MapProvider: React.FC<MapProviderProps> = ({
 
   return (
     <MapContext.Provider
-      value={{ zoom: currentZoom, center: currentCenter, noWrap }}
+      value={{
+        zoom: currentZoom,
+        center: currentCenter,
+        noWrap,
+        // blank config values fall back to OpenStreetMap
+        tileUrl: tileUrl?.trim() || DEFAULT_TILE_URL,
+        tileAttribution: tileUrl?.trim()
+          ? tileAttribution || ""
+          : DEFAULT_TILE_ATTRIBUTION,
+      }}
     >
       {children}
     </MapContext.Provider>
